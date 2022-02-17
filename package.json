@@ -9,7 +9,7 @@
     "format": "prettier --write **/**/*.{css,js,json,ts,tsx}"
   },
   "dependencies": {
-    "3swap-sdk": "^1.0.0",
+    "3swap-sdk": "^1.0.2",
     "@binance-chain/bsc-connector": "^1.0.0",
     "@ethersproject/abi": "^5.5.0",
     "@web3-react/core": "^6.1.9",

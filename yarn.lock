@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"3swap-sdk@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/3swap-sdk/-/3swap-sdk-1.0.0.tgz#62a49de0ab859ba6959db2bb76f3c62faac801d5"
-  integrity sha512-/epkaN4S6Rbl0wJ25QOMOa+38Y84x6mDYmWYTWQTGwPeZCZyrh6osO/BWDYmbHfFfaqTSuoHtVhCVBG9/+JeIQ==
+"3swap-sdk@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/3swap-sdk/-/3swap-sdk-1.0.2.tgz#cd1974e5773d69738bd8e5bb98b7bd8fe8ccfa7a"
+  integrity sha512-mKZGarnU8Hw89meOEyB+zOrcfT0OgbXwEW/mT/XR36SB3Uz4NAGEppolVJjYxOjSQv532Un4XOZoNC7KucTZyQ==
   dependencies:
     "3swap-v1-core" "^1.0.13"
     "@ethersproject/abi" "^5.5.0"
