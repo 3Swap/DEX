@@ -6,7 +6,7 @@ import { usePageQuery } from '../hooks';
 const MainContainer = styled('div')`
   min-width: 100vw;
   min-height: 100vh;
-  background: black;
+  background: #0e0020;
 `;
 
 const Navbar = styled('div')`
