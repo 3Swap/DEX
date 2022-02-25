@@ -1,11 +1,15 @@
-import React from 'react'
+import React from 'react';
+type Props = {};
 
-type Props = {}
-
-const index = (props: Props) => {
+const Toggle = (props: Props) => {
   return (
-    <div>Toggle</div>
-  )
-}
+    <div>
+      <input className="react-switch-checkbox" id={`react-switch-new`} type="checkbox" />
+      <label className="react-switch-label" htmlFor={`react-switch-new`}>
+        <span className={`react-switch-button`} />
+      </label>
+    </div>
+  );
+};
 
-export default index
+export default Toggle;

@@ -1,11 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-type Props = {}
+type Props = {};
 
 const index = (props: Props) => {
-  return (
-    <div>Components</div>
-  )
-}
+  return <div>Components</div>;
+};
 
-export default index
+export default index;
