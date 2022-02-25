@@ -52,11 +52,15 @@ export const useWeb3WithInjectedConnectorEagerly = (): boolean => {
   return connected;
 };
 
-export const useWeb3WithNetworkConnector = (context: string = 'network') => {
+export const useWeb3WithNetworkConnector = (
+  context: string = 'network',
+  chainId: number = Number(ChainId.BINANCE_TESTNET)
+) => {
   const { activate, active } = useWeb3React(context);
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    network.changeChainId(chainId);
     activate(network, undefined, true).then(() => {
       setIsActive(true);
     });
