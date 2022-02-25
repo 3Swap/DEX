@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import Web3 from 'web3';
-import { injected } from '../connectors';
+import { injected, network } from '../connectors';
 
 export const useChainId = (web3Ctx: Web3ReactContextInterface<Web3>): number => {
   const [chainId, setChainId] = useState(1);
@@ -35,4 +35,21 @@ export const useWeb3WithInjectedConnector = (): boolean => {
   }, [connected, active]);
 
   return connected;
+};
+
+export const useWeb3WithNetworkConnector = (context: string = 'network') => {
+  const { activate, active } = useWeb3React(context);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    activate(network, undefined, true).then(() => {
+      setIsActive(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isActive && active) setIsActive(true);
+  }, [isActive, active]);
+
+  return isActive;
 };

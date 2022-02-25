@@ -19,5 +19,6 @@ export const network = new NetworkConnector({
     for (const key in ChainId) links = { ...links, [Number(ChainId[key])]: URLS[Number(ChainId[key])] };
 
     return links;
-  })()
+  })(),
+  defaultChainId: Number(ChainId.BINANCE_TESTNET)
 });
