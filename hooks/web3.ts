@@ -58,7 +58,7 @@ export const useWeb3WithNetworkConnector = (
     activate(network, undefined, true).then(() => {
       setIsActive(true);
     });
-  }, []);
+  }, [chainId]);
 
   useEffect(() => {
     if (!isActive && active) setIsActive(true);
