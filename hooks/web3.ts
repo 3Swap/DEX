@@ -29,7 +29,7 @@ export const useChainId = (
   return chainId;
 };
 
-export const useWeb3WithInjectedConnector = (): boolean => {
+export const useWeb3WithInjectedConnectorEagerly = (): boolean => {
   const { activate, active } = useWeb3React();
   const [connected, setConnected] = useState(false);
 
@@ -40,7 +40,7 @@ export const useWeb3WithInjectedConnector = (): boolean => {
           setConnected(true);
         });
       } else {
-        setConnected(true);
+        setConnected(false);
       }
     });
   }, []);
@@ -67,4 +67,17 @@ export const useWeb3WithNetworkConnector = (context: string = 'network') => {
   }, [isActive, active]);
 
   return isActive;
+};
+
+export const useWeb3WithInjectedConnectorOnRequest = () => {
+  const { library, activate } = useWeb3React<Web3>();
+  const [isActive, setIsActive] = useState(false);
+
+  function connect() {
+    activate(injected, undefined, true).then(() => {
+      setIsActive(true);
+    });
+  }
+
+  return [{ ctx: library, activated: isActive }, connect] as [{ ctx: Web3; activated: boolean }, () => void];
 };
