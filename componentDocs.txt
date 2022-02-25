@@ -1,0 +1,8 @@
+props for button components
+name : (string) button text
+
+handleClick : (func) callback for component
+
+props for toggle component
+
+handleClick : (func) callback for component

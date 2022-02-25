@@ -11,10 +11,13 @@ const ButtonDiv = styled.button`
   color: white;
 `;
 
-const Button = ({ name, onClick }: any) => {
+const Button = ({ name, handleClick }: any) => {
+  const handClick = () => {
+    return handleClick();
+  };
   return (
     <div>
-      <ButtonDiv>Button</ButtonDiv>
+      <ButtonDiv onClick={handClick}>{name}</ButtonDiv>
     </div>
   );
 };
