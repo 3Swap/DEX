@@ -5,11 +5,25 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import Web3 from 'web3';
 import { injected, network } from '../connectors';
-import { ChainId } from '3swap-sdk';
+import { ChainId, hexToNumber } from '3swap-sdk';
+import { isHex } from '../utils';
 
-export const useChainId = (web3Ctx: Web3ReactContextInterface<Web3>): number => {
-  const [chainId, setChainId] = useState<number>(Number(ChainId.BINANCE_TESTNET));
+export const useChainId = (
+  web3Ctx: Web3ReactContextInterface<Web3>,
+  chainid: ChainId = ChainId.BINANCE_TESTNET
+): number => {
+  const [chainId, setChainId] = useState<number>(Number(chainid));
   useEffect(() => {
+    const { ethereum } = window as any;
+
+    if (ethereum && ethereum.on)
+      ethereum.on('chainChanged', (chain: string | number) => {
+        if (typeof chain === 'string')
+          if (isHex(chain)) setChainId(hexToNumber(chain));
+          else setChainId(parseInt(chain));
+        else setChainId(chain);
+      });
+
     web3Ctx.library?.eth.getChainId().then(chain => setChainId(chain));
   }, []);
   return chainId;
