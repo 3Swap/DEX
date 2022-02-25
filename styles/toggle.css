@@ -1,31 +1,3 @@
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: normal;
-  src: local(''), url('../public/fonts/poppins-v19-latin-regular.woff') format('woff');
-}
-
-
-
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
-    Helvetica Neue, sans-serif,Poppins;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-
-
 .react-switch-checkbox {
   height: 0;
   width: 0;
@@ -62,10 +34,7 @@ a {
   left: calc(100% - 2px);
   transform: translateX(-100%);
 }
-.react-switch-checkbox:checked + .react-switch-button {
-  background: lime;
-}
+
 .react-switch-label:active .react-switch-button {
   width: 60px;
 }
-
