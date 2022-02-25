@@ -6,7 +6,7 @@ export const injected = new InjectedConnector({
   supportedChainIds: (() => {
     let chainIds: Array<number> = [];
 
-    for (const key in ChainId) chainIds = [...chainIds, Number(ChainId[key])];
+    for (const key in ChainId) if (isNaN(Number(key))) chainIds = [...chainIds, Number(ChainId[key])];
 
     return chainIds;
   })()
@@ -16,8 +16,10 @@ export const network = new NetworkConnector({
   urls: (() => {
     let links: { [chainId: number]: string } = {};
 
-    for (const key in ChainId) links = { ...links, [Number(ChainId[key])]: URLS[Number(ChainId[key])] };
-
+    for (const key in ChainId)
+      if (isNaN(Number(key))) {
+        links = { ...links, [Number(ChainId[key])]: URLS[Number(ChainId[key])] };
+      }
     return links;
   })(),
   defaultChainId: Number(ChainId.BINANCE_TESTNET)
