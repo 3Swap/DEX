@@ -2,16 +2,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
-import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import Web3 from 'web3';
 import { injected, network } from '../connectors';
 import { ChainId, hexToNumber } from '3swap-sdk';
 import { isHex } from '../utils';
 
-export const useChainId = (
-  web3Ctx: Web3ReactContextInterface<Web3>,
-  chainid: ChainId = ChainId.BINANCE_TESTNET
-): number => {
+export const useChainId = (chainid: ChainId = ChainId.BINANCE_TESTNET): number => {
   const [chainId, setChainId] = useState<number>(Number(chainid));
   useEffect(() => {
     const { ethereum } = window as any;
@@ -23,8 +19,6 @@ export const useChainId = (
           else setChainId(parseInt(chain));
         else setChainId(chain);
       });
-
-    web3Ctx.library?.eth.getChainId().then(chain => setChainId(chain));
   }, []);
   return chainId;
 };
