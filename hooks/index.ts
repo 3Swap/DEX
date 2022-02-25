@@ -1,1 +1,2 @@
-export { useCurrencyQuery, usePageQuery } from './query';
+export * from './query';
+export * from './web3';
