@@ -5,9 +5,10 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types';
 import Web3 from 'web3';
 import { injected, network } from '../connectors';
+import { ChainId } from '3swap-sdk';
 
 export const useChainId = (web3Ctx: Web3ReactContextInterface<Web3>): number => {
-  const [chainId, setChainId] = useState(1);
+  const [chainId, setChainId] = useState<number>(Number(ChainId.BINANCE_TESTNET));
   useEffect(() => {
     web3Ctx.library?.eth.getChainId().then(chain => setChainId(chain));
   }, []);
