@@ -1,5 +1,5 @@
 import React from 'react'
-import Swap from "../../components/routes/app/swap"
+import Swap from "../../routes/app/swap";
 import styled from 'styled-components'
 
 
