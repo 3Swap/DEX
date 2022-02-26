@@ -1,5 +1,6 @@
 import React from 'react';
 import Swap from '../routes/app/swap';
+import AddLiquidity from '../routes/app/liquidity';
 import styled from 'styled-components';
 import { usePageQuery } from '../hooks';
 
@@ -32,7 +33,7 @@ export default function Index() {
           <Swap></Swap>
         ) : slug === 'liquidity' ? (
           <div>
-            <span>Liquidity goes here</span>
+            <AddLiquidity />
           </div>
         ) : (
           <div>
