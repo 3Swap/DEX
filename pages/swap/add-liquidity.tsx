@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import React from 'react'
 import styled from 'styled-components'
-import styles from '../../styles/Swap.module.css'
+import styles from '../../styles/AddLiquidity.module.css'
 
 type Props = {}
 
@@ -9,7 +9,7 @@ const Button = () => (
   <button className={styles.btn_primary}>Connect Wallet</button>
 )
 
-export default function Swap({ }: Props) {
+export default function AddLiquidity({ }: Props) {
   return (
     <div className={styles.container}>
     <Head>
