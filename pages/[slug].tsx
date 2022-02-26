@@ -1,6 +1,6 @@
 import React from 'react';
 import Swap from '../routes/app/swap';
-import AddLiquidity from '../routes/app/liquidity';
+import Liquidity from '../routes/app/liquidity';
 import styled from 'styled-components';
 import { usePageQuery } from '../hooks';
 
@@ -30,10 +30,10 @@ export default function Index() {
     <MainContainer>
       <MainPage>
         {slug === 'swap' || slug === '' || slug === 'index' ? (
-          <Swap></Swap>
+          <Swap />
         ) : slug === 'liquidity' ? (
           <div>
-            <AddLiquidity />
+            <Liquidity />
           </div>
         ) : (
           <div>
