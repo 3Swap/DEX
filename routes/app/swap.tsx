@@ -1,10 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import styled from 'styled-components';
+import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 
 type Props = {};
 
 const SwapCard = styled('div')`
+  margin: 2em auto;
   width: 540px;
   height: 846px;
   background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
@@ -245,7 +248,7 @@ export default function Swap({}: Props) {
     <SwapCard>
       <div className="title">
         <div>Swap</div>
-        <img src="./settings.svg" alt="settings" style={{ cursor: 'pointer' }} width={28} height={28} />
+        <Icon iconType="solid" name="gear" width="28px" height="28px" />
       </div>
       <div className="desc">Swap two tokens for one, pay less.</div>
 
@@ -256,7 +259,7 @@ export default function Swap({}: Props) {
           <div className="left">
             <img src="./usdt.svg" alt="usdt" style={{ cursor: 'pointer' }} width={28} height={28} />
             <div>USDT</div>
-            <img src="./down.svg" alt="down" style={{ cursor: 'pointer' }} width={12} height={6} />
+            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
           </div>
 
           <div className="right">
@@ -271,7 +274,7 @@ export default function Swap({}: Props) {
           <div className="left">
             <img src="./eth.svg" style={{ cursor: 'pointer' }} alt="eth" width={28} height={28} />
             <div>ETH</div>
-            <img src="./down.svg" style={{ cursor: 'pointer' }} alt="down" width={12} height={6} />
+            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
           </div>
 
           <div className="right">
@@ -292,7 +295,7 @@ export default function Swap({}: Props) {
           <div className="left">
             <img src="./btc.svg" style={{ cursor: 'pointer' }} alt="btc" width={28} height={28} />
             <div>BTC</div>
-            <img src="./down.svg" style={{ cursor: 'pointer' }} alt="down" width={12} height={6} />
+            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
           </div>
 
           <div className="right">
@@ -302,7 +305,7 @@ export default function Swap({}: Props) {
         </div>
       </div>
 
-      <button className="btn-disabled">Swap</button>
+      <Button background="#4500a0" marginTop="40px" width="460px" height="62px" title="Swap" />
     </SwapCard>
   );
 }

@@ -1,22 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
+import { CustomComponentProps } from '../props';
 
-type CustomButtonProps = {};
+type Props = {
+  title: string;
+  click?: (ev: Event) => void;
+  disabled?: boolean;
+};
 
-const CustomButton = styled.button`
-  width: 145px;
-  height: 38px;
-  background: rgba(69, 0, 160, 1);
-  border-radius: 5px;
-  color: white;
+const CustomButton = styled('button')<CustomComponentProps>`
+  width: ${props => props.width || '145px'};
+  height: ${props => props.height || '38px'};
+  background: ${props => props.background || 'rgba(69, 0, 160, 1)'};
+  border-radius: ${props => props.borderRadius || '5px'};
+  color: ${props => props.color || '#fff'};
+  border: none;
+  margin-top: ${props => props.marginTop};
+  cursor: pointer;
 `;
 
-const Button = ({ name, onClick }: any) => {
-  return (
-    <div>
-      <CustomButton>Button</CustomButton>
-    </div>
-  );
-};
+const Button = (props: Props & CustomComponentProps) => (
+  <CustomButton {...(props as CustomComponentProps)} onClick={(props as Props).click} disabled={props.disabled}>
+    {(props as Props).title}
+  </CustomButton>
+);
 
 export default Button;
