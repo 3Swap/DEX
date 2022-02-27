@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
@@ -242,7 +243,7 @@ export default function Liquidity({}) {
         <div className="select_token">
           <div className="coin_container">
             <div className="left">
-              <img src="../btc.svg" style={{ cursor: 'pointer' }} width={28} height={28} />
+              <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
               <div>BTC</div>
               <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
             </div>
@@ -268,7 +269,7 @@ export default function Liquidity({}) {
         <div className="select_token">
           <div className="coin_container">
             <div className="left">
-              <img src="../btc.svg" style={{ cursor: 'pointer' }} width={28} height={28} />
+              <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
               <div>BTC</div>
               <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
             </div>
@@ -294,7 +295,7 @@ export default function Liquidity({}) {
         <div className="select_token">
           <div className="coin_container">
             <div className="left">
-              <img src="../btc.svg" style={{ cursor: 'pointer' }} width={28} height={28} />
+              <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
               <div>BTC</div>
               <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
             </div>
