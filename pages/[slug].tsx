@@ -95,7 +95,7 @@ export default function Index() {
           </div>
           <div></div>
         </Flex>
-        {slug === 'swap' || slug === '' || slug === 'index' ? (
+        {slug === 'swap' || slug === 'index' ? (
           <div>
             <Swap />
           </div>
