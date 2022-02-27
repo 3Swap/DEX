@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
+import IconButton from '../../components/IconButton';
 
 type Props = {};
 
@@ -28,7 +29,7 @@ const SwapCard = styled('div')`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 40px;
 
     height: 27px;
 
@@ -264,7 +265,7 @@ export default function Swap({}: Props) {
 
           <div className="right">
             <div className="amt">Enter Amount</div>
-            <img src="./max.svg" alt="max" />
+            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
           </div>
         </div>
 
@@ -279,14 +280,22 @@ export default function Swap({}: Props) {
 
           <div className="right">
             <div className="amt">Enter Amount</div>
-            <img src="./max.svg" alt="max" />
+            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
           </div>
         </div>
 
         <div className="bal">Balance: 0 ETH</div>
       </div>
 
-      <img className="interchange" src="./interchange.svg" alt="interchange" />
+      <IconButton
+        background="#4500a0"
+        iconType="solid"
+        name="rotate"
+        width="34px"
+        height="34px"
+        borderRadius="50%"
+        marginTop="2em"
+      />
 
       <div className="text-second">To</div>
 
@@ -300,12 +309,12 @@ export default function Swap({}: Props) {
 
           <div className="right">
             <div className="amt">Enter Amount</div>
-            <img src="./max.svg" alt="max" />
+            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
           </div>
         </div>
       </div>
 
-      <Button background="#4500a0" marginTop="40px" width="460px" height="62px" title="Swap" />
+      <Button background="#4500a0" marginTop="40px" width="460px" height="62px" title="Swap" fontSize="20px" />
     </SwapCard>
   );
 }

@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import React from 'react';
 import styled from 'styled-components';
+import Button from '../../components/Button';
 import Icon from '../../components/Icon';
+import IconButton from '../../components/IconButton';
 
 const LiquidityCard = styled('div')`
   .container {
@@ -242,7 +244,7 @@ export default function Liquidity({}) {
             <div className="left">
               <img src="../btc.svg" style={{ cursor: 'pointer' }} width={28} height={28} />
               <div>BTC</div>
-              <img src="../down.svg" style={{ cursor: 'pointer' }} width={12} height={6} />
+              <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
             </div>
 
             <div className="right">
@@ -251,7 +253,15 @@ export default function Liquidity({}) {
           </div>
         </div>
 
-        <img className="addition" src="../addition.svg" />
+        <IconButton
+          background="#4500a0"
+          iconType="solid"
+          name="plus"
+          width="34px"
+          height="34px"
+          borderRadius="50%"
+          marginTop="2em"
+        />
 
         <div className="text_select_token">Select Token</div>
 
@@ -260,7 +270,7 @@ export default function Liquidity({}) {
             <div className="left">
               <img src="../btc.svg" style={{ cursor: 'pointer' }} width={28} height={28} />
               <div>BTC</div>
-              <img src="../down.svg" style={{ cursor: 'pointer' }} width={12} height={6} />
+              <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
             </div>
 
             <div className="right">
@@ -269,7 +279,15 @@ export default function Liquidity({}) {
           </div>
         </div>
 
-        <img className="addition" src="../addition.svg" />
+        <IconButton
+          background="#4500a0"
+          iconType="solid"
+          name="plus"
+          width="34px"
+          height="34px"
+          borderRadius="50%"
+          marginTop="2em"
+        />
 
         <div className="text_select_token">Select Token</div>
 
@@ -278,7 +296,7 @@ export default function Liquidity({}) {
             <div className="left">
               <img src="../btc.svg" style={{ cursor: 'pointer' }} width={28} height={28} />
               <div>BTC</div>
-              <img src="../down.svg" style={{ cursor: 'pointer' }} width={12} height={6} />
+              <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
             </div>
 
             <div className="right">
@@ -286,6 +304,14 @@ export default function Liquidity({}) {
             </div>
           </div>
         </div>
+        <Button
+          background="#4500a0"
+          marginTop="40px"
+          width="460px"
+          height="62px"
+          title="Add Liquidity"
+          fontSize="20px"
+        />
       </div>
     </LiquidityCard>
   );
