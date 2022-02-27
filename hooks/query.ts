@@ -2,7 +2,12 @@ import { useRouter } from 'next/router';
 
 export const useCurrencyQuery = () => {
   const router = useRouter();
-  return { inputCurrency: router.query.inputCurrency, outputCurrency: router.query.outputCurrency };
+  return {
+    inputCurrency1: router.query.inputCurrency1,
+    inputCurrency2: router.query.inputCurrency2,
+    outputCurrency: router.query.outputCurrency,
+    chainId: router.query.chainId
+  };
 };
 
 export const usePageQuery = () => {
