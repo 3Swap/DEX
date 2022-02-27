@@ -8,7 +8,15 @@ import { ActiveLink } from '../components/Link';
 const MainContainer = styled('div')`
   min-width: 100vw;
   min-height: 100vh;
-  background: #0e0020;
+  background-color: #0e0020;
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(188, 41, 224, 0.5),
+    rgba(69, 0, 160, 0.5),
+    rgba(252, 232, 165, 0.3),
+    rgba(255, 213, 73, 0.3),
+    rgba(158, 0, 255, 0.5)
+  );
 `;
 
 const Navbar = styled('div')`
