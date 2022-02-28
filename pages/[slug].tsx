@@ -1,9 +1,11 @@
+
 import React from 'react';
 import Swap from '../routes/app/swap';
 import Liquidity from '../routes/app/liquidity';
 import styled from 'styled-components';
 import { usePageQuery } from '../hooks';
 import { ActiveLink } from '../components/Link';
+import Header from '../components/Header';
 
 const MainContainer = styled('div')`
   min-width: 100vw;
@@ -70,6 +72,7 @@ export default function Index() {
   const { slug } = usePageQuery();
   return (
     <MainContainer>
+       <Header></Header> 
       <MainPage>
         <Flex style={{ margin: '1em auto' }}>
           <div></div>
@@ -120,3 +123,4 @@ export default function Index() {
     </MainContainer>
   );
 }
+
