@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 const HeaderContainer = styled('div')`
   width: 100vw;
-  padding-right: 100px;
-  padding-left: 100px;
+  padding-right: 40px;
+  padding-left: 40px;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
