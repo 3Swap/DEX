@@ -1,10 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import styled from 'styled-components';
+import Button from '../../components/Button';
+import Icon from '../../components/Icon';
+import IconButton from '../../components/IconButton';
 
 type Props = {};
 
 const SwapCard = styled('div')`
+  margin: 2em auto;
   width: 540px;
   height: 846px;
   background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
@@ -25,7 +29,7 @@ const SwapCard = styled('div')`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 40px;
 
     height: 27px;
 
@@ -245,7 +249,7 @@ export default function Swap({}: Props) {
     <SwapCard>
       <div className="title">
         <div>Swap</div>
-        <img src="./settings.svg" alt="settings" style={{ cursor: 'pointer' }} width={28} height={28} />
+        <Icon iconType="solid" name="gear" width="28px" height="28px" />
       </div>
       <div className="desc">Swap two tokens for one, pay less.</div>
 
@@ -256,12 +260,12 @@ export default function Swap({}: Props) {
           <div className="left">
             <img src="./usdt.svg" alt="usdt" style={{ cursor: 'pointer' }} width={28} height={28} />
             <div>USDT</div>
-            <img src="./down.svg" alt="down" style={{ cursor: 'pointer' }} width={12} height={6} />
+            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
           </div>
 
           <div className="right">
             <div className="amt">Enter Amount</div>
-            <img src="./max.svg" alt="max" />
+            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
           </div>
         </div>
 
@@ -271,19 +275,27 @@ export default function Swap({}: Props) {
           <div className="left">
             <img src="./eth.svg" style={{ cursor: 'pointer' }} alt="eth" width={28} height={28} />
             <div>ETH</div>
-            <img src="./down.svg" style={{ cursor: 'pointer' }} alt="down" width={12} height={6} />
+            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
           </div>
 
           <div className="right">
             <div className="amt">Enter Amount</div>
-            <img src="./max.svg" alt="max" />
+            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
           </div>
         </div>
 
         <div className="bal">Balance: 0 ETH</div>
       </div>
 
-      <img className="interchange" src="./interchange.svg" alt="interchange" />
+      <IconButton
+        background="#4500a0"
+        iconType="solid"
+        name="rotate"
+        width="34px"
+        height="34px"
+        borderRadius="50%"
+        marginTop="2em"
+      />
 
       <div className="text-second">To</div>
 
@@ -292,17 +304,17 @@ export default function Swap({}: Props) {
           <div className="left">
             <img src="./btc.svg" style={{ cursor: 'pointer' }} alt="btc" width={28} height={28} />
             <div>BTC</div>
-            <img src="./down.svg" style={{ cursor: 'pointer' }} alt="down" width={12} height={6} />
+            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
           </div>
 
           <div className="right">
             <div className="amt">Enter Amount</div>
-            <img src="./max.svg" alt="max" />
+            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
           </div>
         </div>
       </div>
 
-      <button className="btn-disabled">Swap</button>
+      <Button background="#4500a0" marginTop="40px" width="460px" height="62px" title="Swap" fontSize="20px" />
     </SwapCard>
   );
 }

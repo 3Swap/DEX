@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import Icon from '../Icon';
 import { CustomComponentProps } from '../props';
 
 type Props = {
-  title: string;
+  iconType: 'regular' | 'solid' | 'brands' | 'light' | 'duotone' | 'thin';
+  name: string;
   click?: (ev: Event) => void;
   disabled?: boolean;
 };
@@ -21,10 +23,10 @@ const CustomButton = styled('button')<CustomComponentProps>`
   text-align: center;
 `;
 
-const Button = (props: Props & CustomComponentProps) => (
+const IconButton = (props: Props & CustomComponentProps) => (
   <CustomButton {...(props as CustomComponentProps)} onClick={(props as Props).click} disabled={props.disabled}>
-    {(props as Props).title}
+    <Icon iconType={props.iconType} name={props.name} />
   </CustomButton>
 );
 
-export default Button;
+export default IconButton;
