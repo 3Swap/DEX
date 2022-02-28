@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Swap from '../routes/app/swap';
 import Liquidity from '../routes/app/liquidity';
@@ -6,6 +5,7 @@ import styled from 'styled-components';
 import { usePageQuery } from '../hooks';
 import { ActiveLink } from '../components/Link';
 import Header from '../components/Header';
+import Button from '../components/Button';
 
 const MainContainer = styled('div')`
   min-width: 100vw;
@@ -68,11 +68,19 @@ const Flex = styled('div')`
   }
 `;
 
+const SwapLogo = styled('img')`
+  width: 125.19px;
+  height: 42px;
+`;
+
 export default function Index() {
   const { slug } = usePageQuery();
   return (
     <MainContainer>
-       <Header></Header> 
+      <Header>
+        <SwapLogo src="3swap.svg" />
+        <Button width="145px" height="45px" title="Connect Wallet" background="#4500a0" fontSize="14px" />
+      </Header>
       <MainPage>
         <Flex style={{ margin: '1em auto' }}>
           <div></div>
@@ -123,4 +131,3 @@ export default function Index() {
     </MainContainer>
   );
 }
-
