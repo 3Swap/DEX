@@ -3,11 +3,15 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import '@fortawesome/fontawesome-free/css/brands.min.css';
 import '@fortawesome/fontawesome-free/css/regular.min.css';
 import '@fortawesome/fontawesome-free/css/solid.min.css';
-import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core';
+import { Provider } from 'react-redux';
+import { Web3ReactProvider } from '@web3-react/core';
 import Web3 from 'web3';
+import store from '../redux/store';
 import type { AppProps } from 'next/app';
+import dynamic from 'next/dynamic';
 
-const Web3NetworkRoot = createWeb3ReactRoot('network');
+// Import dynamically to prevent trouble with SSR
+const Web3NetworkRoot = dynamic(() => import('../components/Web3NetworkRoot'), { ssr: false });
 
 const getLibrary = (provider: any) => {
   return new Web3(provider);
@@ -15,11 +19,13 @@ const getLibrary = (provider: any) => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Web3NetworkRoot getLibrary={getLibrary}>
-        <Component {...pageProps} />
-      </Web3NetworkRoot>
-    </Web3ReactProvider>
+    <Provider store={store}>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <Web3NetworkRoot getLibrary={getLibrary}>
+          <Component {...pageProps} />
+        </Web3NetworkRoot>
+      </Web3ReactProvider>
+    </Provider>
   );
 }
 
