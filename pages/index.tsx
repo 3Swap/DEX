@@ -1,14 +1,16 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
-import styles from '../styles/Home.module.css';
-import Button from '../components/Button';
-const Home: NextPage = () => {
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+export default function Index() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/swap');
+  }, []);
   return (
-    <div className={styles.container}>
-      <Button />
+    <div>
+      <span>Loading...</span>
     </div>
   );
-};
-
-export default Home;
+}
