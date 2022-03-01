@@ -1,6 +1,7 @@
 import React from 'react';
 import Swap from '../routes/app/swap';
 import Liquidity from '../routes/app/liquidity';
+import PageNotFound from '../routes/app/404';
 import styled from 'styled-components';
 import { usePageQuery } from '../hooks';
 import { ActiveLink } from '../components/Link';
@@ -124,7 +125,7 @@ export default function Index() {
           </div>
         ) : (
           <div>
-            <span>Not found</span>
+            <PageNotFound />
           </div>
         )}
       </MainPage>
