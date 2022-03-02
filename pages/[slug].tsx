@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Swap from '../routes/app/swap';
 import Liquidity from '../routes/app/liquidity';
 import styled from 'styled-components';
@@ -70,8 +70,17 @@ const Flex = styled('div')`
 
 export default function Index() {
   const { slug } = usePageQuery();
+
+  const [transactionModal,setTransactionModal] = useState(false);
+
+  const handleBackgroundClick=()=>{
+    if(transactionModal){
+      setTransactionModal(false);
+    }
+  }
+
   return (
-    <MainContainer>
+    <MainContainer onClick={handleBackgroundClick}>
        <Header></Header> 
       <MainPage>
         <Flex style={{ margin: '1em auto' }}>
@@ -108,7 +117,7 @@ export default function Index() {
         </Flex>
         {slug === 'swap' || slug === 'index' ? (
           <div>
-            <Swap />
+            <Swap transactionModal={transactionModal} setTransactionModal={setTransactionModal} />
           </div>
         ) : slug === 'liquidity' ? (
           <div>

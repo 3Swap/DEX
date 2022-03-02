@@ -5,7 +5,10 @@ import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import IconButton from '../../components/IconButton';
 
-type Props = {};
+type Props = {
+  transactionModal:boolean,
+  setTransactionModal: any
+};
 
 const SwapCard = styled('div')`
   margin: 2em auto;
@@ -15,6 +18,8 @@ const SwapCard = styled('div')`
   box-shadow: -10px 48.5967px 140px rgba(126, 123, 160, 0.2);
   backdrop-filter: blur(19px);
   /* Note: backdrop-filter has minimal browser support */
+
+
 
   border-radius: 20px;
   display: flex;
@@ -39,6 +44,109 @@ const SwapCard = styled('div')`
     font-weight: bold;
     font-size: 36px;
     line-height: 24px;
+  }
+
+  .details {
+    width: 80%;
+    color: #322E37;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+
+    height: 25px;
+
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 24px;
+
+    .detailtext{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+
+      .info{
+        position: relative;
+        transition-duration: 250ms;
+     
+        .hover{
+          display: none;
+        }
+    
+        .triangle{
+          display: none;
+        }
+    
+        .info-icon{
+          cursor: pointer;
+          margin-top: 5px;
+          z-index: 1;
+        }
+    
+        &:hover{
+    
+          .triangle{
+            display: block;
+            position: absolute;
+            width: 18px;
+            height: 20px;
+            top: 100%;
+            z-index: 2;
+    
+            
+          }
+    
+          .hover{
+            display: block;
+            position: absolute;
+            width: 100px;
+            height: 66px;
+            margin-left: -15px;
+            top: 140%;
+            background: #FCFCFC;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 2;
+          }
+        }
+      }
+
+
+
+    }
+
+    .num{
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 24px;
+      /* identical to box height, or 171% */
+
+
+      /* Color primary */
+
+      color: #4500A0;
+    }
+
+    .num-green{
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 24px;
+      /* identical to box height, or 171% */
+
+
+      /* Color primary */
+
+      color: #1C8D61;
+    }
   }
 
   .desc {
@@ -245,7 +353,7 @@ const SwapCard = styled('div')`
   }
 `;
 
-const TransactionSettings = styled('div')`
+const TransactionSettings = styled('div')<{open:boolean}>`
 background: linear-gradient(190.57deg, rgba(255, 255, 255, 0.56) 19.25%, rgba(255, 255, 255, 0.56) 19.26%, rgba(248, 248, 255, 0.71) 54.39%, rgba(255, 255, 255, 0.59) 90.02%);
 box-shadow: 0px 15px 70px rgba(189, 189, 189, 0.7);
 backdrop-filter: blur(19px);
@@ -257,6 +365,8 @@ position: absolute;
 right: 10%;
 top: 15%;
 padding-left: 20px;
+opacity: ${(props)=>props.open?"1":"0"};
+transition-duration: 250ms;
 
 display: flex;
 flex-direction: column;
@@ -290,22 +400,27 @@ color: #4500A0;
 
 .slippage{
   width: 65%;
-  border: 1px solid red;
   color: #4500A0;
   margin-top: 8px;
   display: flex;
   flex-direction: row;
   gap: 20px;
   align-items: center;
+  transition-duration: 250ms;
 
   .info{
     position: relative;
+    transition-duration: 250ms;
     .hover{
       display: none;
     }
 
     .triangle{
       display: none;
+    }
+
+    .info-icon{
+      cursor: pointer;
     }
 
     &:hover{
@@ -315,7 +430,8 @@ color: #4500A0;
         position: absolute;
         width: 18px;
         height: 20px;
-        top: 50%;
+        top: 80%;
+
         
       }
 
@@ -325,7 +441,7 @@ color: #4500A0;
         width: 100px;
         height: 66px;
         margin-left: -15px;
-        top: 120%;
+        top: 200%;
         background: #FCFCFC;
         border-radius: 4px;
         font-size: 12px;
@@ -336,45 +452,112 @@ color: #4500A0;
 
 .deadline{
   width: 65%;
-  border: 1px solid blue;;
+
+  height: 35px;
+  margin-top: 10px;
+}
+
+.box{
+  width: 70%;
+  margin-top: 10px;
+  height: 45px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+  font-family: Poppins;
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 24px;
+
+  .round{
+    width: 45px;
+height: 24px;
+padding: 0px 10px;
+background: #FCFCFC;
+border-radius: 28px;
+background: white;
+font-family: Poppins;
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 24px;
+color: rgba(0, 0, 0, 0.7);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+
+  }
+
 }
 
 
 
 `;
 
-export default function Swap({}: Props) {
-  const [transactionModal,setTransactionModal] = useState(false);
+
+export default function Swap({transactionModal,setTransactionModal}: Props) {
+  
+
+
+
+ 
 
   return (
     <SwapCard>
       <div className="title">
         <div>Swap</div>
-        <Icon iconType="solid" name="gear" width="28px" height="28px" onClick={()=>setTransactionModal(!transactionModal)}/>
+        <Icon style={{cursor:'pointer'}} iconType="solid" name="gear" width="28px" height="28px" onClick={()=>setTransactionModal(!transactionModal)}/>
       </div>
       <div className="desc">Swap two tokens for one, pay less.</div>
-      {
-        transactionModal && (
-          <TransactionSettings>
-            <div className='top'>
-              <div>Transaction Settings</div>
-              <img src='./close.svg' className='close' onClick={()=>setTransactionModal(false)}/>
-            </div>
-            <div className='slippage'>
-             <div>Slippage Tolerance</div>
-             <div className='info'>
-              <img src='./info.svg' className='info-icon'></img>
-              <img src='./triangle.svg' className='triangle'></img>
-              <div className='hover'>
-                This will have info of question mark....
-              </div>
-             </div>
-            
-            </div>
-            <div className='deadline'></div>
-          </TransactionSettings>
-        )
-      }
+          
+         
+    
+                <TransactionSettings onClick={(e:any)=>{e.stopPropagation()}} open={transactionModal}>
+                  <div className='top'>
+                    <div>Transaction Settings</div>
+                    <img src='./close.svg' className='close' onClick={()=>setTransactionModal(false)}/>
+                  </div>
+                  <div className='slippage'>
+                    <div>Slippage Tolerance</div>
+                    <div className='info'>
+                      <img src='./info.svg' className='info-icon'></img>
+                      <img src='./triangle.svg' className='triangle'></img>
+                      <div className='hover'>
+                        This will have info of question mark....
+                      </div>
+                    </div>
+                  
+                  </div>
+                  <div className='box'>
+                      <div className='round'>0.1%</div>
+                      <div className='round'>0.5%</div>
+                      <div className='round'>1.0%</div>
+                  </div>
+                  <div className='slippage'>
+                      <div>Transaction Tolerance</div>
+                      <div className='info'>
+                        <img src='./info.svg' className='info-icon'></img>
+                        <img src='./triangle.svg' className='triangle'></img>
+                        <div className='hover'>
+                          This will have info of question mark....
+                        </div>
+                      </div>
+                  </div>
+
+                  <div className='box'>
+                     <div className='round'>20</div>
+                     <div>minutes</div>
+                    </div>
+                </TransactionSettings>
+    
+          
+      
+        
+ 
 
       <div className="text">From</div>
 
@@ -437,7 +620,51 @@ export default function Swap({}: Props) {
         </div>
       </div>
 
-      <Button background="#4500a0" marginTop="40px" width="460px" height="62px" title="Swap" fontSize="20px" />
+      <div className='details'>
+        <div className='detailtext'>  
+          <div>Minimum recieved</div>
+          <div className='info'>
+                        <img src='./info-black.svg' className='info-icon'></img>
+                        <img src='./triangle.svg' className='triangle'></img>
+                        <div className='hover'>
+                          This will have info of question mark....
+                        </div>
+          </div>
+        
+        </div>
+        <div className='num'>0.00</div>
+      </div>
+
+      <div className='details'>
+        <div className='detailtext'>  
+          <div>Price impact</div>
+          <div className='info'>
+                        <img src='./info-black.svg' className='info-icon'></img>
+                        <img src='./triangle.svg' className='triangle'></img>
+                        <div className='hover'>
+                          This will have info of question mark....
+                        </div>
+          </div>
+        
+        </div>
+        <div className='num-green'>0.05%</div>
+      </div>
+
+      <div className='details'>
+        <div className='detailtext'>  
+          <div>Liquidity provider</div>
+          <div className='info'>
+                        <img src='./info-black.svg' className='info-icon'></img>
+                        <img src='./triangle.svg' className='triangle'></img>
+                        <div className='hover'>
+                          This will have info of question mark....
+                        </div>
+          </div>
+        
+        </div>
+        <div className='num'>0.000000001 BTC</div>
+      </div>
+      <Button background="#4500a0" marginTop="20px" width="460px" height="62px" title="Swap" fontSize="20px" />
     </SwapCard>
   );
 }
