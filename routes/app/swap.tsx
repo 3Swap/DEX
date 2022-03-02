@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
@@ -21,6 +21,7 @@ const SwapCard = styled('div')`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
+  position: relative;
 
   .title {
     width: 80%;
@@ -244,14 +245,136 @@ const SwapCard = styled('div')`
   }
 `;
 
+const TransactionSettings = styled('div')`
+background: linear-gradient(190.57deg, rgba(255, 255, 255, 0.56) 19.25%, rgba(255, 255, 255, 0.56) 19.26%, rgba(248, 248, 255, 0.71) 54.39%, rgba(255, 255, 255, 0.59) 90.02%);
+box-shadow: 0px 15px 70px rgba(189, 189, 189, 0.7);
+backdrop-filter: blur(19px);
+
+border-radius: 20px;
+width: 360px;
+height: 298px;
+position: absolute;
+right: 10%;
+top: 15%;
+padding-left: 20px;
+
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+align-items: flex-start;
+
+.top{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+
+  margin-top: 50px;
+  font-family: Poppins;
+font-style: normal;
+font-weight: bold;
+font-size: 22px;
+line-height: 24px;
+/* or 109% */
+
+
+/* Color primary */
+
+color: #4500A0;
+.close{
+  cursor: pointer;
+}
+
+}
+
+.slippage{
+  width: 65%;
+  border: 1px solid red;
+  color: #4500A0;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+
+  .info{
+    position: relative;
+    .hover{
+      display: none;
+    }
+
+    .triangle{
+      display: none;
+    }
+
+    &:hover{
+
+      .triangle{
+        display: block;
+        position: absolute;
+        width: 18px;
+        height: 20px;
+        top: 50%;
+        
+      }
+
+      .hover{
+        display: block;
+        position: absolute;
+        width: 100px;
+        height: 66px;
+        margin-left: -15px;
+        top: 120%;
+        background: #FCFCFC;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.deadline{
+  width: 65%;
+  border: 1px solid blue;;
+}
+
+
+
+`;
+
 export default function Swap({}: Props) {
+  const [transactionModal,setTransactionModal] = useState(false);
+
   return (
     <SwapCard>
       <div className="title">
         <div>Swap</div>
-        <Icon iconType="solid" name="gear" width="28px" height="28px" />
+        <Icon iconType="solid" name="gear" width="28px" height="28px" onClick={()=>setTransactionModal(!transactionModal)}/>
       </div>
       <div className="desc">Swap two tokens for one, pay less.</div>
+      {
+        transactionModal && (
+          <TransactionSettings>
+            <div className='top'>
+              <div>Transaction Settings</div>
+              <img src='./close.svg' className='close' onClick={()=>setTransactionModal(false)}/>
+            </div>
+            <div className='slippage'>
+             <div>Slippage Tolerance</div>
+             <div className='info'>
+              <img src='./info.svg' className='info-icon'></img>
+              <img src='./triangle.svg' className='triangle'></img>
+              <div className='hover'>
+                This will have info of question mark....
+              </div>
+             </div>
+            
+            </div>
+            <div className='deadline'></div>
+          </TransactionSettings>
+        )
+      }
 
       <div className="text">From</div>
 
