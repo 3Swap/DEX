@@ -91,7 +91,7 @@ export default function Index() {
 
   return (
 
-    <MainContainer>
+    <MainContainer onClick={handleBackgroundClick}>
       <Header>
         <SwapLogo src="3swap.svg" />
         <Button width="145px" height="45px" title="Connect Wallet" background="#4500a0" fontSize="14px" />
