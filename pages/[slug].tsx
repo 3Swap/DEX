@@ -1,7 +1,4 @@
-
-
 import React, { useState } from 'react';
-
 
 import Swap from '../routes/app/swap';
 import Liquidity from '../routes/app/liquidity';
@@ -81,16 +78,15 @@ const SwapLogo = styled('img')`
 export default function Index() {
   const { slug } = usePageQuery();
 
-  const [transactionModal,setTransactionModal] = useState(false);
+  const [transactionModal, setTransactionModal] = useState(false);
 
-  const handleBackgroundClick=()=>{
-    if(transactionModal){
+  const handleBackgroundClick = () => {
+    if (transactionModal) {
       setTransactionModal(false);
     }
-  }
+  };
 
   return (
-
     <MainContainer onClick={handleBackgroundClick}>
       <Header>
         <SwapLogo src="3swap.svg" />
