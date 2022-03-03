@@ -234,7 +234,7 @@ export default function Liquidity({}) {
         </Head>
         <div className="title">
           <div>Add Liquidity</div>
-          <Icon iconType="solid" name="gear" width="28px" height="28px" />
+          <Icon iconType="solid" name="gear" width="20px" height="20px" fontSize="20px" />
         </div>
         <div className="desc">Get LP tokens when you add liquidity.</div>
 
@@ -260,6 +260,7 @@ export default function Liquidity({}) {
           name="plus"
           width="34px"
           height="34px"
+          fontSize="20px"
           borderRadius="50%"
           marginTop="2em"
         />
@@ -286,6 +287,7 @@ export default function Liquidity({}) {
           name="plus"
           width="34px"
           height="34px"
+          fontSize="20px"
           borderRadius="50%"
           marginTop="2em"
         />

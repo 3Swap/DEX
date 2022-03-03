@@ -21,6 +21,9 @@ const CustomButton = styled('button')<CustomComponentProps>`
   cursor: pointer;
   font-size: ${props => props.fontSize || '8px'};
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const IconButton = (props: Props & CustomComponentProps) => (
