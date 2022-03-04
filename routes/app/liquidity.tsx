@@ -6,6 +6,11 @@ import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import IconButton from '../../components/IconButton';
 
+type Props = {
+  liquidityPoolModal: boolean;
+  setLiquidityPoolModal: any;
+};
+
 const LiquidityCard = styled('div')`
   .container {
     width: 540px;
@@ -224,98 +229,198 @@ const LiquidityCard = styled('div')`
     font-weight: bold;
   }
 `;
+const LiquidityPoolCard = styled('div')<{ open: boolean }>`
+  width: 540px;
+  height: auto;
+  background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
+  box-shadow: -10px 48.5967px 140px rgba(126, 123, 160, 0.2);
+  backdrop-filter: blur(19px);
+  overflow: hidden;
+  display: ${props => (props.open ? 'block' : 'none')};
+  /* Note: backdrop-filter has minimal browser support */
+  border-radius: 20px;
+  margin: 2em auto;
+  font-family: 'Poppins';
 
-export default function Liquidity({}) {
+  .title {
+    display: flex;
+    align-items: center;
+    padding: 20px 40px;
+    justify-content: space-between;
+
+    .heading {
+      h2 {
+        margin-bottom: -8px;
+        color: #fff;
+      }
+      p {
+        font-size: 14px;
+        color: #fff;
+      }
+    }
+  }
+  .container {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px 40px;
+    .content {
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-bottom: 20px;
+
+      h3 {
+        font-size: 14px;
+        color: #121212;
+      }
+      h2 {
+        font-size: 14px;
+        color: #333;
+      }
+    }
+  }
+`;
+export default function Liquidity({ liquidityPoolModal, setLiquidityPoolModal }: Props) {
   return (
-    <LiquidityCard>
-      <div className="container">
-        <Head>
-          <title>3Swap | Add Liquidity</title>
-        </Head>
-        <div className="title">
-          <div>Add Liquidity</div>
-          <Icon iconType="solid" name="gear" width="20px" height="20px" fontSize="20px" />
-        </div>
-        <div className="desc">Get LP tokens when you add liquidity.</div>
-
-        <div className="text_select_token">Select Token</div>
-
-        <div className="select_token">
-          <div className="coin_container">
-            <div className="left">
-              <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
-              <div>BTC</div>
-              <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+    <>
+      <LiquidityPoolCard
+        open={!liquidityPoolModal}
+        onClick={(e: any) => {
+          e.stopPropagation();
+        }}
+      >
+        <div className="liquidityPoolWrapper">
+          <div className="title">
+            <div className="heading">
+              <h2>Your Liquidity</h2>
+              <p>Remove liquidity to receive tokens back.</p>
             </div>
-
-            <div className="right">
-              <div className="amt">0.000001</div>
+            <div className="icon">
+              {/* <Icon iconType="solid" name="gear" width="20px" height="20px" fontSize="20px" /> */}
+              <Icon
+                iconType="solid"
+                name="gear"
+                width="20px"
+                height="20px"
+                fontSize="20px"
+                style={{ marginLeft: '25px', color: '#fff', cursor: 'pointer' }}
+              />
+            </div>
+          </div>
+          <div className="container">
+            <div className="content">
+              <h3>No liquidity found.</h3>
+              <h2>Don&apos;t see a pool you joined?</h2>
+              <Button
+                background="transparent"
+                style={{
+                  border: '2px solid #4500a0',
+                  padding: '10px 25px',
+                  borderRadius: '20px',
+                  color: '#4500a0',
+                  fontWeight: '600'
+                }}
+                marginTop="0px"
+                width="auto"
+                height="auto"
+                title="Find other LP tokens"
+                fontSize="18px"
+              />
             </div>
           </div>
         </div>
+      </LiquidityPoolCard>
+      <LiquidityCard>
+        <div className="container">
+          <Head>
+            <title>3Swap | Add Liquidity</title>
+          </Head>
+          <div className="title">
+            <div>Add Liquidity</div>
+            <Icon iconType="solid" name="gear" width="20px" height="20px" fontSize="20px" />
+          </div>
+          <div className="desc">Get LP tokens when you add liquidity.</div>
 
-        <IconButton
-          background="#4500a0"
-          iconType="solid"
-          name="plus"
-          width="34px"
-          height="34px"
-          fontSize="20px"
-          borderRadius="50%"
-          marginTop="2em"
-        />
+          <div className="text_select_token">Select Token</div>
 
-        <div className="text_select_token">Select Token</div>
+          <div className="select_token">
+            <div className="coin_container">
+              <div className="left">
+                <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
+                <div>BTC</div>
+                <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+              </div>
 
-        <div className="select_token">
-          <div className="coin_container">
-            <div className="left">
-              <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
-              <div>BTC</div>
-              <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
-            </div>
-
-            <div className="right">
-              <div className="amt">0.000001</div>
+              <div className="right">
+                <div className="amt">0.000001</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <IconButton
-          background="#4500a0"
-          iconType="solid"
-          name="plus"
-          width="34px"
-          height="34px"
-          fontSize="20px"
-          borderRadius="50%"
-          marginTop="2em"
-        />
+          <IconButton
+            background="#4500a0"
+            iconType="solid"
+            name="plus"
+            width="34px"
+            height="34px"
+            fontSize="20px"
+            borderRadius="50%"
+            marginTop="2em"
+          />
 
-        <div className="text_select_token">Select Token</div>
+          <div className="text_select_token">Select Token</div>
 
-        <div className="select_token">
-          <div className="coin_container">
-            <div className="left">
-              <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
-              <div>BTC</div>
-              <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
-            </div>
+          <div className="select_token">
+            <div className="coin_container">
+              <div className="left">
+                <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
+                <div>BTC</div>
+                <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+              </div>
 
-            <div className="right">
-              <div className="amt">0.000001</div>
+              <div className="right">
+                <div className="amt">0.000001</div>
+              </div>
             </div>
           </div>
+
+          <IconButton
+            background="#4500a0"
+            iconType="solid"
+            name="plus"
+            width="34px"
+            height="34px"
+            fontSize="20px"
+            borderRadius="50%"
+            marginTop="2em"
+          />
+
+          <div className="text_select_token">Select Token</div>
+
+          <div className="select_token">
+            <div className="coin_container">
+              <div className="left">
+                <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
+                <div>BTC</div>
+                <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+              </div>
+
+              <div className="right">
+                <div className="amt">0.000001</div>
+              </div>
+            </div>
+          </div>
+          <Button
+            background="#4500a0"
+            marginTop="40px"
+            width="460px"
+            height="62px"
+            title="Add Liquidity"
+            fontSize="20px"
+          />
         </div>
-        <Button
-          background="#4500a0"
-          marginTop="40px"
-          width="460px"
-          height="62px"
-          title="Add Liquidity"
-          fontSize="20px"
-        />
-      </div>
-    </LiquidityCard>
+      </LiquidityCard>
+    </>
   );
 }
