@@ -686,7 +686,15 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         </div>
         <div className="num">0.000000001 BTC</div>
       </div>
-      <Button background="#4500a0" marginTop="20px" width="460px" height="62px" title="Swap" fontSize="20px" />
+      <Button
+        background="#4500a0"
+        marginTop="20px"
+        marginBottom="20px"
+        width="460px"
+        height="62px"
+        title="Swap"
+        fontSize="20px"
+      />
     </SwapCard>
   );
 }

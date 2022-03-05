@@ -414,6 +414,7 @@ export default function Liquidity({ liquidityPoolModal, setLiquidityPoolModal }:
           <Button
             background="#4500a0"
             marginTop="40px"
+            marginBottom="20px"
             width="460px"
             height="62px"
             title="Add Liquidity"
