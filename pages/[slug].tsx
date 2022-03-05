@@ -79,6 +79,7 @@ export default function Index() {
   const { slug } = usePageQuery();
 
   const [transactionModal, setTransactionModal] = useState(false);
+  const [liquidityPoolModal, setLiquidityPoolModal] = useState(false);
 
   const handleBackgroundClick = () => {
     if (transactionModal) {
@@ -131,7 +132,7 @@ export default function Index() {
           </div>
         ) : slug === 'liquidity' ? (
           <div>
-            <Liquidity />
+            <Liquidity liquidityPoolModal={liquidityPoolModal} setLiquidityPoolModal={setLiquidityPoolModal} />
           </div>
         ) : (
           <div>

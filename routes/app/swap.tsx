@@ -551,7 +551,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
               border="1px solid #4500a0"
               borderRadius="50%"
             />
-            <img src="./triangle.svg" className="triangle"></img>
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
             <div className="hover">
               Percentage change you&apos;re willing to allow between transaction execution time and block inclusion
               time.
@@ -576,7 +576,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
               border="1px solid #4500a0"
               borderRadius="50%"
             />
-            <img src="./triangle.svg" className="triangle"></img>
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
             <div className="hover">
               How long from execution time before this transaction will be considered a failed one.
             </div>
@@ -655,8 +655,8 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         <div className="detailtext">
           <div>Minimum recieved</div>
           <div className="info">
-            <img src="./info-black.svg" className="info-icon"></img>
-            <img src="./triangle.svg" className="triangle"></img>
+            <img src="./info-black.svg" alt="image" className="info-icon"></img>
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
             <div className="hover">This will have info of question mark....</div>
           </div>
         </div>
@@ -667,8 +667,8 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         <div className="detailtext">
           <div>Price impact</div>
           <div className="info">
-            <img src="./info-black.svg" className="info-icon"></img>
-            <img src="./triangle.svg" className="triangle"></img>
+            <img src="./info-black.svg" alt="image" className="info-icon"></img>
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
             <div className="hover">This will have info of question mark....</div>
           </div>
         </div>
@@ -679,14 +679,22 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         <div className="detailtext">
           <div>Liquidity provider</div>
           <div className="info">
-            <img src="./info-black.svg" className="info-icon"></img>
-            <img src="./triangle.svg" className="triangle"></img>
+            <img src="./info-black.svg" alt="image" className="info-icon"></img>
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
             <div className="hover">This will have info of question mark....</div>
           </div>
         </div>
         <div className="num">0.000000001 BTC</div>
       </div>
-      <Button background="#4500a0" marginTop="20px" width="460px" height="62px" title="Swap" fontSize="20px" />
+      <Button
+        background="#4500a0"
+        marginTop="20px"
+        marginBottom="20px"
+        width="460px"
+        height="62px"
+        title="Swap"
+        fontSize="20px"
+      />
     </SwapCard>
   );
 }
