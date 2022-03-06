@@ -8,6 +8,7 @@ import { usePageQuery } from '../hooks';
 import { ActiveLink } from '../components/Link';
 import Header from '../components/Header';
 import Button from '../components/Button';
+import Dropdown from '../components/Dropdown';
 
 const MainContainer = styled('div')`
   min-width: 100vw;
@@ -91,7 +92,10 @@ export default function Index() {
     <MainContainer onClick={handleBackgroundClick}>
       <Header>
         <SwapLogo src="3swap.svg" />
-        <Button width="145px" height="45px" title="Connect Wallet" background="#4500a0" fontSize="14px" />
+        <div className='nav_right'>
+          <Dropdown />
+          <Button width="145px" height="45px" title="Connect Wallet" background="#4500a0" fontSize="14px" />
+        </div>
       </Header>
       <MainPage>
         <Flex style={{ margin: '1em auto' }}>
