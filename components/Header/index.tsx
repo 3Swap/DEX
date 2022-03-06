@@ -11,6 +11,12 @@ const HeaderContainer = styled('div')`
   justify-content: space-between;
   height: 100px;
   padding-bottom: 20px;
+    .nav_right{
+      display:flex;
+      flex-direction:row;
+      justify-content:baseline;
+      column-gap:10px;
+    }
 `;
 
 type Props = { children: any };
