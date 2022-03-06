@@ -39,7 +39,7 @@ const DropdownListContainer = styled("div")`
     padding:10px 0;
     width:15.5em;
     position:absolute;
-    top:8%;
+    top:10%;
     margin-top: 1.5rem;
     z-index:999;
 `;
