@@ -92,7 +92,7 @@ export default function Index() {
     <MainContainer onClick={handleBackgroundClick}>
       <Header>
         <SwapLogo src="3swap.svg" />
-        <div className='nav_right'>
+        <div className="nav_right">
           <Dropdown />
           <Button width="145px" height="45px" title="Connect Wallet" background="#4500a0" fontSize="14px" />
         </div>
