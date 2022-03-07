@@ -1,12 +1,17 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
-type Props = {};
 import styled from 'styled-components';
+import _ from 'lodash';
 import Icon from '../Icon';
-const eth = '/eth.svg';
-const polygon = '/polygon.svg';
-const optimism = '/optimism.svg';
-const arbitrum = '/arbitrum.svg';
+import { supportedChainIdsToNetworkNameMap } from '../../global/maps';
+
+const chainIdToImageMap: { [key: number]: string } = {
+  0x3: '/ethereum.svg',
+  0x61: '/binance.svg',
+  0x13881: '/polygon.svg',
+  0xa869: '/avalanche.svg',
+  0xfa2: '/fantom.svg'
+};
 
 const DropdownContainer = styled('div')`
   color: #fff;
@@ -81,77 +86,63 @@ const IconChain = styled('img')`
   object-fit: contain;
 `;
 
-const Dropdown = (props: Props) => {
-  const [isOpen, SetIsDropdownOpen] = useState(false);
-  const toggling = () => SetIsDropdownOpen(!isOpen);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [chainIcon, setChainIcon] = useState<string>(eth);
+type Props = {
+  onChainSwitch?: (id: string) => void;
+};
+
+const Dropdown = ({ onChainSwitch }: Props) => {
+  const [isOpen, setIsDropdownOpen] = useState(false);
+  const [selectedChain, setSelectedChain] = useState<number>(0x61);
   const [chainiconAlt, setChainIconAlt] = useState<string>('Ethereum Icon');
 
-  const options = [
-    {
-      imgDir: eth,
-      optionChoice: 'Ethereum',
-      alt: 'Ethereum Icon'
-    },
-    {
-      imgDir: polygon,
-      optionChoice: 'Polygon',
-      alt: 'Polygon Icon'
-    },
-    {
-      imgDir: optimism,
-      optionChoice: 'Optimism',
-      alt: 'Optimism Icon'
-    },
-    {
-      imgDir: arbitrum,
-      optionChoice: 'Arbitrum',
-      alt: 'Arbitrum Icon'
-    }
-  ];
-
-  const onOptionClick = (value: string) => () => {
-    setSelectedOption(value);
-    SetIsDropdownOpen(false);
-    if (value === 'Ethereum') {
-      setChainIcon(eth);
-      setChainIconAlt('Ethereum Icon');
-    } else if (value === 'Polygon') {
-      setChainIcon(polygon);
-      setChainIconAlt('Polygon Icon');
-    } else if (value === 'Optimism') {
-      setChainIcon(optimism);
-      setChainIconAlt('Optimism Icon');
-    } else if (value === 'Arbitrum') {
-      setChainIcon(arbitrum);
-      setChainIconAlt('Arbitrum Icon');
-    }
-  };
+  const toggle = () => setIsDropdownOpen(!isOpen);
 
   return (
     <div className="dropdown">
       <DropdownContainer>
-        <DropdownHeader onClick={toggling}>
-          <Image src={chainIcon} alt={chainiconAlt} className="chain_icon" width="20px" height="20px" />
-          <div>{selectedOption || 'Ethereum'}</div>
-          <Icon
-            iconType="solid"
-            name="chevron-down"
-            width="12px"
-            height="6px"
-            fontSize="12px"
-            style={{ marginLeft: '10px' }}
-          />
+        <DropdownHeader onClick={toggle}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'row',
+              width: '100%',
+              textAlign: 'center'
+            }}
+          >
+            <div style={{ flexGrow: 1, flexBasis: '20%', marginLeft: 2, marginRight: 2 }}>
+              <Image
+                src={chainIdToImageMap[selectedChain]}
+                alt={selectedChain.toString()}
+                className="chain_icon"
+                width="18px"
+                height="18px"
+              />
+            </div>
+            <div style={{ flexGrow: 1, flexBasis: '60%', marginLeft: 2, marginRight: 2 }}>
+              <span style={{ fontSize: 16 }}>{supportedChainIdsToNetworkNameMap[selectedChain]}</span>
+            </div>
+            <div style={{ flexGrow: 1, flexBasis: '20%', marginLeft: 2, marginRight: 2 }}>
+              <Icon iconType="solid" name="chevron-down" width="12px" height="12px" fontSize="14px" />
+            </div>
+          </div>
         </DropdownHeader>
         {isOpen && (
           <DropdownListContainer>
             <Text>Select a network</Text>
             <DropdownList>
-              {options.map(option => (
-                <ListItem onClick={onOptionClick(option.optionChoice)} key={Math.random()}>
-                  <IconChain src={option.imgDir} alt={option.alt} />
-                  {option.optionChoice}
+              {_.map(Object.keys(supportedChainIdsToNetworkNameMap), key => (
+                <ListItem
+                  onClick={() => {
+                    setSelectedChain(parseInt(key));
+                    setIsDropdownOpen(false);
+                    if (onChainSwitch) onChainSwitch(key);
+                  }}
+                  key={key}
+                >
+                  <IconChain src={chainIdToImageMap[parseInt(key)]} alt={key} />
+                  {supportedChainIdsToNetworkNameMap[parseInt(key)]}
                 </ListItem>
               ))}
             </DropdownList>
