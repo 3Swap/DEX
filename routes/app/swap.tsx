@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import IconButton from '../../components/IconButton';
+import TokenList from '../../components/TokenList';
 
 type Props = {
   transactionModal: boolean;
@@ -517,7 +518,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         />
       </div>
       <div className="desc">Swap two tokens for one, pay less.</div>
-
+      <TokenList />
       <TransactionSettings
         onClick={(e: any) => {
           e.stopPropagation();
