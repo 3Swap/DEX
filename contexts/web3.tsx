@@ -51,7 +51,10 @@ export const Web3GlobalProvider = ({ children }: any) => {
     (chainId: string) => {
       if (ethereum) {
         ethereum
-          .request({ method: 'wallet_switchEthereumChain', params: [{ chainId }] })
+          .request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId }]
+          })
           .then(console.log)
           .catch((error: any) => {
             // This code means the chain hasn't been added yet
@@ -66,7 +69,16 @@ export const Web3GlobalProvider = ({ children }: any) => {
   );
 
   return (
-    <Web3Context.Provider value={{ isActive, chainId, switchChain, account, connectWallet, disconnectWallet }}>
+    <Web3Context.Provider
+      value={{
+        isActive,
+        chainId,
+        switchChain,
+        account,
+        connectWallet,
+        disconnectWallet
+      }}
+    >
       {children}
     </Web3Context.Provider>
   );

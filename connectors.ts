@@ -18,7 +18,10 @@ export const network = new NetworkConnector({
 
     for (const key in ChainId)
       if (isNaN(Number(key))) {
-        links = { ...links, [Number(ChainId[key])]: URLS[Number(ChainId[key])] };
+        links = {
+          ...links,
+          [Number(ChainId[key])]: URLS[Number(ChainId[key])]
+        };
       }
     return links;
   })(),

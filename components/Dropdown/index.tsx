@@ -18,6 +18,7 @@ const DropdownContainer = styled('div')`
   border-radius: 5px;
   width: 10.5em;
 `;
+
 const DropdownHeader = styled('div')`
   cursor: pointer;
   border-radius: 8px;
@@ -42,6 +43,7 @@ const DropdownHeader = styled('div')`
     height: 15px;
   }
 `;
+
 const DropdownListContainer = styled('div')`
   color: #fff;
   background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
@@ -55,6 +57,7 @@ const DropdownListContainer = styled('div')`
   margin-top: 1.5rem;
   z-index: 999;
 `;
+
 const DropdownList = styled('ul')`
   list-style-type: none;
 `;
@@ -111,7 +114,14 @@ const Dropdown = ({ onChainSwitch }: Props) => {
               textAlign: 'center'
             }}
           >
-            <div style={{ flexGrow: 1, flexBasis: '20%', marginLeft: 2, marginRight: 2 }}>
+            <div
+              style={{
+                flexGrow: 1,
+                flexBasis: '20%',
+                marginLeft: 2,
+                marginRight: 2
+              }}
+            >
               <Image
                 src={chainIdToImageMap[selectedChain]}
                 alt={selectedChain.toString()}
@@ -120,10 +130,24 @@ const Dropdown = ({ onChainSwitch }: Props) => {
                 height="18px"
               />
             </div>
-            <div style={{ flexGrow: 1, flexBasis: '60%', marginLeft: 2, marginRight: 2 }}>
+            <div
+              style={{
+                flexGrow: 1,
+                flexBasis: '60%',
+                marginLeft: 2,
+                marginRight: 2
+              }}
+            >
               <span style={{ fontSize: 16 }}>{supportedChainIdsToNetworkNameMap[selectedChain]}</span>
             </div>
-            <div style={{ flexGrow: 1, flexBasis: '20%', marginLeft: 2, marginRight: 2 }}>
+            <div
+              style={{
+                flexGrow: 1,
+                flexBasis: '20%',
+                marginLeft: 2,
+                marginRight: 2
+              }}
+            >
               <Icon iconType="solid" name="chevron-down" width="12px" height="12px" fontSize="14px" />
             </div>
           </div>
