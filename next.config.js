@@ -10,4 +10,8 @@ module.exports = withPWA({
     disable: process.env.NODE_ENV === 'development',
     runtimeCaching
   }
+,
+  env:{
+    BINANCE_API:'https://api.binance.com/api/v3/',
+  }
 });
