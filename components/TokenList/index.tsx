@@ -7,7 +7,7 @@ import { useWeb3Context } from '../../contexts/web3';
 
 type Props = {
   onItemClick: (value: string) => void;
-  selectedAddress: string;
+  selectedAddresses: Array<string>;
   onClose: () => void;
 };
 
@@ -145,7 +145,7 @@ const TokenlistItem = styled.button`
   }
 `;
 
-const TokenList = ({ selectedAddress, onItemClick, onClose }: Props) => {
+const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
   const { assets } = useAssetsContext();
   const { chainId, networkWeb3ChainId } = useWeb3Context();
   return (
@@ -167,7 +167,7 @@ const TokenList = ({ selectedAddress, onItemClick, onClose }: Props) => {
               {!!assets &&
                 Object.keys(assets).length > 0 &&
                 _.map(Object.keys(assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`]), key => (
-                  <TokenlistItem key={key} disabled={key === selectedAddress} onClick={() => onItemClick(key)}>
+                  <TokenlistItem key={key} disabled={selectedAddresses.includes(key)} onClick={() => onItemClick(key)}>
                     <div className="img">
                       <img
                         src={`http://${assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].image}`}

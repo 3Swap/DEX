@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
+import * as ethereumAddress from 'ethereum-address';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import IconButton from '../../components/IconButton';
@@ -498,13 +499,19 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
 export default function Swap({ transactionModal, setTransactionModal }: Props) {
   const { inputCurrency1, inputCurrency2, outputCurrency, chainId: queryChainId } = useCurrencyQuery();
   const { assets } = useAssetsContext();
-  const { networkWeb3ChainId, chainId } = useWeb3Context();
+  const { networkWeb3ChainId, chainId, switchChain, isActive } = useWeb3Context();
+
   const [firstSelectedAddress, setFirstSelectedAddress] = useState('');
   const [secondSelectedAddress, setSecondSelectedAddress] = useState('');
   const [thirdSelectedAddress, setThirdSelectedAddress] = useState('');
+
   const [showList1, setShowList1] = useState<boolean>(false);
+  const [showList2, setShowList2] = useState<boolean>(false);
+  const [showList3, setShowList3] = useState<boolean>(false);
 
   const setSelectedCurrencies = useCallback(() => {
+    if (isActive && !!queryChainId) switchChain(queryChainId as string);
+
     if (inputCurrency1) setFirstSelectedAddress(inputCurrency1 as string);
 
     if (inputCurrency2) setSecondSelectedAddress(inputCurrency2 as string);
@@ -514,7 +521,15 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
 
   useEffect(() => {
     setSelectedCurrencies();
-  }, [inputCurrency1, inputCurrency2, outputCurrency]);
+  }, [inputCurrency1, inputCurrency2, outputCurrency, queryChainId]);
+
+  useEffect(() => {
+    if (assets && Object.keys(assets).length > 1 && (queryChainId || chainId || networkWeb3ChainId)) {
+      setFirstSelectedAddress(
+        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+      );
+    }
+  }, [assets, queryChainId, chainId, networkWeb3ChainId]);
 
   return (
     <SwapCard>
@@ -615,22 +630,44 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
 
       <div className="text">From</div>
 
-      {showList1 && (
-        <TokenList
-          selectedAddress={firstSelectedAddress}
-          onClose={() => setShowList1(false)}
-          onItemClick={val => {
-            setFirstSelectedAddress(val);
-            setShowList1(false);
-          }}
-        />
-      )}
-
       <div className="from">
+        {showList1 && (
+          <TokenList
+            selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+            onClose={() => setShowList1(false)}
+            onItemClick={val => {
+              setFirstSelectedAddress(val);
+              setShowList1(false);
+            }}
+          />
+        )}
         <div className="coin-container">
           <div className="left" onClick={() => setShowList1(true)}>
-            <img src="./usdt.svg" alt="usdt" style={{ cursor: 'pointer' }} width={28} height={28} />
-            <div>USDT</div>
+            <img
+              src={
+                !!assets && Object.keys(assets).length > 0
+                  ? 'http://' +
+                    assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                      ethereumAddress.isAddress(firstSelectedAddress)
+                        ? firstSelectedAddress
+                        : Object.keys(Object.values(assets)[0])[0]
+                    ]?.image
+                  : ''
+              }
+              alt="coin_image"
+              style={{ cursor: 'pointer' }}
+              width={28}
+              height={28}
+            />
+            <div>
+              {!!assets && Object.keys(assets).length > 0
+                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                    ethereumAddress.isAddress(firstSelectedAddress)
+                      ? firstSelectedAddress
+                      : Object.keys(Object.values(assets)[0])[0]
+                  ]?.symbol
+                : 'TOKEN_SYMBOL'}
+            </div>
             <IconButton
               width="12px"
               height="12px"
@@ -649,11 +686,28 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
 
         <div className="bal">Balance: 0 USDT</div>
 
+        {showList2 && (
+          <TokenList
+            selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+            onClose={() => setShowList2(false)}
+            onItemClick={val => {
+              setSecondSelectedAddress(val);
+              setShowList2(false);
+            }}
+          />
+        )}
         <div className="coin-container">
-          <div className="left">
+          <div className="left" onClick={() => setShowList2(true)}>
             <img src="./eth.svg" style={{ cursor: 'pointer' }} alt="eth" width={28} height={28} />
             <div>ETH</div>
-            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+            <IconButton
+              width="12px"
+              height="12px"
+              iconType="solid"
+              fontSize="12px"
+              name="chevron-down"
+              color="#4500a0"
+            />
           </div>
 
           <div className="right">
