@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import Icon from '../Icon';
 import { supportedChainIdsToNetworkNameMap } from '../../global/maps';
+import { useWeb3Context } from '../../contexts/web3';
 
 const chainIdToImageMap: { [key: number]: string } = {
   0x3: '/ethereum.svg',
@@ -89,21 +90,16 @@ const IconChain = styled('img')`
   object-fit: contain;
 `;
 
-type Props = {
-  onChainSwitch?: (id: string) => void;
-};
-
-const Dropdown = ({ onChainSwitch }: Props) => {
+const Dropdown = () => {
   const [isOpen, setIsDropdownOpen] = useState(false);
-  const [selectedChain, setSelectedChain] = useState<number>(0x61);
-  const [chainiconAlt, setChainIconAlt] = useState<string>('Ethereum Icon');
+  const { isActive, chainId, networkWeb3ChainId, switchChain } = useWeb3Context();
 
   const toggle = () => setIsDropdownOpen(!isOpen);
 
   return (
     <div className="dropdown">
       <DropdownContainer>
-        <DropdownHeader onClick={toggle}>
+        <DropdownHeader style={{ pointerEvents: !isActive ? 'none' : 'auto' }} onClick={isActive ? toggle : undefined}>
           <div
             style={{
               display: 'flex',
@@ -123,8 +119,8 @@ const Dropdown = ({ onChainSwitch }: Props) => {
               }}
             >
               <Image
-                src={chainIdToImageMap[selectedChain]}
-                alt={selectedChain.toString()}
+                src={chainIdToImageMap[(chainId as number) || (networkWeb3ChainId as number)]}
+                alt={(chainId || networkWeb3ChainId)?.toString()}
                 className="chain_icon"
                 width="18px"
                 height="18px"
@@ -138,7 +134,9 @@ const Dropdown = ({ onChainSwitch }: Props) => {
                 marginRight: 2
               }}
             >
-              <span style={{ fontSize: 16 }}>{supportedChainIdsToNetworkNameMap[selectedChain]}</span>
+              <span style={{ fontSize: 16 }}>
+                {supportedChainIdsToNetworkNameMap[(chainId as number) || (networkWeb3ChainId as number)]}
+              </span>
             </div>
             <div
               style={{
@@ -159,9 +157,8 @@ const Dropdown = ({ onChainSwitch }: Props) => {
               {_.map(Object.keys(supportedChainIdsToNetworkNameMap), key => (
                 <ListItem
                   onClick={() => {
-                    setSelectedChain(parseInt(key));
+                    switchChain(`0x${parseInt(key).toString(16)}`);
                     setIsDropdownOpen(false);
-                    if (onChainSwitch) onChainSwitch(key);
                   }}
                   key={key}
                 >

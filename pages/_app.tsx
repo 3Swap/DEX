@@ -10,6 +10,7 @@ import store from '../redux/store';
 import { AssetsProvider } from '../contexts/assets';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
+import { Web3GlobalProvider } from '../contexts/web3';
 
 // Import dynamically to prevent trouble with SSR
 const Web3NetworkRoot = dynamic(() => import('../components/Web3NetworkRoot'), {
@@ -25,9 +26,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <Web3ReactProvider getLibrary={getLibrary}>
         <Web3NetworkRoot getLibrary={getLibrary}>
-          <AssetsProvider>
-            <Component {...pageProps} />
-          </AssetsProvider>
+          <Web3GlobalProvider>
+            <AssetsProvider>
+              <Component {...pageProps} />
+            </AssetsProvider>
+          </Web3GlobalProvider>
         </Web3NetworkRoot>
       </Web3ReactProvider>
     </Provider>

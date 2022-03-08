@@ -3,10 +3,12 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import { useAssetsContext } from '../../contexts/assets';
 import Icon from '../Icon';
+import { useWeb3Context } from '../../contexts/web3';
 
 type Props = {
   onItemClick: (value: string) => void;
   selectedAddress: string;
+  onClose: () => void;
 };
 
 const TokenListContainer = styled.div`
@@ -109,6 +111,10 @@ const TokenlistItem = styled.button`
     color: rgba(255, 255, 255, 0.7);
   }
 
+  &:disabled {
+    background: #c6c6cc;
+  }
+
   .img {
     margin-right: 8px;
     display: flex;
@@ -139,8 +145,9 @@ const TokenlistItem = styled.button`
   }
 `;
 
-const TokenList = ({ selectedAddress, onItemClick }: Props) => {
+const TokenList = ({ selectedAddress, onItemClick, onClose }: Props) => {
   const { assets } = useAssetsContext();
+  const { chainId, networkWeb3ChainId } = useWeb3Context();
   return (
     <>
       <TokenListContainer>
@@ -148,7 +155,7 @@ const TokenList = ({ selectedAddress, onItemClick }: Props) => {
           <TokenHeader>
             <div className="headertext">
               <h2>Select Token</h2>
-              <Icon iconType="solid" name="times-circle" width="20px" height="20px" fontSize="20px" />
+              <Icon iconType="solid" name="times-circle" width="20px" height="20px" fontSize="20px" onClick={onClose} />
             </div>
             <div className="tokenSearch">
               <input type="text" placeholder="Search for token" />
@@ -159,19 +166,19 @@ const TokenList = ({ selectedAddress, onItemClick }: Props) => {
             <Tokenlist>
               {!!assets &&
                 Object.keys(assets).length > 0 &&
-                _.map(Object.keys(assets['0x61']), key => (
+                _.map(Object.keys(assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`]), key => (
                   <TokenlistItem key={key} disabled={key === selectedAddress} onClick={() => onItemClick(key)}>
                     <div className="img">
                       <img
-                        src={`http://${assets['0x61'][key].image}`}
-                        alt={assets['0x61'][key].name}
+                        src={`http://${assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].image}`}
+                        alt={assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].name}
                         width="25px"
                         height="25px"
                       />
                     </div>
                     <div className="tokenName">
-                      <span>{assets['0x61'][key].symbol}</span>
-                      <span>{assets['0x61'][key].name}</span>
+                      <span>{assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].symbol}</span>
+                      <span>{assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].name}</span>
                     </div>
                   </TokenlistItem>
                 ))}

@@ -9,7 +9,7 @@
     "format": "prettier --write **/**/*.{css,js,json,ts,tsx}"
   },
   "dependencies": {
-    "3swap-sdk": "^1.0.2",
+    "3swap-sdk": "^1.0.3",
     "@binance-chain/bsc-connector": "^1.0.0",
     "@ethersproject/abi": "^5.5.0",
     "@fortawesome/fontawesome-free": "^6.0.0",
@@ -19,6 +19,7 @@
     "@web3-react/network-connector": "^6.2.9",
     "@web3-react/walletconnect-connector": "^6.2.10",
     "axios": "^0.26.0",
+    "eth-address": "^1.0.1",
     "jsbi": "^4.1.0",
     "lodash": "^4.17.21",
     "next": "12.0.10",

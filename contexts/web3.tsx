@@ -1,23 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useCallback, useEffect, createContext, useContext } from 'react';
-import { injected } from '../connectors';
+import { injected, network } from '../connectors';
 
 type Web3GlobalContextType = {
   account?: string | null;
-  chainId: string | number;
+  chainId?: number;
   isActive: boolean;
   switchChain: (chainId: string) => void;
   connectWallet: () => void;
   disconnectWallet: () => void;
+  networkWeb3ChainId?: number;
 };
 
 const Web3Context = createContext<Web3GlobalContextType>({} as Web3GlobalContextType);
 
 export const Web3GlobalProvider = ({ children }: any) => {
-  const [chainId, setChainId] = useState(0x61);
   const [isActive, setIsActive] = useState(false);
-  const { activate, account, deactivate } = useWeb3React();
+  const { activate, account, deactivate, chainId } = useWeb3React();
+  const { chainId: networkWeb3ChainId, activate: activateNetworkWeb3 } = useWeb3React('network');
 
   const { ethereum } = window as unknown as Window & { ethereum: any };
 
@@ -32,8 +33,8 @@ export const Web3GlobalProvider = ({ children }: any) => {
   }, []);
 
   useEffect(() => {
-    injected.on('Web3ReactUpdated', update => {
-      if (update.chainId) setChainId(parseInt(update.chainId));
+    activateNetworkWeb3(network, undefined, true).then(() => {
+      console.log('Network web3 connected');
     });
   }, []);
 
@@ -45,6 +46,7 @@ export const Web3GlobalProvider = ({ children }: any) => {
 
   const disconnectWallet = useCallback(() => {
     deactivate();
+    setIsActive(false);
   }, []);
 
   const switchChain = useCallback(
@@ -55,7 +57,9 @@ export const Web3GlobalProvider = ({ children }: any) => {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId }]
           })
-          .then(console.log)
+          .then(() => {
+            network.changeChainId(parseInt(chainId));
+          })
           .catch((error: any) => {
             // This code means the chain hasn't been added yet
             if (error.code === 4902) {
@@ -76,7 +80,8 @@ export const Web3GlobalProvider = ({ children }: any) => {
         switchChain,
         account,
         connectWallet,
-        disconnectWallet
+        disconnectWallet,
+        networkWeb3ChainId
       }}
     >
       {children}
