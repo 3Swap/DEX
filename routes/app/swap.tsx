@@ -224,7 +224,7 @@ const SwapCard = styled('div')`
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         gap: 10px;
         padding-right: 18px;
         font-family: Poppins;
@@ -237,6 +237,16 @@ const SwapCard = styled('div')`
         /* Inactive text color */
 
         color: #9a999c;
+
+        .inner-right-input {
+          flex-basis: 90%;
+          flex-grow: 1;
+        }
+
+        .inner-right-button {
+          flex-basis: 10%;
+          flex-grow: 1;
+        }
       }
     }
 
@@ -528,6 +538,12 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
       setFirstSelectedAddress(
         Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
       );
+      setSecondSelectedAddress(
+        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+      );
+      setThirdSelectedAddress(
+        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
+      );
     }
   }, [assets, queryChainId, chainId, networkWeb3ChainId]);
 
@@ -646,11 +662,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             <img
               src={
                 !!assets && Object.keys(assets).length > 0
-                  ? 'http://' +
-                    assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
                       ethereumAddress.isAddress(firstSelectedAddress)
                         ? firstSelectedAddress
-                        : Object.keys(Object.values(assets)[0])[0]
+                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
                     ]?.image
                   : ''
               }
@@ -664,7 +679,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
                 ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
                     ethereumAddress.isAddress(firstSelectedAddress)
                       ? firstSelectedAddress
-                      : Object.keys(Object.values(assets)[0])[0]
+                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
                   ]?.symbol
                 : 'TOKEN_SYMBOL'}
             </div>
@@ -679,8 +694,23 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           </div>
 
           <div className="right">
-            <div className="amt">Enter Amount</div>
-            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            <div className="inner-right-input">
+              <input
+                type="number"
+                style={{
+                  border: 'none',
+                  fontSize: 14,
+                  padding: 4,
+                  width: '100%',
+                  outline: 'none',
+                  textAlign: 'right'
+                }}
+                placeholder="Enter Amount"
+              />
+            </div>
+            <div className="inner-right-button">
+              <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            </div>
           </div>
         </div>
 
@@ -698,8 +728,30 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         )}
         <div className="coin-container">
           <div className="left" onClick={() => setShowList2(true)}>
-            <img src="./eth.svg" style={{ cursor: 'pointer' }} alt="eth" width={28} height={28} />
-            <div>ETH</div>
+            <img
+              src={
+                !!assets && Object.keys(assets).length > 0
+                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                      ethereumAddress.isAddress(secondSelectedAddress)
+                        ? secondSelectedAddress
+                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+                    ]?.image
+                  : ''
+              }
+              style={{ cursor: 'pointer' }}
+              alt="eth"
+              width={28}
+              height={28}
+            />
+            <div>
+              {!!assets && Object.keys(assets).length > 0
+                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                    ethereumAddress.isAddress(secondSelectedAddress)
+                      ? secondSelectedAddress
+                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+                  ]?.symbol
+                : 'TOKEN_SYMBOL'}
+            </div>
             <IconButton
               width="12px"
               height="12px"
@@ -711,8 +763,23 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           </div>
 
           <div className="right">
-            <div className="amt">Enter Amount</div>
-            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            <div className="inner-right-input">
+              <input
+                type="number"
+                style={{
+                  border: 'none',
+                  fontSize: 14,
+                  padding: 4,
+                  width: '100%',
+                  outline: 'none',
+                  textAlign: 'right'
+                }}
+                placeholder="Enter Amount"
+              />
+            </div>
+            <div className="inner-right-button">
+              <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            </div>
           </div>
         </div>
 
@@ -733,16 +800,70 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
       <div className="text-second">To</div>
 
       <div className="to">
+        {showList3 && (
+          <TokenList
+            selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+            onClose={() => setShowList3(false)}
+            onItemClick={val => {
+              setThirdSelectedAddress(val);
+              setShowList3(false);
+            }}
+          />
+        )}
         <div className="coin-container">
-          <div className="left">
-            <img src="./btc.svg" style={{ cursor: 'pointer' }} alt="btc" width={28} height={28} />
-            <div>BTC</div>
-            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+          <div className="left" onClick={() => setShowList3(true)}>
+            <img
+              src={
+                !!assets && Object.keys(assets).length > 0
+                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                      ethereumAddress.isAddress(thirdSelectedAddress)
+                        ? thirdSelectedAddress
+                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
+                    ]?.image
+                  : ''
+              }
+              style={{ cursor: 'pointer' }}
+              alt="btc"
+              width={28}
+              height={28}
+            />
+            <div>
+              {!!assets && Object.keys(assets).length > 0
+                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                    ethereumAddress.isAddress(thirdSelectedAddress)
+                      ? thirdSelectedAddress
+                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
+                  ]?.symbol
+                : 'TOKEN_SYMBOL'}
+            </div>
+            <IconButton
+              width="12px"
+              height="12px"
+              iconType="solid"
+              fontSize="12px"
+              name="chevron-down"
+              color="#4500a0"
+            />
           </div>
 
           <div className="right">
-            <div className="amt">Enter Amount</div>
-            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            <div className="inner-right-input">
+              <input
+                type="number"
+                style={{
+                  border: 'none',
+                  fontSize: 14,
+                  padding: 4,
+                  width: '100%',
+                  outline: 'none',
+                  textAlign: 'right'
+                }}
+                placeholder="Enter Amount"
+              />
+            </div>
+            <div className="inner-right-button">
+              <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            </div>
           </div>
         </div>
       </div>

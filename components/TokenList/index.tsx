@@ -170,7 +170,7 @@ const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
                   <TokenlistItem key={key} disabled={selectedAddresses.includes(key)} onClick={() => onItemClick(key)}>
                     <div className="img">
                       <img
-                        src={`http://${assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].image}`}
+                        src={`${assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].image}`}
                         alt={assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].name}
                         width="25px"
                         height="25px"
