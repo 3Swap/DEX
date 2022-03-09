@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import * as ethAddress from 'eth-address';
 import Swap from '../routes/app/swap';
 import Liquidity from '../routes/app/liquidity';
 import PageNotFound from '../routes/app/404';
@@ -9,6 +9,7 @@ import { ActiveLink } from '../components/Link';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import Dropdown from '../components/Dropdown';
+import { useWeb3Context } from '../contexts/web3';
 
 const MainContainer = styled('div')`
   min-width: 100vw;
@@ -78,6 +79,7 @@ const SwapLogo = styled('img')`
 
 export default function Index() {
   const { slug } = usePageQuery();
+  const { isActive, connectWallet, account, disconnectWallet } = useWeb3Context();
 
   const [transactionModal, setTransactionModal] = useState(false);
   const [liquidityPoolModal, setLiquidityPoolModal] = useState(false);
@@ -94,7 +96,17 @@ export default function Index() {
         <SwapLogo src="3swap.svg" />
         <div className="nav_right">
           <Dropdown />
-          <Button width="145px" height="45px" title="Connect Wallet" background="#4500a0" fontSize="14px" />
+          <Button
+            width="145px"
+            height="45px"
+            title={isActive && account ? ethAddress.formatEthAddress(account, 7) : 'Connect Wallet'}
+            background="#4500a0"
+            fontSize="14px"
+            click={() => {
+              if (!isActive) return connectWallet();
+              else return disconnectWallet();
+            }}
+          />
         </div>
       </Header>
       <MainPage>
