@@ -1,19 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AllAsset, fetchAssets } from '../redux/assetsSlice';
+import { AllAsset, fetchAssets, fetchChains } from '../redux/assetsSlice';
 
 const AssetsContext = createContext<AllAsset>({} as AllAsset);
 
 export const AssetsProvider = ({ children }: any) => {
-  const { assets } = useSelector<any, any>(state => state.assets);
+  const { assets, chains } = useSelector<any, any>(state => state.assets);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchAssets());
+    dispatch(fetchChains());
   }, []);
 
-  return <AssetsContext.Provider value={{ assets }}>{children}</AssetsContext.Provider>;
+  return <AssetsContext.Provider value={{ assets, chains }}>{children}</AssetsContext.Provider>;
 };
 
 export const useAssetsContext = () => {

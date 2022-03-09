@@ -10,7 +10,7 @@ import IconButton from '../../components/IconButton';
 import TokenList from '../../components/TokenList';
 import { useWeb3Context } from '../../contexts/web3';
 import { useAssetsContext } from '../../contexts/assets';
-import { useCurrencyQuery } from '../../hooks';
+import { useBalance, useCurrencyQuery } from '../../hooks';
 
 type Props = {
   transactionModal: boolean;
@@ -519,6 +519,9 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
   const [showList2, setShowList2] = useState<boolean>(false);
   const [showList3, setShowList3] = useState<boolean>(false);
 
+  const { balance: balance1, fetchBalance: fetchBalance1 } = useBalance();
+  const { balance: balance2, fetchBalance: fetchBalance2 } = useBalance();
+
   const setSelectedCurrencies = useCallback(() => {
     if (isActive && !!queryChainId) switchChain(queryChainId as string);
 
@@ -546,6 +549,18 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
       );
     }
   }, [assets, queryChainId, chainId, networkWeb3ChainId]);
+
+  useEffect(() => {
+    if (!!firstSelectedAddress && ethereumAddress.isAddress(firstSelectedAddress)) {
+      fetchBalance1(firstSelectedAddress);
+    }
+  }, [firstSelectedAddress]);
+
+  useEffect(() => {
+    if (!!secondSelectedAddress && ethereumAddress.isAddress(secondSelectedAddress)) {
+      fetchBalance2(secondSelectedAddress);
+    }
+  }, [secondSelectedAddress]);
 
   return (
     <SwapCard>
@@ -714,7 +729,16 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           </div>
         </div>
 
-        <div className="bal">Balance: 0 USDT</div>
+        <div className="bal">
+          Balance: {balance1}{' '}
+          {!!assets && Object.keys(assets).length > 0
+            ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                ethereumAddress.isAddress(firstSelectedAddress)
+                  ? firstSelectedAddress
+                  : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+              ]?.symbol
+            : 'TOKEN_SYMBOL'}
+        </div>
 
         {showList2 && (
           <TokenList
@@ -783,7 +807,16 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           </div>
         </div>
 
-        <div className="bal">Balance: 0 ETH</div>
+        <div className="bal">
+          Balance: {balance2}{' '}
+          {!!assets && Object.keys(assets).length > 0
+            ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                ethereumAddress.isAddress(secondSelectedAddress)
+                  ? secondSelectedAddress
+                  : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+              ]?.symbol
+            : 'TOKEN_SYMBOL'}
+        </div>
       </div>
 
       <IconButton

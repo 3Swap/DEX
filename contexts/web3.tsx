@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import type Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useCallback, useEffect, createContext, useContext } from 'react';
 import { injected, network } from '../connectors';
@@ -11,13 +12,14 @@ type Web3GlobalContextType = {
   connectWallet: () => void;
   disconnectWallet: () => void;
   networkWeb3ChainId?: number;
+  library?: Web3;
 };
 
 const Web3Context = createContext<Web3GlobalContextType>({} as Web3GlobalContextType);
 
 export const Web3GlobalProvider = ({ children }: any) => {
   const [isActive, setIsActive] = useState(false);
-  const { activate, account, deactivate, chainId } = useWeb3React();
+  const { activate, account, deactivate, chainId, library } = useWeb3React<Web3>();
   const { chainId: networkWeb3ChainId, activate: activateNetworkWeb3 } = useWeb3React('network');
 
   const { ethereum } = window as unknown as Window & { ethereum: any };
@@ -81,7 +83,8 @@ export const Web3GlobalProvider = ({ children }: any) => {
         account,
         connectWallet,
         disconnectWallet,
-        networkWeb3ChainId
+        networkWeb3ChainId,
+        library
       }}
     >
       {children}
