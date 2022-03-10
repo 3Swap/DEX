@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components';
 import Icon from '../Icon';
-interface Props {
+interface IToast {
   direction?: string;
   status?: string;
 }
 
-const ToastNotification = styled.div<Props>`
+const ToastNotification = styled.div<IToast>`
   position: absolute;
 
   ${({ direction }) =>
@@ -35,7 +35,7 @@ const ToastNotification = styled.div<Props>`
   display: flex;
   background: rgba(255, 255, 255, 0.3);
 `;
-const ToastContainer = styled.div<Props>`
+const ToastContainer = styled.div<IToast>`
   display: flex;
   width: 100%;
   .badge {
@@ -86,7 +86,7 @@ const ToastContainer = styled.div<Props>`
   }
 `;
 
-const Toast = ({ direction, status }: Props) => {
+const Toast = ({ direction, status }: IToast) => {
   console.log(direction);
   return (
     <>
