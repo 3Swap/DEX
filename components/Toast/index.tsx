@@ -7,17 +7,16 @@ interface IToast {
 
 const ToastNotification = styled.div<IToast>`
   position: absolute;
-
   ${({ direction }) =>
     direction === 'topRight'
       ? css`
           right: 40px;
-          top: 10%;
+          top: 0;
         `
       : direction === 'topLeft'
       ? css`
           left: 40px;
-          top: 10%;
+          top: 0;
         `
       : direction === 'bottomRight'
       ? css`
@@ -33,7 +32,10 @@ const ToastNotification = styled.div<IToast>`
   border-radius: 10px;
   overflow: hidden;
   display: flex;
-  background: rgba(255, 255, 255, 0.3);
+  color: #000;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
 `;
 const ToastContainer = styled.div<IToast>`
   display: flex;
@@ -61,7 +63,7 @@ const ToastContainer = styled.div<IToast>`
   .body {
     display: flex;
     align-items: center;
-    color: #fff;
+    color: #000;
     width: 100%;
     justify-content: space-between;
     position: relative;
@@ -74,20 +76,19 @@ const ToastContainer = styled.div<IToast>`
     .close {
       position: absolute;
       right: 20px;
-      top: 5px;
+      top: 8px;
       cursor: pointer;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(0, 0, 0, 0.7);
       transition: all 0.3s ease-in;
 
       &:hover {
-        color: rgba(255, 255, 255, 1);
+        color: rgba(9, 0, 0, 1);
       }
     }
   }
 `;
 
 const Toast = ({ direction, status }: IToast) => {
-  console.log(direction);
   return (
     <>
       <ToastNotification direction={direction}>

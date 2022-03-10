@@ -21,11 +21,11 @@ const SwapCard = styled('div')`
   margin: 2em auto;
   width: 540px;
   height: 846px;
-  background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
-  box-shadow: -10px 48.5967px 140px rgba(126, 123, 160, 0.2);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(19px);
   /* Note: backdrop-filter has minimal browser support */
-
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -33,6 +33,9 @@ const SwapCard = styled('div')`
   justify-content: flex-start;
   position: relative;
 
+  input {
+    background: transparent !important;
+  }
   .title {
     width: 80%;
     color: white;
@@ -58,27 +61,25 @@ const SwapCard = styled('div')`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
-
-    height: 25px;
+    margin-top: 5px;
 
     font-family: Poppins;
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
-    line-height: 24px;
 
     .detailtext {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
+      font-weight: 500;
+      font-size: 12px;
       gap: 10px;
 
       .info {
         position: relative;
         transition-duration: 250ms;
-
         .hover {
           display: none;
         }
@@ -106,14 +107,15 @@ const SwapCard = styled('div')`
           .hover {
             display: block;
             position: absolute;
-            width: 100px;
-            height: 66px;
+            width: max-content;
+            height: fit-content;
             margin-left: -15px;
             top: 140%;
             background: #fcfcfc;
             border-radius: 4px;
             font-size: 12px;
             z-index: 2;
+            padding: 5px 20px;
           }
         }
       }
@@ -179,7 +181,7 @@ const SwapCard = styled('div')`
     width: 460px;
     height: 238px;
     background: #ffffff;
-    border: 1px solid #cedaff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     margin-top: 11px;
     display: flex;
@@ -206,7 +208,7 @@ const SwapCard = styled('div')`
         align-items: center;
         justify-content: center;
         gap: 10px;
-
+        cursor: pointer;
         font-family: Poppins;
         font-style: normal;
         font-weight: 500;
@@ -281,12 +283,12 @@ const SwapCard = styled('div')`
 
   .to {
     width: 460px;
-    height: 40px;
     background: #ffffff;
-    border: 1px solid #cedaff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     height: 100px;
     margin-top: 11px;
+    margin-bottom: 8px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -300,7 +302,7 @@ const SwapCard = styled('div')`
       border: 1px solid #d8d8d8;
       box-sizing: border-box;
       border-radius: 20px;
-      margin-top: 25px;
+      margin-top: 20px;
 
       display: flex;
       flex-direction: row;
@@ -312,7 +314,7 @@ const SwapCard = styled('div')`
         align-items: center;
         justify-content: center;
         gap: 10px;
-
+        cursor: pointer;
         font-family: Poppins;
         font-style: normal;
         font-weight: 500;
@@ -448,7 +450,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
         }
 
         .hover {
-          display: block;
+          display: flex;
           position: absolute;
           width: 100px;
           height: 100px;
@@ -941,9 +943,9 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         marginTop="20px"
         marginBottom="20px"
         width="460px"
-        height="62px"
         title="Swap"
         fontSize="20px"
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '25px 0px' }}
       />
     </SwapCard>
   );

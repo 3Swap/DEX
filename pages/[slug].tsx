@@ -15,16 +15,42 @@ import Toast from '../components/Toast';
 const MainContainer = styled('div')`
   min-width: 100vw;
   min-height: 100vh;
-  background-color: #0e0020;
+  background-color: whitesmoke;
+
   position: relative;
-  background-image: linear-gradient(
-    to bottom right,
-    rgba(188, 41, 224, 0.5),
-    rgba(69, 0, 160, 0.5),
-    rgba(252, 232, 165, 0.3),
-    rgba(255, 213, 73, 0.3),
-    rgba(158, 0, 255, 0.5)
-  );
+  .bg {
+    position: absolute;
+    filter: blur(120px);
+    &:nth-child(1) {
+      background: #bc29e0;
+      width: 400px;
+      height: 400px;
+      left: -80px;
+      top: -80px;
+    }
+    &:nth-child(2) {
+      background: #fce8a5;
+      left: 500px;
+      height: 350px;
+      width: 800px;
+    }
+    &:nth-child(3) {
+      left: 600px;
+      top: 200px;
+      width: 300px;
+      height: 500px;
+      background: #ffd549;
+    }
+    &:nth-child(4) {
+      background: linear-gradient(to bottom, #4500a0, #9e00ff);
+      width: 800px;
+      height: 1000px;
+      left: -100px;
+      top: -100px;
+    }
+    &:nth-child(2) {
+    }
+  }
 `;
 
 const Navbar = styled('div')`
@@ -39,6 +65,7 @@ const MainPage = styled('div')`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(1px);
 `;
 
 const Flex = styled('div')`
@@ -54,9 +81,9 @@ const Flex = styled('div')`
     justify-content: center;
     align-items: center;
     background: #f5f5f5;
-    height: 30px;
+
     border-radius: 8px;
-    width: 20%;
+    width: max-content;
 
     * {
       cursor: pointer;
@@ -64,7 +91,9 @@ const Flex = styled('div')`
 
     button {
       color: #4500a0;
-      padding: 8px;
+      display: flex;
+      align-items: center;
+      padding: 13px 20px;
     }
 
     .activeLink {
@@ -93,73 +122,80 @@ export default function Index() {
   };
 
   return (
-    <MainContainer onClick={handleBackgroundClick}>
-      {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
-      <Toast direction="topRight" status="success" />
-      <Header>
-        <SwapLogo src="3swap.svg" />
-        <div className="nav_right">
-          <Dropdown />
-          <Button
-            width="145px"
-            height="45px"
-            title={isActive && account ? ethAddress.formatEthAddress(account, 7) : 'Connect Wallet'}
-            background="#4500a0"
-            fontSize="14px"
-            click={() => {
-              if (!isActive) return connectWallet();
-              else return disconnectWallet();
-            }}
-          />
-        </div>
-      </Header>
-      <MainPage>
-        <Flex style={{ margin: '1em auto' }}>
-          <div></div>
-          <div className="linkNav">
-            <ActiveLink href="/swap" activeClassName="activeLink">
-              <button
-                style={{
-                  border: 'none',
-                  width: '100%',
-                  height: 'inherit',
-                  borderRadius: 'inherit',
-                  textAlign: 'center'
-                }}
-              >
-                Swap
-              </button>
-            </ActiveLink>
-            <ActiveLink href="/liquidity" activeClassName="activeLink">
-              <button
-                style={{
-                  border: 'none',
-                  width: '100%',
-                  height: 'inherit',
-                  borderRadius: 'inherit',
-                  textAlign: 'center'
-                }}
-              >
-                Liquidity
-              </button>
-            </ActiveLink>
+    <>
+      <MainContainer onClick={handleBackgroundClick}>
+        <div className="bg"></div>
+        <div className="bg"></div>
+        <div className="bg"></div>
+        <div className="bg"></div>
+
+        <Header>
+          <SwapLogo src="3swap.svg" />
+          <div className="nav_right">
+            <Dropdown />
+            <Button
+              width="145px"
+              height="45px"
+              title={isActive && account ? ethAddress.formatEthAddress(account, 7) : 'Connect Wallet'}
+              background="#4500a0"
+              fontSize="14px"
+              click={() => {
+                if (!isActive) return connectWallet();
+                else return disconnectWallet();
+              }}
+            />
           </div>
-          <div></div>
-        </Flex>
-        {slug === 'swap' || slug === 'index' ? (
-          <div>
-            <Swap transactionModal={transactionModal} setTransactionModal={setTransactionModal} />
-          </div>
-        ) : slug === 'liquidity' ? (
-          <div>
-            <Liquidity liquidityPoolModal={liquidityPoolModal} setLiquidityPoolModal={setLiquidityPoolModal} />
-          </div>
-        ) : (
-          <div>
-            <PageNotFound />
-          </div>
-        )}
-      </MainPage>
-    </MainContainer>
+        </Header>
+        <MainPage>
+          {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
+          <Toast direction="topRight" status="success" />
+          <Flex style={{ margin: '1em auto' }}>
+            <div></div>
+            <div className="linkNav">
+              <ActiveLink href="/swap" activeClassName="activeLink">
+                <button
+                  style={{
+                    border: 'none',
+                    width: 'max-content',
+                    height: 'inherit',
+                    borderRadius: 'inherit',
+                    textAlign: 'center'
+                  }}
+                >
+                  Swap
+                </button>
+              </ActiveLink>
+              <ActiveLink href="/liquidity" activeClassName="activeLink">
+                <button
+                  style={{
+                    border: 'none',
+                    width: 'max-content',
+                    height: 'inherit',
+                    borderRadius: 'inherit',
+                    textAlign: 'center'
+                  }}
+                >
+                  Liquidity
+                </button>
+              </ActiveLink>
+            </div>
+            <div></div>
+          </Flex>
+          {slug === 'swap' || slug === 'index' ? (
+            <div>
+              <Swap transactionModal={transactionModal} setTransactionModal={setTransactionModal} />
+            </div>
+          ) : slug === 'liquidity' ? (
+            <div>
+              <Liquidity liquidityPoolModal={liquidityPoolModal} setLiquidityPoolModal={setLiquidityPoolModal} />
+            </div>
+          ) : (
+            <div>
+              <PageNotFound />
+            </div>
+          )}
+        </MainPage>
+      </MainContainer>
+    </>
   );
 }
