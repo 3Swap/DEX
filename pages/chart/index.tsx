@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Image from 'next/image';
 import React, { ReactElement, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Chart from '../../components/Chart/Chart';
@@ -454,8 +453,7 @@ export default function ChartComponent({}: Props): ReactElement {
         <TokenImg src={'./bnb.svg'} alt="bnb" />
         <TokenImg src={'/usdt.webp'} alt="usdt" />
         {selectedPair}
-        <Image src="/swapIcon.svg" alt="swap" className="swap" width="25px" height="25px" />
-        {/* <img src='./swapIcon.svg' className='swap' ></img> */}
+        <img src="./swapIcon.svg" alt="image" className="swap" />
       </ChartTitle>
       <Chart
         setCurrSymbolPrice={null}
