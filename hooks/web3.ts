@@ -1,81 +1,76 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useState } from 'react';
-import { useWeb3React } from '@web3-react/core';
-import Web3 from 'web3';
-import { injected, network } from '../connectors';
-import { ChainId, hexToNumber } from '3swap-sdk';
-import { isHex } from '../utils';
+import { useCallback, useState } from 'react';
+import type Web3 from 'web3';
+import JSBI from 'jsbi';
+import type { Contract } from 'web3-eth-contract';
+import { useWeb3Context } from '../contexts/web3';
+import { _decodeFuncResult, _divideByDecimals, _encodeFuncData, _fromWei, _getSigHash } from '../utils';
+import abi from './assets/ERC20Abi.json';
+import { useAssetsContext } from '../contexts/assets';
+import { _request } from '../rpc';
+import { hexToNumber, WETH } from '3swap-sdk';
 
-export const useChainId = (chainid: ChainId = ChainId.BINANCE_TESTNET): number => {
-  const [chainId, setChainId] = useState<number>(Number(chainid));
-  useEffect(() => {
-    const { ethereum } = window as any;
+export const useContract = () => {
+  const [contract, setContract] = useState<Contract>();
+  const { library } = useWeb3Context();
 
-    if (ethereum && ethereum.on)
-      ethereum.on('chainChanged', (chain: string | number) => {
-        if (typeof chain === 'string')
-          if (isHex(chain)) setChainId(hexToNumber(chain));
-          else setChainId(parseInt(chain));
-        else setChainId(chain);
-      });
+  const createContract = useCallback((address: string) => {
+    setContract(new (library as Web3).eth.Contract(<any>abi, address));
   }, []);
-  return chainId;
+
+  return { contract, createContract };
 };
 
-export const useWeb3WithInjectedConnectorEagerly = (): boolean => {
-  const { activate, active } = useWeb3React();
-  const [connected, setConnected] = useState(false);
+export const useBalance = () => {
+  const [balance, setBalance] = useState(0);
+  const { account, chainId } = useWeb3Context();
+  const { chains } = useAssetsContext();
 
-  useEffect(() => {
-    injected.isAuthorized().then(authorized => {
-      if (authorized) {
-        activate(injected, undefined, true).then(() => {
-          setConnected(true);
-        });
+  const fetchBalance = useCallback(
+    (contract: string) => {
+      if (!!account && !!chainId && !!chains) {
+        const rpcUrl = chains[`0x${chainId?.toString(16)}`].rpcUrl;
+        if (contract.toLowerCase() === WETH[chainId].address().toLowerCase()) {
+          _request(rpcUrl, {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'eth_getBalance',
+            params: [account, 'latest']
+          }).then(balanceResult => {
+            setBalance(parseFloat(_fromWei(hexToNumber(balanceResult)).toPrecision(4)));
+          });
+        } else {
+          const decimalsSighash = _getSigHash(abi, 'decimals');
+          const balanceOfSignature = _encodeFuncData(abi, 'balanceOf', [account]);
+          _request(rpcUrl, {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'eth_call',
+            params: [{ to: contract, data: decimalsSighash }, 'latest']
+          }).then(decimalsResult => {
+            const decimals =
+              typeof decimalsResult === 'string' ? JSBI.toNumber(JSBI.BigInt(decimalsResult)) : decimalsResult;
+            _request(rpcUrl, {
+              jsonrpc: '2.0',
+              id: 1,
+              method: 'eth_call',
+              params: [{ to: contract, data: balanceOfSignature }, 'latest']
+            }).then(balanceResult => {
+              const resultDecoded = _decodeFuncResult(abi, 'balanceOf', balanceResult);
+              const bal =
+                typeof resultDecoded[0] === 'string'
+                  ? _divideByDecimals(parseInt(resultDecoded[0]), decimals).toPrecision(4)
+                  : _divideByDecimals(resultDecoded[0], decimals).toPrecision(4);
+              setBalance(parseFloat(bal));
+            });
+          });
+        }
       } else {
-        setConnected(false);
+        setBalance(0);
       }
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!connected && active) setConnected(true);
-  }, [connected, active]);
-
-  return connected;
-};
-
-export const useWeb3WithNetworkConnector = (
-  context: string = 'network',
-  chainId: number = Number(ChainId.BINANCE_TESTNET)
-) => {
-  const { activate, active } = useWeb3React(context);
-  const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    network.changeChainId(chainId);
-    activate(network, undefined, true).then(() => {
-      setIsActive(true);
-    });
-  }, [chainId]);
-
-  useEffect(() => {
-    if (!isActive && active) setIsActive(true);
-  }, [isActive, active]);
-
-  return isActive;
-};
-
-export const useWeb3WithInjectedConnectorOnRequest = () => {
-  const { library, activate } = useWeb3React<Web3>();
-  const [isActive, setIsActive] = useState(false);
-
-  function connect() {
-    activate(injected, undefined, true).then(() => {
-      setIsActive(true);
-    });
-  }
-
-  return [{ ctx: library, activated: isActive }, connect] as [{ ctx: Web3; activated: boolean }, () => void];
+    },
+    [account, chainId, chains]
+  );
+  return { balance, fetchBalance };
 };

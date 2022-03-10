@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import Icon from '../Icon';
 import { supportedChainIdsToNetworkNameMap } from '../../global/maps';
+import { useWeb3Context } from '../../contexts/web3';
 
 const chainIdToImageMap: { [key: number]: string } = {
   0x3: '/ethereum.svg',
@@ -18,6 +19,7 @@ const DropdownContainer = styled('div')`
   border-radius: 5px;
   width: 10.5em;
 `;
+
 const DropdownHeader = styled('div')`
   cursor: pointer;
   border-radius: 8px;
@@ -42,6 +44,7 @@ const DropdownHeader = styled('div')`
     height: 15px;
   }
 `;
+
 const DropdownListContainer = styled('div')`
   color: #fff;
   background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
@@ -55,6 +58,7 @@ const DropdownListContainer = styled('div')`
   margin-top: 1.5rem;
   z-index: 999;
 `;
+
 const DropdownList = styled('ul')`
   list-style-type: none;
 `;
@@ -86,21 +90,16 @@ const IconChain = styled('img')`
   object-fit: contain;
 `;
 
-type Props = {
-  onChainSwitch?: (id: string) => void;
-};
-
-const Dropdown = ({ onChainSwitch }: Props) => {
+const Dropdown = () => {
   const [isOpen, setIsDropdownOpen] = useState(false);
-  const [selectedChain, setSelectedChain] = useState<number>(0x61);
-  const [chainiconAlt, setChainIconAlt] = useState<string>('Ethereum Icon');
+  const { isActive, chainId, networkWeb3ChainId, switchChain } = useWeb3Context();
 
   const toggle = () => setIsDropdownOpen(!isOpen);
 
   return (
     <div className="dropdown">
       <DropdownContainer>
-        <DropdownHeader onClick={toggle}>
+        <DropdownHeader style={{ pointerEvents: !isActive ? 'none' : 'auto' }} onClick={isActive ? toggle : undefined}>
           <div
             style={{
               display: 'flex',
@@ -111,19 +110,42 @@ const Dropdown = ({ onChainSwitch }: Props) => {
               textAlign: 'center'
             }}
           >
-            <div style={{ flexGrow: 1, flexBasis: '20%', marginLeft: 2, marginRight: 2 }}>
+            <div
+              style={{
+                flexGrow: 1,
+                flexBasis: '20%',
+                marginLeft: 2,
+                marginRight: 2
+              }}
+            >
               <Image
-                src={chainIdToImageMap[selectedChain]}
-                alt={selectedChain.toString()}
+                src={chainIdToImageMap[(chainId as number) || (networkWeb3ChainId as number)]}
+                alt={(chainId || networkWeb3ChainId)?.toString()}
                 className="chain_icon"
                 width="18px"
                 height="18px"
               />
             </div>
-            <div style={{ flexGrow: 1, flexBasis: '60%', marginLeft: 2, marginRight: 2 }}>
-              <span style={{ fontSize: 16 }}>{supportedChainIdsToNetworkNameMap[selectedChain]}</span>
+            <div
+              style={{
+                flexGrow: 1,
+                flexBasis: '60%',
+                marginLeft: 2,
+                marginRight: 2
+              }}
+            >
+              <span style={{ fontSize: 16 }}>
+                {supportedChainIdsToNetworkNameMap[(chainId as number) || (networkWeb3ChainId as number)]}
+              </span>
             </div>
-            <div style={{ flexGrow: 1, flexBasis: '20%', marginLeft: 2, marginRight: 2 }}>
+            <div
+              style={{
+                flexGrow: 1,
+                flexBasis: '20%',
+                marginLeft: 2,
+                marginRight: 2
+              }}
+            >
               <Icon iconType="solid" name="chevron-down" width="12px" height="12px" fontSize="14px" />
             </div>
           </div>
@@ -135,9 +157,8 @@ const Dropdown = ({ onChainSwitch }: Props) => {
               {_.map(Object.keys(supportedChainIdsToNetworkNameMap), key => (
                 <ListItem
                   onClick={() => {
-                    setSelectedChain(parseInt(key));
+                    switchChain(`0x${parseInt(key).toString(16)}`);
                     setIsDropdownOpen(false);
-                    if (onChainSwitch) onChainSwitch(key);
                   }}
                   key={key}
                 >

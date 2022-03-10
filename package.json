@@ -19,6 +19,8 @@
     "@web3-react/walletconnect-connector": "^6.2.10",
     "3swap-sdk": "^1.0.2",
     "axios": "^0.26.0",
+    "eth-address": "^1.0.1",
+    "ethereum-address": "^0.0.4",
     "jsbi": "^4.1.0",
     "lodash": "^4.17.21",
     "next": "12.0.10",
@@ -28,7 +30,8 @@
     "react-redux": "^7.2.6",
     "recharts": "^2.1.9",
     "styled-components": "^5.3.3",
-    "web3": "^1.7.0"
+    "web3": "^1.7.0",
+    "web3-eth-contract": "^1.7.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.179",
