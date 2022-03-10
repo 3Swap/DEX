@@ -15,7 +15,7 @@ const CustomIcon = styled('i')<CustomComponentProps>`
 `;
 
 const Icon = (props: Props & CustomComponentProps) => (
-  <CustomIcon {...props} className={`fa-${props.iconType} fa-${props.name}`} />
+  <CustomIcon {...props} className={`fa-${props.iconType} fa-${props.name}`} onClick={props.onClick} />
 );
 
 export default Icon;

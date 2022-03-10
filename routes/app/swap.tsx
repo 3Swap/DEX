@@ -1,11 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
+import * as ethereumAddress from 'ethereum-address';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import IconButton from '../../components/IconButton';
 import TokenList from '../../components/TokenList';
+import { useWeb3Context } from '../../contexts/web3';
+import { useAssetsContext } from '../../contexts/assets';
+import { useBalance, useCurrencyQuery } from '../../hooks';
 
 type Props = {
   transactionModal: boolean;
@@ -219,7 +224,7 @@ const SwapCard = styled('div')`
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         gap: 10px;
         padding-right: 18px;
         font-family: Poppins;
@@ -232,6 +237,16 @@ const SwapCard = styled('div')`
         /* Inactive text color */
 
         color: #9a999c;
+
+        .inner-right-input {
+          flex-basis: 90%;
+          flex-grow: 1;
+        }
+
+        .inner-right-button {
+          flex-basis: 10%;
+          flex-grow: 1;
+        }
       }
     }
 
@@ -370,7 +385,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
   opacity: ${props => (props.open ? '1' : '0')};
   transition-duration: 250ms;
 
-  display: flex;
+  display: ${props => (props.open ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
@@ -492,6 +507,61 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
 `;
 
 export default function Swap({ transactionModal, setTransactionModal }: Props) {
+  const { inputCurrency1, inputCurrency2, outputCurrency, chainId: queryChainId } = useCurrencyQuery();
+  const { assets } = useAssetsContext();
+  const { networkWeb3ChainId, chainId, switchChain, isActive } = useWeb3Context();
+
+  const [firstSelectedAddress, setFirstSelectedAddress] = useState('');
+  const [secondSelectedAddress, setSecondSelectedAddress] = useState('');
+  const [thirdSelectedAddress, setThirdSelectedAddress] = useState('');
+
+  const [showList1, setShowList1] = useState<boolean>(false);
+  const [showList2, setShowList2] = useState<boolean>(false);
+  const [showList3, setShowList3] = useState<boolean>(false);
+
+  const { balance: balance1, fetchBalance: fetchBalance1 } = useBalance();
+  const { balance: balance2, fetchBalance: fetchBalance2 } = useBalance();
+
+  const setSelectedCurrencies = useCallback(() => {
+    if (isActive && !!queryChainId) switchChain(queryChainId as string);
+
+    if (inputCurrency1) setFirstSelectedAddress(inputCurrency1 as string);
+
+    if (inputCurrency2) setSecondSelectedAddress(inputCurrency2 as string);
+
+    if (outputCurrency) setThirdSelectedAddress(outputCurrency as string);
+  }, []);
+
+  useEffect(() => {
+    setSelectedCurrencies();
+  }, [inputCurrency1, inputCurrency2, outputCurrency, queryChainId]);
+
+  useEffect(() => {
+    if (assets && Object.keys(assets).length > 1 && (queryChainId || chainId || networkWeb3ChainId)) {
+      setFirstSelectedAddress(
+        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+      );
+      setSecondSelectedAddress(
+        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+      );
+      setThirdSelectedAddress(
+        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
+      );
+    }
+  }, [assets, queryChainId, chainId, networkWeb3ChainId]);
+
+  useEffect(() => {
+    if (!!firstSelectedAddress && ethereumAddress.isAddress(firstSelectedAddress)) {
+      fetchBalance1(firstSelectedAddress);
+    }
+  }, [firstSelectedAddress]);
+
+  useEffect(() => {
+    if (!!secondSelectedAddress && ethereumAddress.isAddress(secondSelectedAddress)) {
+      fetchBalance2(secondSelectedAddress);
+    }
+  }, [secondSelectedAddress]);
+
   return (
     <SwapCard>
       <Head>
@@ -518,7 +588,6 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         />
       </div>
       <div className="desc">Swap two tokens for one, pay less.</div>
-      <TokenList />
       <TransactionSettings
         onClick={(e: any) => {
           e.stopPropagation();
@@ -593,35 +662,161 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
       <div className="text">From</div>
 
       <div className="from">
+        {showList1 && (
+          <TokenList
+            selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+            onClose={() => setShowList1(false)}
+            onItemClick={val => {
+              setFirstSelectedAddress(val);
+              setShowList1(false);
+            }}
+          />
+        )}
         <div className="coin-container">
-          <div className="left">
-            <img src="./usdt.svg" alt="usdt" style={{ cursor: 'pointer' }} width={28} height={28} />
-            <div>USDT</div>
-            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+          <div className="left" onClick={() => setShowList1(true)}>
+            <img
+              src={
+                !!assets && Object.keys(assets).length > 0
+                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                      ethereumAddress.isAddress(firstSelectedAddress)
+                        ? firstSelectedAddress
+                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+                    ]?.image
+                  : ''
+              }
+              alt="coin_image"
+              style={{ cursor: 'pointer' }}
+              width={28}
+              height={28}
+            />
+            <div>
+              {!!assets && Object.keys(assets).length > 0
+                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                    ethereumAddress.isAddress(firstSelectedAddress)
+                      ? firstSelectedAddress
+                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+                  ]?.symbol
+                : 'TOKEN_SYMBOL'}
+            </div>
+            <IconButton
+              width="12px"
+              height="12px"
+              iconType="solid"
+              fontSize="12px"
+              name="chevron-down"
+              color="#4500a0"
+            />
           </div>
 
           <div className="right">
-            <div className="amt">Enter Amount</div>
-            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            <div className="inner-right-input">
+              <input
+                type="number"
+                style={{
+                  border: 'none',
+                  fontSize: 14,
+                  padding: 4,
+                  width: '100%',
+                  outline: 'none',
+                  textAlign: 'right'
+                }}
+                placeholder="Enter Amount"
+              />
+            </div>
+            <div className="inner-right-button">
+              <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            </div>
           </div>
         </div>
 
-        <div className="bal">Balance: 0 USDT</div>
+        <div className="bal">
+          Balance: {balance1}{' '}
+          {!!assets && Object.keys(assets).length > 0
+            ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                ethereumAddress.isAddress(firstSelectedAddress)
+                  ? firstSelectedAddress
+                  : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+              ]?.symbol
+            : 'TOKEN_SYMBOL'}
+        </div>
 
+        {showList2 && (
+          <TokenList
+            selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+            onClose={() => setShowList2(false)}
+            onItemClick={val => {
+              setSecondSelectedAddress(val);
+              setShowList2(false);
+            }}
+          />
+        )}
         <div className="coin-container">
-          <div className="left">
-            <img src="./eth.svg" style={{ cursor: 'pointer' }} alt="eth" width={28} height={28} />
-            <div>ETH</div>
-            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+          <div className="left" onClick={() => setShowList2(true)}>
+            <img
+              src={
+                !!assets && Object.keys(assets).length > 0
+                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                      ethereumAddress.isAddress(secondSelectedAddress)
+                        ? secondSelectedAddress
+                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+                    ]?.image
+                  : ''
+              }
+              style={{ cursor: 'pointer' }}
+              alt="eth"
+              width={28}
+              height={28}
+            />
+            <div>
+              {!!assets && Object.keys(assets).length > 0
+                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                    ethereumAddress.isAddress(secondSelectedAddress)
+                      ? secondSelectedAddress
+                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+                  ]?.symbol
+                : 'TOKEN_SYMBOL'}
+            </div>
+            <IconButton
+              width="12px"
+              height="12px"
+              iconType="solid"
+              fontSize="12px"
+              name="chevron-down"
+              color="#4500a0"
+            />
           </div>
 
           <div className="right">
-            <div className="amt">Enter Amount</div>
-            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            <div className="inner-right-input">
+              <input
+                type="number"
+                style={{
+                  border: 'none',
+                  fontSize: 14,
+                  padding: 4,
+                  width: '100%',
+                  outline: 'none',
+                  textAlign: 'right'
+                }}
+                placeholder="Enter Amount"
+              />
+            </div>
+            <div className="inner-right-button">
+              <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            </div>
           </div>
         </div>
 
-        <div className="bal">Balance: 0 ETH</div>
+        <div className="bal">
+          Balance: {balance2}{' '}
+          {!!assets && Object.keys(assets).length > 0
+            ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                ethereumAddress.isAddress(secondSelectedAddress)
+                  ? secondSelectedAddress
+                  : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+              ]?.symbol
+            : 'TOKEN_SYMBOL'}
+        </div>
       </div>
 
       <IconButton
@@ -638,16 +833,70 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
       <div className="text-second">To</div>
 
       <div className="to">
+        {showList3 && (
+          <TokenList
+            selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+            onClose={() => setShowList3(false)}
+            onItemClick={val => {
+              setThirdSelectedAddress(val);
+              setShowList3(false);
+            }}
+          />
+        )}
         <div className="coin-container">
-          <div className="left">
-            <img src="./btc.svg" style={{ cursor: 'pointer' }} alt="btc" width={28} height={28} />
-            <div>BTC</div>
-            <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+          <div className="left" onClick={() => setShowList3(true)}>
+            <img
+              src={
+                !!assets && Object.keys(assets).length > 0
+                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                      ethereumAddress.isAddress(thirdSelectedAddress)
+                        ? thirdSelectedAddress
+                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
+                    ]?.image
+                  : ''
+              }
+              style={{ cursor: 'pointer' }}
+              alt="btc"
+              width={28}
+              height={28}
+            />
+            <div>
+              {!!assets && Object.keys(assets).length > 0
+                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                    ethereumAddress.isAddress(thirdSelectedAddress)
+                      ? thirdSelectedAddress
+                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
+                  ]?.symbol
+                : 'TOKEN_SYMBOL'}
+            </div>
+            <IconButton
+              width="12px"
+              height="12px"
+              iconType="solid"
+              fontSize="12px"
+              name="chevron-down"
+              color="#4500a0"
+            />
           </div>
 
           <div className="right">
-            <div className="amt">Enter Amount</div>
-            <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            <div className="inner-right-input">
+              <input
+                type="number"
+                style={{
+                  border: 'none',
+                  fontSize: 14,
+                  padding: 4,
+                  width: '100%',
+                  outline: 'none',
+                  textAlign: 'right'
+                }}
+                placeholder="Enter Amount"
+              />
+            </div>
+            <div className="inner-right-button">
+              <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+            </div>
           </div>
         </div>
       </div>
