@@ -10,11 +10,13 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import Dropdown from '../components/Dropdown';
 import { useWeb3Context } from '../contexts/web3';
+import Toast from '../components/Toast';
 
 const MainContainer = styled('div')`
   min-width: 100vw;
   min-height: 100vh;
   background-color: #0e0020;
+  position: relative;
   background-image: linear-gradient(
     to bottom right,
     rgba(188, 41, 224, 0.5),
@@ -92,6 +94,8 @@ export default function Index() {
 
   return (
     <MainContainer onClick={handleBackgroundClick}>
+      {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
+      <Toast direction="topRight" status="success" />
       <Header>
         <SwapLogo src="3swap.svg" />
         <div className="nav_right">
