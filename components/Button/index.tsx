@@ -16,6 +16,7 @@ const CustomButton = styled('button')<CustomComponentProps>`
   color: ${props => props.color || '#fff'};
   border: ${props => props.border || 'none'};
   margin-top: ${props => props.marginTop};
+  margin-bottom: ${props => props.marginBottom};
   cursor: pointer;
   font-size: ${props => props.fontSize || '8px'};
   text-align: center;

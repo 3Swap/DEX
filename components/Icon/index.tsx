@@ -8,9 +8,10 @@ type Props = {
 };
 
 const CustomIcon = styled('i')<CustomComponentProps>`
-  width: ${props => props.width || '20px'};
-  height: ${props => props.height || '20px'};
-  font-size: ${props => props.fontSize || '20px'};
+  text-align: center;
+  width: ${props => props.width};
+  height: ${props => props.height};
+  font-size: ${props => props.fontSize};
 `;
 
 const Icon = (props: Props & CustomComponentProps) => (

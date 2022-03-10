@@ -1,7 +1,4 @@
-
-
 import React, { useState } from 'react';
-
 
 import Swap from '../routes/app/swap';
 import Liquidity from '../routes/app/liquidity';
@@ -11,6 +8,7 @@ import { usePageQuery } from '../hooks';
 import { ActiveLink } from '../components/Link';
 import Header from '../components/Header';
 import Button from '../components/Button';
+import Dropdown from '../components/Dropdown';
 
 const MainContainer = styled('div')`
   min-width: 100vw;
@@ -81,20 +79,23 @@ const SwapLogo = styled('img')`
 export default function Index() {
   const { slug } = usePageQuery();
 
-  const [transactionModal,setTransactionModal] = useState(false);
+  const [transactionModal, setTransactionModal] = useState(false);
+  const [liquidityPoolModal, setLiquidityPoolModal] = useState(false);
 
-  const handleBackgroundClick=()=>{
-    if(transactionModal){
+  const handleBackgroundClick = () => {
+    if (transactionModal) {
       setTransactionModal(false);
     }
-  }
+  };
 
   return (
-
     <MainContainer onClick={handleBackgroundClick}>
       <Header>
         <SwapLogo src="3swap.svg" />
-        <Button width="145px" height="45px" title="Connect Wallet" background="#4500a0" fontSize="14px" />
+        <div className="nav_right">
+          <Dropdown />
+          <Button width="145px" height="45px" title="Connect Wallet" background="#4500a0" fontSize="14px" />
+        </div>
       </Header>
       <MainPage>
         <Flex style={{ margin: '1em auto' }}>
@@ -135,7 +136,7 @@ export default function Index() {
           </div>
         ) : slug === 'liquidity' ? (
           <div>
-            <Liquidity />
+            <Liquidity liquidityPoolModal={liquidityPoolModal} setLiquidityPoolModal={setLiquidityPoolModal} />
           </div>
         ) : (
           <div>

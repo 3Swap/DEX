@@ -1,13 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
+import Head from 'next/head';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import IconButton from '../../components/IconButton';
+import TokenList from '../../components/TokenList';
 
 type Props = {
-  transactionModal:boolean,
-  setTransactionModal: any
+  transactionModal: boolean;
+  setTransactionModal: any;
 };
 
 const SwapCard = styled('div')`
@@ -18,8 +20,6 @@ const SwapCard = styled('div')`
   box-shadow: -10px 48.5967px 140px rgba(126, 123, 160, 0.2);
   backdrop-filter: blur(19px);
   /* Note: backdrop-filter has minimal browser support */
-
-
 
   border-radius: 20px;
   display: flex;
@@ -48,7 +48,7 @@ const SwapCard = styled('div')`
 
   .details {
     width: 80%;
-    color: #322E37;
+    color: #322e37;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -63,64 +63,58 @@ const SwapCard = styled('div')`
     font-size: 12px;
     line-height: 24px;
 
-    .detailtext{
+    .detailtext {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
       gap: 10px;
 
-      .info{
+      .info {
         position: relative;
         transition-duration: 250ms;
-     
-        .hover{
+
+        .hover {
           display: none;
         }
-    
-        .triangle{
+
+        .triangle {
           display: none;
         }
-    
-        .info-icon{
+
+        .info-icon {
           cursor: pointer;
           margin-top: 5px;
           z-index: 1;
         }
-    
-        &:hover{
-    
-          .triangle{
+
+        &:hover {
+          .triangle {
             display: block;
             position: absolute;
             width: 18px;
             height: 20px;
             top: 100%;
             z-index: 2;
-    
-            
           }
-    
-          .hover{
+
+          .hover {
             display: block;
             position: absolute;
             width: 100px;
             height: 66px;
             margin-left: -15px;
             top: 140%;
-            background: #FCFCFC;
+            background: #fcfcfc;
             border-radius: 4px;
             font-size: 12px;
             z-index: 2;
           }
         }
       }
-
-
-
     }
 
-    .num{
+    .num {
       font-family: Poppins;
       font-style: normal;
       font-weight: 500;
@@ -128,13 +122,12 @@ const SwapCard = styled('div')`
       line-height: 24px;
       /* identical to box height, or 171% */
 
-
       /* Color primary */
 
-      color: #4500A0;
+      color: #4500a0;
     }
 
-    .num-green{
+    .num-green {
       font-family: Poppins;
       font-style: normal;
       font-weight: 500;
@@ -142,10 +135,9 @@ const SwapCard = styled('div')`
       line-height: 24px;
       /* identical to box height, or 171% */
 
-
       /* Color primary */
 
-      color: #1C8D61;
+      color: #1c8d61;
     }
   }
 
@@ -159,6 +151,10 @@ const SwapCard = styled('div')`
     height: 27px;
     width: 80%;
     margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
   }
 
   .text {
@@ -353,211 +349,246 @@ const SwapCard = styled('div')`
   }
 `;
 
-const TransactionSettings = styled('div')<{open:boolean}>`
-background: linear-gradient(190.57deg, rgba(255, 255, 255, 0.56) 19.25%, rgba(255, 255, 255, 0.56) 19.26%, rgba(248, 248, 255, 0.71) 54.39%, rgba(255, 255, 255, 0.59) 90.02%);
-box-shadow: 0px 15px 70px rgba(189, 189, 189, 0.7);
-backdrop-filter: blur(19px);
+const TransactionSettings = styled('div')<{ open: boolean }>`
+  background: linear-gradient(
+    190.57deg,
+    rgba(255, 255, 255, 0.56) 19.25%,
+    rgba(255, 255, 255, 0.56) 19.26%,
+    rgba(248, 248, 255, 0.71) 54.39%,
+    rgba(255, 255, 255, 0.59) 90.02%
+  );
+  box-shadow: 0px 15px 70px rgba(189, 189, 189, 0.7);
+  backdrop-filter: blur(19px);
 
-border-radius: 20px;
-width: 360px;
-height: 298px;
-position: absolute;
-right: 10%;
-top: 15%;
-padding-left: 20px;
-opacity: ${(props)=>props.open?"1":"0"};
-transition-duration: 250ms;
-
-display: flex;
-flex-direction: column;
-justify-content: flex-start;
-align-items: flex-start;
-
-.top{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 95%;
-
-  margin-top: 50px;
-  font-family: Poppins;
-font-style: normal;
-font-weight: bold;
-font-size: 22px;
-line-height: 24px;
-/* or 109% */
-
-
-/* Color primary */
-
-color: #4500A0;
-.close{
-  cursor: pointer;
-}
-
-}
-
-.slippage{
-  width: 65%;
-  color: #4500A0;
-  margin-top: 8px;
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
+  border-radius: 20px;
+  width: 360px;
+  height: 298px;
+  position: absolute;
+  right: 10%;
+  top: 15%;
+  padding-left: 20px;
+  opacity: ${props => (props.open ? '1' : '0')};
   transition-duration: 250ms;
 
-  .info{
-    position: relative;
-    transition-duration: 250ms;
-    .hover{
-      display: none;
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 
-    .triangle{
-      display: none;
-    }
+  .top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
 
-    .info-icon{
+    margin-top: 50px;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 24px;
+    /* or 109% */
+
+    /* Color primary */
+
+    color: #4500a0;
+    .close {
       cursor: pointer;
     }
+  }
 
-    &:hover{
+  .slippage {
+    width: 65%;
+    color: #4500a0;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    transition-duration: 250ms;
 
-      .triangle{
-        display: block;
-        position: absolute;
-        width: 18px;
-        height: 20px;
-        top: 80%;
-
-        
+    .info {
+      position: relative;
+      transition-duration: 250ms;
+      .hover {
+        display: none;
       }
 
-      .hover{
-        display: block;
-        position: absolute;
-        width: 100px;
-        height: 66px;
-        margin-left: -15px;
-        top: 200%;
-        background: #FCFCFC;
-        border-radius: 4px;
-        font-size: 12px;
+      .triangle {
+        display: none;
+      }
+
+      .info-icon {
+        cursor: pointer;
+      }
+
+      &:hover {
+        .triangle {
+          display: block;
+          position: absolute;
+          width: 18px;
+          height: 20px;
+          top: 80%;
+        }
+
+        .hover {
+          display: block;
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          margin-left: -15px;
+          top: -50%;
+          background: #f5f5f5;
+          border-radius: 4px;
+          font-size: 12px;
+          padding: 8px;
+        }
       }
     }
   }
-}
 
-.deadline{
-  width: 65%;
+  .deadline {
+    width: 65%;
 
-  height: 35px;
-  margin-top: 10px;
-}
-
-.box{
-  width: 70%;
-  margin-top: 10px;
-  height: 45px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 10px;
-  font-family: Poppins;
-font-style: normal;
-font-weight: 500;
-font-size: 12px;
-line-height: 24px;
-
-  .round{
-    width: 45px;
-height: 24px;
-padding: 0px 10px;
-background: #FCFCFC;
-border-radius: 28px;
-background: white;
-font-family: Poppins;
-font-style: normal;
-font-weight: 500;
-font-size: 12px;
-line-height: 24px;
-color: rgba(0, 0, 0, 0.7);
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-
+    height: 35px;
+    margin-top: 10px;
   }
 
-}
+  .box {
+    width: 70%;
+    margin-top: 10px;
+    height: 45px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 24px;
 
-
-
+    .round {
+      width: 45px;
+      height: 24px;
+      padding: 0px 10px;
+      background: #fcfcfc;
+      border-radius: 28px;
+      background: white;
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 24px;
+      color: rgba(0, 0, 0, 0.7);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 `;
 
-
-export default function Swap({transactionModal,setTransactionModal}: Props) {
-  
-
-
-
- 
-
+export default function Swap({ transactionModal, setTransactionModal }: Props) {
   return (
     <SwapCard>
+      <Head>
+        <title>3Swap | Swap</title>
+      </Head>
       <div className="title">
+        <Icon
+          style={{ cursor: 'pointer' }}
+          iconType="solid"
+          name="chart-line"
+          width="20px"
+          height="20px"
+          fontSize="20px"
+        />
         <div>Swap</div>
-        <Icon style={{cursor:'pointer'}} iconType="solid" name="gear" width="28px" height="28px" onClick={()=>setTransactionModal(!transactionModal)}/>
+        <Icon
+          style={{ cursor: 'pointer' }}
+          iconType="solid"
+          name="gear"
+          width="20px"
+          height="20px"
+          fontSize="20px"
+          onClick={() => setTransactionModal(!transactionModal)}
+        />
       </div>
       <div className="desc">Swap two tokens for one, pay less.</div>
-          
-         
-    
-                <TransactionSettings onClick={(e:any)=>{e.stopPropagation()}} open={transactionModal}>
-                  <div className='top'>
-                    <div>Transaction Settings</div>
-                    <img src='./close.svg' className='close' onClick={()=>setTransactionModal(false)}/>
-                  </div>
-                  <div className='slippage'>
-                    <div>Slippage Tolerance</div>
-                    <div className='info'>
-                      <img src='./info.svg' className='info-icon'></img>
-                      <img src='./triangle.svg' className='triangle'></img>
-                      <div className='hover'>
-                        This will have info of question mark....
-                      </div>
-                    </div>
-                  
-                  </div>
-                  <div className='box'>
-                      <div className='round'>0.1%</div>
-                      <div className='round'>0.5%</div>
-                      <div className='round'>1.0%</div>
-                  </div>
-                  <div className='slippage'>
-                      <div>Transaction Tolerance</div>
-                      <div className='info'>
-                        <img src='./info.svg' className='info-icon'></img>
-                        <img src='./triangle.svg' className='triangle'></img>
-                        <div className='hover'>
-                          This will have info of question mark....
-                        </div>
-                      </div>
-                  </div>
+      <TokenList />
+      <TransactionSettings
+        onClick={(e: any) => {
+          e.stopPropagation();
+        }}
+        open={transactionModal}
+      >
+        <div className="top">
+          <div>Transaction Settings</div>
+          <IconButton
+            iconType="solid"
+            name="close"
+            width="20px"
+            height="20px"
+            color="#fff"
+            fontSize="15px"
+            background="#4500a0"
+            borderRadius="50%"
+            click={() => setTransactionModal(false)}
+          />
+        </div>
+        <div className="slippage">
+          <div>Slippage Tolerance</div>
+          <div className="info">
+            <IconButton
+              iconType="solid"
+              name="question"
+              width="16px"
+              height="16px"
+              color="#4500a0"
+              fontSize="9px"
+              border="1px solid #4500a0"
+              borderRadius="50%"
+            />
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
+            <div className="hover">
+              Percentage change you&apos;re willing to allow between transaction execution time and block inclusion
+              time.
+            </div>
+          </div>
+        </div>
+        <div className="box">
+          <div className="round">0.1%</div>
+          <div className="round">0.5%</div>
+          <div className="round">1.0%</div>
+        </div>
+        <div className="slippage">
+          <div>Transaction Deadline</div>
+          <div className="info">
+            <IconButton
+              iconType="solid"
+              name="question"
+              width="16px"
+              height="16px"
+              color="#4500a0"
+              fontSize="9px"
+              border="1px solid #4500a0"
+              borderRadius="50%"
+            />
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
+            <div className="hover">
+              How long from execution time before this transaction will be considered a failed one.
+            </div>
+          </div>
+        </div>
 
-                  <div className='box'>
-                     <div className='round'>20</div>
-                     <div>minutes</div>
-                    </div>
-                </TransactionSettings>
-    
-          
-      
-        
- 
+        <div className="box">
+          <div className="round">20</div>
+          <div>minutes</div>
+        </div>
+      </TransactionSettings>
 
       <div className="text">From</div>
 
@@ -599,6 +630,7 @@ export default function Swap({transactionModal,setTransactionModal}: Props) {
         name="rotate"
         width="34px"
         height="34px"
+        fontSize="20px"
         borderRadius="50%"
         marginTop="2em"
       />
@@ -620,51 +652,50 @@ export default function Swap({transactionModal,setTransactionModal}: Props) {
         </div>
       </div>
 
-      <div className='details'>
-        <div className='detailtext'>  
+      <div className="details">
+        <div className="detailtext">
           <div>Minimum recieved</div>
-          <div className='info'>
-                        <img src='./info-black.svg' className='info-icon'></img>
-                        <img src='./triangle.svg' className='triangle'></img>
-                        <div className='hover'>
-                          This will have info of question mark....
-                        </div>
+          <div className="info">
+            <img src="./info-black.svg" alt="image" className="info-icon"></img>
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
+            <div className="hover">This will have info of question mark....</div>
           </div>
-        
         </div>
-        <div className='num'>0.00</div>
+        <div className="num">0.00</div>
       </div>
 
-      <div className='details'>
-        <div className='detailtext'>  
+      <div className="details">
+        <div className="detailtext">
           <div>Price impact</div>
-          <div className='info'>
-                        <img src='./info-black.svg' className='info-icon'></img>
-                        <img src='./triangle.svg' className='triangle'></img>
-                        <div className='hover'>
-                          This will have info of question mark....
-                        </div>
+          <div className="info">
+            <img src="./info-black.svg" alt="image" className="info-icon"></img>
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
+            <div className="hover">This will have info of question mark....</div>
           </div>
-        
         </div>
-        <div className='num-green'>0.05%</div>
+        <div className="num-green">0.05%</div>
       </div>
 
-      <div className='details'>
-        <div className='detailtext'>  
+      <div className="details">
+        <div className="detailtext">
           <div>Liquidity provider</div>
-          <div className='info'>
-                        <img src='./info-black.svg' className='info-icon'></img>
-                        <img src='./triangle.svg' className='triangle'></img>
-                        <div className='hover'>
-                          This will have info of question mark....
-                        </div>
+          <div className="info">
+            <img src="./info-black.svg" alt="image" className="info-icon"></img>
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
+            <div className="hover">This will have info of question mark....</div>
           </div>
-        
         </div>
-        <div className='num'>0.000000001 BTC</div>
+        <div className="num">0.000000001 BTC</div>
       </div>
-      <Button background="#4500a0" marginTop="20px" width="460px" height="62px" title="Swap" fontSize="20px" />
+      <Button
+        background="#4500a0"
+        marginTop="20px"
+        marginBottom="20px"
+        width="460px"
+        height="62px"
+        title="Swap"
+        fontSize="20px"
+      />
     </SwapCard>
   );
 }
