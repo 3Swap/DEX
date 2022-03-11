@@ -9,13 +9,8 @@ import Web3 from 'web3';
 import store from '../redux/store';
 import { AssetsProvider } from '../contexts/assets';
 import type { AppProps } from 'next/app';
-import dynamic from 'next/dynamic';
 import { Web3GlobalProvider } from '../contexts/web3';
-
-// Import dynamically to prevent trouble with SSR
-const Web3NetworkRoot = dynamic(() => import('../components/Web3NetworkRoot'), {
-  ssr: false
-});
+import { ToastProvider } from '../contexts/toast';
 
 const getLibrary = (provider: any) => {
   return new Web3(provider);
@@ -25,13 +20,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3NetworkRoot getLibrary={getLibrary}>
-          <Web3GlobalProvider>
-            <AssetsProvider>
+        <Web3GlobalProvider>
+          <AssetsProvider>
+            <ToastProvider>
               <Component {...pageProps} />
-            </AssetsProvider>
-          </Web3GlobalProvider>
-        </Web3NetworkRoot>
+            </ToastProvider>
+          </AssetsProvider>
+        </Web3GlobalProvider>
       </Web3ReactProvider>
     </Provider>
   );

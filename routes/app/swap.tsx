@@ -511,7 +511,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
 export default function Swap({ transactionModal, setTransactionModal }: Props) {
   const { inputCurrency1, inputCurrency2, outputCurrency, chainId: queryChainId } = useCurrencyQuery();
   const { assets } = useAssetsContext();
-  const { networkWeb3ChainId, chainId, switchChain, isActive } = useWeb3Context();
+  const { localChainId, chainId, switchChain, isActive } = useWeb3Context();
 
   const [firstSelectedAddress, setFirstSelectedAddress] = useState('');
   const [secondSelectedAddress, setSecondSelectedAddress] = useState('');
@@ -539,18 +539,12 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
   }, [inputCurrency1, inputCurrency2, outputCurrency, queryChainId]);
 
   useEffect(() => {
-    if (assets && Object.keys(assets).length > 1 && (queryChainId || chainId || networkWeb3ChainId)) {
-      setFirstSelectedAddress(
-        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
-      );
-      setSecondSelectedAddress(
-        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
-      );
-      setThirdSelectedAddress(
-        Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
-      );
+    if (assets && Object.keys(assets).length > 1 && (queryChainId || chainId || localChainId)) {
+      setFirstSelectedAddress(Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[0]);
+      setSecondSelectedAddress(Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[1]);
+      setThirdSelectedAddress(Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[2]);
     }
-  }, [assets, queryChainId, chainId, networkWeb3ChainId]);
+  }, [assets, queryChainId, chainId, localChainId]);
 
   useEffect(() => {
     if (!!firstSelectedAddress && ethereumAddress.isAddress(firstSelectedAddress)) {
@@ -679,10 +673,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             <img
               src={
                 !!assets && Object.keys(assets).length > 0
-                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                  ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
                       ethereumAddress.isAddress(firstSelectedAddress)
                         ? firstSelectedAddress
-                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+                        : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[0]
                     ]?.image
                   : ''
               }
@@ -693,10 +687,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             />
             <div>
               {!!assets && Object.keys(assets).length > 0
-                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
                     ethereumAddress.isAddress(firstSelectedAddress)
                       ? firstSelectedAddress
-                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+                      : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[0]
                   ]?.symbol
                 : 'TOKEN_SYMBOL'}
             </div>
@@ -734,10 +728,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         <div className="bal">
           Balance: {balance1}{' '}
           {!!assets && Object.keys(assets).length > 0
-            ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+            ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
                 ethereumAddress.isAddress(firstSelectedAddress)
                   ? firstSelectedAddress
-                  : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[0]
+                  : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[0]
               ]?.symbol
             : 'TOKEN_SYMBOL'}
         </div>
@@ -757,10 +751,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             <img
               src={
                 !!assets && Object.keys(assets).length > 0
-                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                  ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
                       ethereumAddress.isAddress(secondSelectedAddress)
                         ? secondSelectedAddress
-                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+                        : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[1]
                     ]?.image
                   : ''
               }
@@ -771,10 +765,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             />
             <div>
               {!!assets && Object.keys(assets).length > 0
-                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
                     ethereumAddress.isAddress(secondSelectedAddress)
                       ? secondSelectedAddress
-                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+                      : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[1]
                   ]?.symbol
                 : 'TOKEN_SYMBOL'}
             </div>
@@ -812,10 +806,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         <div className="bal">
           Balance: {balance2}{' '}
           {!!assets && Object.keys(assets).length > 0
-            ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+            ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
                 ethereumAddress.isAddress(secondSelectedAddress)
                   ? secondSelectedAddress
-                  : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[1]
+                  : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[1]
               ]?.symbol
             : 'TOKEN_SYMBOL'}
         </div>
@@ -850,10 +844,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             <img
               src={
                 !!assets && Object.keys(assets).length > 0
-                  ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                  ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
                       ethereumAddress.isAddress(thirdSelectedAddress)
                         ? thirdSelectedAddress
-                        : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
+                        : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[2]
                     ]?.image
                   : ''
               }
@@ -864,10 +858,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             />
             <div>
               {!!assets && Object.keys(assets).length > 0
-                ? assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`][
+                ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
                     ethereumAddress.isAddress(thirdSelectedAddress)
                       ? thirdSelectedAddress
-                      : Object.keys(assets[`0x${(queryChainId || chainId || networkWeb3ChainId)?.toString(16)}`])[2]
+                      : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[2]
                   ]?.symbol
                 : 'TOKEN_SYMBOL'}
             </div>

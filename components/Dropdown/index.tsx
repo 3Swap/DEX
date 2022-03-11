@@ -3,16 +3,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import Icon from '../Icon';
-import { supportedChainIdsToNetworkNameMap } from '../../global/maps';
+import { supportedChainIdsToNetworkNameMap, chainIdToImageMap } from '../../global/maps';
 import { useWeb3Context } from '../../contexts/web3';
-
-const chainIdToImageMap: { [key: number]: string } = {
-  0x3: '/ethereum.svg',
-  0x61: '/binance.svg',
-  0x13881: '/polygon.svg',
-  0xa869: '/avalanche.svg',
-  0xfa2: '/fantom.svg'
-};
 
 const DropdownContainer = styled('div')`
   color: #000;
@@ -93,7 +85,7 @@ const IconChain = styled('img')`
 
 const Dropdown = () => {
   const [isOpen, setIsDropdownOpen] = useState(false);
-  const { isActive, chainId, networkWeb3ChainId, switchChain } = useWeb3Context();
+  const { isActive, chainId, localChainId, switchChain } = useWeb3Context();
 
   const toggle = () => setIsDropdownOpen(!isOpen);
 
@@ -120,8 +112,8 @@ const Dropdown = () => {
               }}
             >
               <Image
-                src={chainIdToImageMap[(chainId as number) || (networkWeb3ChainId as number)]}
-                alt={(chainId || networkWeb3ChainId)?.toString()}
+                src={chainIdToImageMap[(chainId as number) || (localChainId as number)]}
+                alt={(chainId || localChainId)?.toString()}
                 className="chain_icon"
                 width="18px"
                 height="18px"
@@ -136,7 +128,7 @@ const Dropdown = () => {
               }}
             >
               <span style={{ fontSize: 16 }}>
-                {supportedChainIdsToNetworkNameMap[(chainId as number) || (networkWeb3ChainId as number)]}
+                {supportedChainIdsToNetworkNameMap[(chainId as number) || (localChainId as number)]}
               </span>
             </div>
             <div

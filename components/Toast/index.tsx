@@ -1,8 +1,11 @@
 import styled, { css } from 'styled-components';
 import Icon from '../Icon';
+
 interface IToast {
   direction?: string;
-  status?: string;
+  status?: 'success' | 'danger' | 'warning';
+  children?: any;
+  onClose?: () => void;
 }
 
 const ToastNotification = styled.div<IToast>`
@@ -59,6 +62,7 @@ const ToastContainer = styled.div<IToast>`
           `}
     flex: 0.1;
     padding: 20px 25px;
+    color: #fff;
   }
   .body {
     display: flex;
@@ -88,15 +92,20 @@ const ToastContainer = styled.div<IToast>`
   }
 `;
 
-const Toast = ({ direction, status }: IToast) => {
+const Toast = ({ direction, status, children }: IToast) => {
   return (
     <>
       {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
       <ToastNotification direction={direction}>
         <ToastContainer status={status}>
-          <div className="badge">&nbsp;</div>
+          <div className="badge">
+            <Icon
+              iconType="solid"
+              name={status === 'warning' ? 'triangle-exclamation' : status === 'danger' ? 'ban' : 'check'}
+            />
+          </div>
           <div className="body">
-            <div className="message">Toast Notification goes here.</div>
+            <div className="message">{children}</div>
             <div className="close">
               <Icon iconType="solid" name="times" width="20px" height="20px" fontSize="20px" />
             </div>
