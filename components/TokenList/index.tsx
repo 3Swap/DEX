@@ -165,7 +165,7 @@ const TokenlistItem = styled.button`
 
 const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
   const { assets } = useAssetsContext();
-  const { chainId, networkWeb3ChainId } = useWeb3Context();
+  const { chainId, localChainId } = useWeb3Context();
   return (
     <>
       <TokenListContainer>
@@ -184,19 +184,19 @@ const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
             <Tokenlist>
               {!!assets &&
                 Object.keys(assets).length > 0 &&
-                _.map(Object.keys(assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`]), key => (
+                _.map(Object.keys(assets[`0x${(chainId || localChainId)?.toString(16)}`]), key => (
                   <TokenlistItem key={key} disabled={selectedAddresses.includes(key)} onClick={() => onItemClick(key)}>
                     <div className="img">
                       <img
-                        src={`${assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].image}`}
-                        alt={assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].name}
+                        src={`${assets[`0x${(chainId || localChainId)?.toString(16)}`][key].image}`}
+                        alt={assets[`0x${(chainId || localChainId)?.toString(16)}`][key].name}
                         width="25px"
                         height="25px"
                       />
                     </div>
                     <div className="tokenName">
-                      <span>{assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].symbol}</span>
-                      <span>{assets[`0x${(chainId || networkWeb3ChainId)?.toString(16)}`][key].name}</span>
+                      <span>{assets[`0x${(chainId || localChainId)?.toString(16)}`][key].symbol}</span>
+                      <span>{assets[`0x${(chainId || localChainId)?.toString(16)}`][key].name}</span>
                     </div>
                   </TokenlistItem>
                 ))}
