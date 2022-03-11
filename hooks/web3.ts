@@ -29,7 +29,7 @@ export const useBalance = () => {
 
   const fetchBalance = useCallback(
     (contract: string) => {
-      if (!!account && !!chainId && !!chains) {
+      if (!!account && !!chainId && !!chains && Object.keys(chains).length > 0) {
         const rpcUrl = chains[`0x${chainId?.toString(16)}`].rpcUrl;
         if (contract.toLowerCase() === WETH[chainId].address().toLowerCase()) {
           _request(rpcUrl, {
