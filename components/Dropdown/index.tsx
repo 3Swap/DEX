@@ -3,16 +3,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import Icon from '../Icon';
-import { supportedChainIdsToNetworkNameMap } from '../../global/maps';
+import { supportedChainIdsToNetworkNameMap, chainIdToImageMap } from '../../global/maps';
 import { useWeb3Context } from '../../contexts/web3';
-
-const chainIdToImageMap: { [key: number]: string } = {
-  0x3: '/ethereum.svg',
-  0x61: '/binance.svg',
-  0x13881: '/polygon.svg',
-  0xa869: '/avalanche.svg',
-  0xfa2: '/fantom.svg'
-};
 
 const DropdownContainer = styled('div')`
   color: #000;
