@@ -22,8 +22,6 @@ export const Web3GlobalProvider = ({ children }: any) => {
   const { activate, account, deactivate, chainId, library } = useWeb3React<Web3>();
   const [localChainId, setLocalChainId] = useState(0x61);
 
-  const { ethereum } = window as unknown as Window & { ethereum: any };
-
   useEffect(() => {
     injected.isAuthorized().then(authorized => {
       if (authorized) {
@@ -45,28 +43,27 @@ export const Web3GlobalProvider = ({ children }: any) => {
     setIsActive(false);
   }, []);
 
-  const switchChain = useCallback(
-    (chainId: string) => {
-      if (ethereum) {
-        ethereum
-          .request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId }]
-          })
-          .then(() => {
-            setLocalChainId(parseInt(chainId));
-          })
-          .catch((error: any) => {
-            // This code means the chain hasn't been added yet
-            if (error.code === 4902) {
-              // Fetch chain info from server
-              ethereum.request({ method: 'wallet_addEthereumChain', params: [] }).then(console.log);
-            }
-          });
-      }
-    },
-    [ethereum]
-  );
+  const switchChain = useCallback((chainId: string) => {
+    const { ethereum } = window as unknown as Window & { ethereum: any };
+
+    if (ethereum) {
+      ethereum
+        .request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId }]
+        })
+        .then(() => {
+          setLocalChainId(parseInt(chainId));
+        })
+        .catch((error: any) => {
+          // This code means the chain hasn't been added yet
+          if (error.code === 4902) {
+            // Fetch chain info from server
+            ethereum.request({ method: 'wallet_addEthereumChain', params: [] }).then(console.log);
+          }
+        });
+    }
+  }, []);
 
   return (
     <Web3Context.Provider
