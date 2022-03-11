@@ -91,6 +91,7 @@ const ToastContainer = styled.div<IToast>`
 const Toast = ({ direction, status }: IToast) => {
   return (
     <>
+      {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
       <ToastNotification direction={direction}>
         <ToastContainer status={status}>
           <div className="badge">&nbsp;</div>
