@@ -2,7 +2,7 @@
 import type Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useCallback, useEffect, createContext, useContext } from 'react';
-import { injected, network } from '../connectors';
+import { injected } from '../connectors';
 
 type Web3GlobalContextType = {
   account?: string | null;
@@ -11,7 +11,7 @@ type Web3GlobalContextType = {
   switchChain: (chainId: string) => void;
   connectWallet: () => void;
   disconnectWallet: () => void;
-  networkWeb3ChainId?: number;
+  localChainId?: number;
   library?: Web3;
 };
 
@@ -20,7 +20,7 @@ const Web3Context = createContext<Web3GlobalContextType>({} as Web3GlobalContext
 export const Web3GlobalProvider = ({ children }: any) => {
   const [isActive, setIsActive] = useState(false);
   const { activate, account, deactivate, chainId, library } = useWeb3React<Web3>();
-  const { chainId: networkWeb3ChainId, activate: activateNetworkWeb3 } = useWeb3React('network');
+  const [localChainId, setLocalChainId] = useState(0x61);
 
   const { ethereum } = window as unknown as Window & { ethereum: any };
 
@@ -31,12 +31,6 @@ export const Web3GlobalProvider = ({ children }: any) => {
           setIsActive(true);
         });
       }
-    });
-  }, []);
-
-  useEffect(() => {
-    activateNetworkWeb3(network, undefined, true).then(() => {
-      console.log('Network web3 connected');
     });
   }, []);
 
@@ -60,7 +54,7 @@ export const Web3GlobalProvider = ({ children }: any) => {
             params: [{ chainId }]
           })
           .then(() => {
-            network.changeChainId(parseInt(chainId));
+            setLocalChainId(parseInt(chainId));
           })
           .catch((error: any) => {
             // This code means the chain hasn't been added yet
@@ -83,7 +77,7 @@ export const Web3GlobalProvider = ({ children }: any) => {
         account,
         connectWallet,
         disconnectWallet,
-        networkWeb3ChainId,
+        localChainId,
         library
       }}
     >

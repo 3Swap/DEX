@@ -11,6 +11,7 @@ import Button from '../components/Button';
 import Dropdown from '../components/Dropdown';
 import { useWeb3Context } from '../contexts/web3';
 import Toast from '../components/Toast';
+import { useToastContext } from '../contexts/toast';
 
 const MainContainer = styled('div')`
   min-width: 100vw;
@@ -111,6 +112,7 @@ const SwapLogo = styled('img')`
 export default function Index() {
   const { slug } = usePageQuery();
   const { isActive, connectWallet, account, disconnectWallet } = useWeb3Context();
+  const { isVisible, content, toastType } = useToastContext();
 
   const [transactionModal, setTransactionModal] = useState(false);
   const [liquidityPoolModal, setLiquidityPoolModal] = useState(false);
@@ -148,7 +150,11 @@ export default function Index() {
         </Header>
         <MainPage>
           {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
-          <Toast direction="topRight" status="success" />
+          {isVisible && (
+            <Toast direction="bottomRight" status={toastType}>
+              {content}
+            </Toast>
+          )}
           <Flex style={{ margin: '1em auto' }}>
             <div></div>
             <div className="linkNav">
