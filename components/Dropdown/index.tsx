@@ -15,18 +15,19 @@ const chainIdToImageMap: { [key: number]: string } = {
 };
 
 const DropdownContainer = styled('div')`
-  color: #fff;
+  color: #000;
   border-radius: 5px;
   width: 10.5em;
+  cursor: pointer;
 `;
 
 const DropdownHeader = styled('div')`
   cursor: pointer;
   border-radius: 8px;
-  background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
-  box-shadow: -10px 48.5967px 140px rgba(126, 123, 160, 0.2);
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
   height: 45px;
-  backdrop-filter: blur(19px);
+  backdrop-filter: blur(1px);
   /* padding: 10px; */
   align-items: center;
   display: flex;
@@ -46,7 +47,7 @@ const DropdownHeader = styled('div')`
 `;
 
 const DropdownListContainer = styled('div')`
-  color: #fff;
+  color: #000;
   background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
   box-shadow: -10px 48.5967px 140px rgba(126, 123, 160, 0.2);
   backdrop-filter: blur(19px);

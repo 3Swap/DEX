@@ -36,7 +36,7 @@ const ChartArea = styled.div`
 
 const TransparenDiv = styled.div`
   position: absolute;
-  backgroundcolor: #00ff0000;
+  background: #00ff0000;
   height: 100%;
   width: 100%;
 `;

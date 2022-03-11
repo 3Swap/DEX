@@ -453,7 +453,7 @@ export default function ChartComponent({}: Props): ReactElement {
         <TokenImg src={'./bnb.svg'} alt="bnb" />
         <TokenImg src={'/usdt.webp'} alt="usdt" />
         {selectedPair}
-        <img src="./swapIcon.svg" className="swap"></img>
+        <img src="./swapIcon.svg" alt="image" className="swap" />
       </ChartTitle>
       <Chart
         setCurrSymbolPrice={null}

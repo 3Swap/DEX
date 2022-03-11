@@ -10,6 +10,7 @@ const HeaderContainer = styled('div')`
   align-items: flex-end;
   justify-content: space-between;
   height: 100px;
+  backdrop-filter: blur(1px);
   padding-bottom: 20px;
   .nav_right {
     display: flex;

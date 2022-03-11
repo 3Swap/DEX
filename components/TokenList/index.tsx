@@ -14,13 +14,9 @@ type Props = {
 const TokenListContainer = styled.div`
   position: absolute;
   top: 15%;
-  background: linear-gradient(
-    190.57deg,
-    rgba(255, 255, 255, 0.56) 19.25%,
-    rgba(248, 248, 255, 0.71) 54.39%,
-    rgba(255, 255, 255, 0.59) 90.02%
-  );
-  box-shadow: -10px 48.5967px 140px rgba(126, 123, 160, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(19px);
   width: 400px;
   min-height: 500px;
@@ -37,7 +33,7 @@ const TokenWrapper = styled.div`
 const TokenHeader = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px 12px;
+  padding: 10px 12px;
 
   .headertext {
     display: flex;
@@ -46,6 +42,9 @@ const TokenHeader = styled.div`
     color: rgba(0, 0, 0, 0.7);
     i {
       cursor: pointer;
+      position: absolute;
+      top: 15px;
+      right: 20px;
     }
   }
   .tokenSearch {
@@ -74,7 +73,7 @@ const TokenHeader = styled.div`
 
 const TokenListWrapper = styled.div`
   width: 100%;
-  height: 400px;
+  height: 300px;
   overflow-y: scroll;
   margin-top: 30px;
   ::-webkit-scrollbar {
@@ -95,7 +94,7 @@ const Tokenlist = styled.div`
 `;
 
 const TokenlistItem = styled.button`
-  margin: 8px 0;
+  margin: 3px 0;
   width: 100%;
   display: flex;
   align-items: center;
@@ -105,14 +104,33 @@ const TokenlistItem = styled.button`
   border: none;
   background: transparent;
   text-align: left;
-
+  transition: all 0.5s linear;
   &:hover {
     background: #4500a0;
+    transition: all 0.5s linear;
     color: rgba(255, 255, 255, 0.7);
+    .tokenName {
+      span {
+        &:nth-child(1),
+        :nth-child(2) {
+          color: #fff;
+        }
+      }
+    }
   }
 
   &:disabled {
-    background: #c6c6cc;
+    background: rgba(0, 0, 0, 0.1);
+    .tokenName {
+      span {
+        &:nth-child(1) {
+          color: #4500a0;
+        }
+        &:nth-child(2) {
+          color: #9978c5;
+        }
+      }
+    }
   }
 
   .img {
