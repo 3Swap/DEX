@@ -100,7 +100,7 @@ const TokenlistItem = styled.button`
   align-items: center;
   cursor: pointer;
   transition: all 0.3s linear;
-  padding: 4px 8px;
+  padding: 4px 20px;
   border: none;
   background: transparent;
   text-align: left;
