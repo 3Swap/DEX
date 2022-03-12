@@ -16,7 +16,7 @@ const DropdownContainer = styled('div')`
 const DropdownHeader = styled('div')`
   cursor: pointer;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
   height: 45px;
   backdrop-filter: blur(1px);

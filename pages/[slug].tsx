@@ -16,7 +16,7 @@ import { useToastContext } from '../contexts/toast';
 const MainContainer = styled('div')`
   min-width: 100vw;
   min-height: 100vh;
-  background-color: whitesmoke;
+  background-color: #0e0020;
 
   position: relative;
   .bg {
@@ -31,21 +31,21 @@ const MainContainer = styled('div')`
     }
     &:nth-child(2) {
       background: #fce8a5;
-      left: 500px;
-      height: 350px;
-      width: 800px;
+      left: 150px;
+      height: 500px;
+      width: 400px;
     }
     &:nth-child(3) {
-      left: 600px;
+      left: 500px;
       top: 200px;
       width: 300px;
-      height: 500px;
+      height: 100px;
       background: #ffd549;
     }
     &:nth-child(4) {
       background: linear-gradient(to bottom, #4500a0, #9e00ff);
-      width: 800px;
-      height: 1000px;
+      width: 600px;
+      height: 800px;
       left: -100px;
       top: -100px;
     }
