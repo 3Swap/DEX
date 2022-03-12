@@ -56,7 +56,7 @@ const SwapCard = styled('div')`
 
   .details {
     width: 80%;
-    color: #322e37;
+    color: #fff;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -112,6 +112,7 @@ const SwapCard = styled('div')`
             margin-left: -15px;
             top: 140%;
             background: #fcfcfc;
+            color: #4500a0;
             border-radius: 4px;
             font-size: 12px;
             z-index: 2;
@@ -131,13 +132,13 @@ const SwapCard = styled('div')`
 
       /* Color primary */
 
-      color: #4500a0;
+      color: #fff;
     }
 
     .num-green {
       font-family: Poppins;
       font-style: normal;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 14px;
       line-height: 24px;
       /* identical to box height, or 171% */
@@ -367,13 +368,7 @@ const SwapCard = styled('div')`
 `;
 
 const TransactionSettings = styled('div')<{ open: boolean }>`
-  background: linear-gradient(
-    190.57deg,
-    rgba(255, 255, 255, 0.56) 19.25%,
-    rgba(255, 255, 255, 0.56) 19.26%,
-    rgba(248, 248, 255, 0.71) 54.39%,
-    rgba(255, 255, 255, 0.59) 90.02%
-  );
+  background: rgba(255, 255, 255, 0.8);
   box-shadow: 0px 15px 70px rgba(189, 189, 189, 0.7);
   backdrop-filter: blur(19px);
 
@@ -399,7 +394,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
     align-items: center;
     width: 95%;
 
-    margin-top: 50px;
+    margin-top: 30px;
     font-family: Poppins;
     font-style: normal;
     font-weight: bold;
@@ -418,7 +413,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
   .slippage {
     width: 65%;
     color: #4500a0;
-    margin-top: 8px;
+    margin-top: 20px;
     display: flex;
     flex-direction: row;
     gap: 20px;
@@ -473,9 +468,8 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
   }
 
   .box {
-    width: 70%;
+    width: 95%;
     margin-top: 10px;
-    height: 45px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -493,7 +487,6 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
       padding: 0px 10px;
       background: #fcfcfc;
       border-radius: 28px;
-      background: white;
       font-family: Poppins;
       font-style: normal;
       font-weight: 500;
@@ -504,6 +497,19 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.3s ease-in-out;
+      border: 1px solid #ccc;
+      &:first-child {
+        background: #4500a0;
+        color: #fff;
+        border: none;
+      }
+      &:hover {
+        border: none;
+        background: #4500a0;
+        color: #fff;
+        transition: all 0.3s ease-in-out;
+      }
     }
   }
 `;
@@ -618,7 +624,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
               borderRadius="50%"
             />
             <img src="./triangle.svg" alt="image" className="triangle"></img>
-            <div className="hover">
+            <div className="hover" style={{ width: '200px', height: 'auto' }}>
               Percentage change you&apos;re willing to allow between transaction execution time and block inclusion
               time.
             </div>
@@ -643,7 +649,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
               borderRadius="50%"
             />
             <img src="./triangle.svg" alt="image" className="triangle"></img>
-            <div className="hover">
+            <div className="hover" style={{ width: '200px', height: 'auto' }}>
               How long from execution time before this transaction will be considered a failed one.
             </div>
           </div>
@@ -939,7 +945,13 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         width="460px"
         title="Swap"
         fontSize="20px"
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '25px 0px' }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '25px 0px',
+          borderRadius: '10px'
+        }}
       />
     </SwapCard>
   );

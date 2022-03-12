@@ -16,7 +16,7 @@ import { useToastContext } from '../contexts/toast';
 const MainContainer = styled('div')`
   min-width: 100vw;
   min-height: 100vh;
-  background-color: whitesmoke;
+  background-color: #0e0020;
 
   position: relative;
   .bg {
@@ -31,25 +31,23 @@ const MainContainer = styled('div')`
     }
     &:nth-child(2) {
       background: #fce8a5;
-      left: 500px;
-      height: 350px;
-      width: 800px;
+      left: 150px;
+      height: 500px;
+      width: 400px;
     }
     &:nth-child(3) {
-      left: 600px;
+      left: 500px;
       top: 200px;
       width: 300px;
-      height: 500px;
+      height: 100px;
       background: #ffd549;
     }
     &:nth-child(4) {
       background: linear-gradient(to bottom, #4500a0, #9e00ff);
-      width: 800px;
-      height: 1000px;
+      width: 600px;
+      height: 800px;
       left: -100px;
       top: -100px;
-    }
-    &:nth-child(2) {
     }
   }
 `;
@@ -66,7 +64,6 @@ const MainPage = styled('div')`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(1px);
 `;
 
 const Flex = styled('div')`
@@ -75,7 +72,8 @@ const Flex = styled('div')`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-
+  backdrop-filter: blur(0px);
+  z-index: 10;
   .linkNav {
     display: flex;
     flex-direction: row;
@@ -138,9 +136,10 @@ export default function Index() {
             <Button
               width="145px"
               height="45px"
-              title={isActive && account ? ethAddress.formatEthAddress(account, 7) : 'Connect Wallet'}
+              title={isActive && account ? ethAddress.formatEthAddress(account, 6) : 'Connect Wallet'}
               background="#4500a0"
               fontSize="14px"
+              style={{ padding: '0 5px', fontWeight: '600' }}
               click={() => {
                 if (!isActive) return connectWallet();
                 else return disconnectWallet();
