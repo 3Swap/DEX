@@ -49,8 +49,6 @@ const MainContainer = styled('div')`
       left: -100px;
       top: -100px;
     }
-    &:nth-child(2) {
-    }
   }
 `;
 
@@ -66,7 +64,6 @@ const MainPage = styled('div')`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(1px);
 `;
 
 const Flex = styled('div')`
@@ -75,7 +72,8 @@ const Flex = styled('div')`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-
+  backdrop-filter: blur(0px);
+  z-index: 10;
   .linkNav {
     display: flex;
     flex-direction: row;
@@ -138,9 +136,10 @@ export default function Index() {
             <Button
               width="145px"
               height="45px"
-              title={isActive && account ? ethAddress.formatEthAddress(account, 7) : 'Connect Wallet'}
+              title={isActive && account ? ethAddress.formatEthAddress(account, 6) : 'Connect Wallet'}
               background="#4500a0"
               fontSize="14px"
+              style={{ padding: '0 5px', fontWeight: '600' }}
               click={() => {
                 if (!isActive) return connectWallet();
                 else return disconnectWallet();

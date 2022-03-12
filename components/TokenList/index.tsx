@@ -120,7 +120,10 @@ const TokenlistItem = styled.button`
   }
 
   &:disabled {
-    background: rgba(0, 0, 0, 0.1);
+    cursor: not-allowed;
+    &:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
     .tokenName {
       span {
         &:nth-child(1) {

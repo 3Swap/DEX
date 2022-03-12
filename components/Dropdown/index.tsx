@@ -40,11 +40,11 @@ const DropdownHeader = styled('div')`
 
 const DropdownListContainer = styled('div')`
   color: #000;
-  background: linear-gradient(175.58deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.27) 99.87%);
+  background: rgba(255, 255, 255, 0.8);
   box-shadow: -10px 48.5967px 140px rgba(126, 123, 160, 0.2);
   backdrop-filter: blur(19px);
   border-radius: 10px;
-  padding: 10px 0;
+  overflow: hidden;
   width: 15.5em;
   position: absolute;
   /* top: 10%; */
@@ -63,10 +63,14 @@ const ListItem = styled('li')`
   display: flex;
   align-items: center;
   transition: all 0.3s linear;
+  backdrop-filter: blur(19px);
 
+  &:last-child {
+    margin-bottom: -16px;
+  }
   &:hover {
     background: #4500a0;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 1);
   }
 `;
 
