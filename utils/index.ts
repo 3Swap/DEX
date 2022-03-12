@@ -26,3 +26,11 @@ export const _fromWei = (amt: number | bigint) => {
 export const _divideByDecimals = (amt: number | bigint, decimals: number) => {
   return Number(amt) / 10 ** decimals;
 };
+
+export const _toWei = (amt: number | bigint) => {
+  return Number(amt) * 10 ** 18;
+};
+
+export const _raiseByDecimals = (amt: number | bigint, decimals: number) => {
+  return Number(amt) * 10 ** decimals;
+};

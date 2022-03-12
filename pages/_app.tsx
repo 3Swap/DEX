@@ -11,6 +11,7 @@ import { AssetsProvider } from '../contexts/assets';
 import type { AppProps } from 'next/app';
 import { Web3GlobalProvider } from '../contexts/web3';
 import { ToastProvider } from '../contexts/toast';
+import { SwapProvider } from '../contexts/swap';
 
 const getLibrary = (provider: any) => {
   return new Web3(provider);
@@ -23,7 +24,9 @@ function App({ Component, pageProps }: AppProps) {
         <AssetsProvider>
           <Web3GlobalProvider>
             <ToastProvider>
-              <Component {...pageProps} />
+              <SwapProvider>
+                <Component {...pageProps} />
+              </SwapProvider>
             </ToastProvider>
           </Web3GlobalProvider>
         </AssetsProvider>

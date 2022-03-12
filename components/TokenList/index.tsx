@@ -262,7 +262,7 @@ const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
                 Object.keys(assets).length > 0 &&
                 searchItem.trim().length > 0 &&
                 Object.keys(assets[`0x${(chainId || localChainId)?.toString(16)}`]).filter(val =>
-                  val.includes(searchItem)
+                  val.toLowerCase().includes(searchItem.toLowerCase())
                 ).length === 0 && (
                   <div className="import-token-container">
                     <div style={{ flexBasis: '30%', flexGrow: 1, margin: 4 }}>
@@ -285,7 +285,7 @@ const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
                 Object.keys(assets).length > 0 &&
                 _.map(
                   Object.keys(assets[`0x${(chainId || localChainId)?.toString(16)}`]).filter(val => {
-                    if (searchItem.trim().length > 0) return val.includes(searchItem);
+                    if (searchItem.trim().length > 0) return val.toLowerCase().includes(searchItem.toLowerCase());
                     else return val;
                   }),
                   key => (

@@ -482,7 +482,9 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
     line-height: 24px;
 
     .round {
-      width: 45px;
+      &.small {
+        width: 45px;
+      }
       height: 24px;
       padding: 0px 10px;
       background: #fcfcfc;
@@ -499,7 +501,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
       justify-content: center;
       transition: all 0.3s ease-in-out;
       border: 1px solid #ccc;
-      &:first-child {
+      &.selected {
         background: #4500a0;
         color: #fff;
         border: none;
@@ -529,6 +531,9 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
 
   const { balance: balance1, fetchBalance: fetchBalance1 } = useBalance();
   const { balance: balance2, fetchBalance: fetchBalance2 } = useBalance();
+
+  const [slippage, setSlippage] = useState(0.1);
+  const [gas, setGas] = useState(5);
 
   const setSelectedCurrencies = useCallback(() => {
     if (isActive && !!queryChainId) switchChain(queryChainId as string);
@@ -631,9 +636,15 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           </div>
         </div>
         <div className="box">
-          <div className="round">0.1%</div>
-          <div className="round">0.5%</div>
-          <div className="round">1.0%</div>
+          <div className={slippage === 0.1 ? 'round selected' : 'round'} onClick={() => setSlippage(0.1)}>
+            0.1%
+          </div>
+          <div className={slippage === 0.5 ? 'round selected' : 'round'} onClick={() => setSlippage(0.5)}>
+            0.5%
+          </div>
+          <div className={slippage === 1.0 ? 'round selected' : 'round'} onClick={() => setSlippage(1.0)}>
+            1.0%
+          </div>
         </div>
         <div className="slippage">
           <div>Transaction Deadline</div>
@@ -656,8 +667,45 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         </div>
 
         <div className="box">
-          <div className="round">20</div>
+          <div className="round small">
+            <input
+              type="number"
+              style={{ border: 'none', width: 'inherit', textAlign: 'center', outline: 'none' }}
+              value="20"
+            />
+          </div>
           <div>minutes</div>
+        </div>
+
+        <div className="slippage">
+          <div>Transaction Speed (Gwei) </div>
+          <div className="info">
+            <IconButton
+              iconType="solid"
+              name="question"
+              width="16px"
+              height="16px"
+              color="#4500a0"
+              fontSize="9px"
+              border="1px solid #4500a0"
+              borderRadius="50%"
+            />
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
+            <div className="hover" style={{ width: '200px', height: 'auto' }}>
+              How fast do you want this transaction?
+            </div>
+          </div>
+        </div>
+        <div className="box">
+          <div className={gas === 5 ? 'round selected' : 'round'} onClick={() => setGas(5)}>
+            Standard (5)
+          </div>
+          <div className={gas === 4 ? 'round selected' : 'round'} onClick={() => setGas(4)}>
+            Safe (4)
+          </div>
+          <div className={gas === 10 ? 'round selected' : 'round'} onClick={() => setGas(10)}>
+            Instant (10)
+          </div>
         </div>
       </TransactionSettings>
 
@@ -830,6 +878,11 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         fontSize="20px"
         borderRadius="50%"
         marginTop="2em"
+        click={() => {
+          setFirstSelectedAddress(thirdSelectedAddress);
+          setSecondSelectedAddress(firstSelectedAddress);
+          setThirdSelectedAddress(secondSelectedAddress);
+        }}
       />
 
       <div className="text-second">To</div>
