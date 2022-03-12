@@ -1,10 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import * as ethereumAddress from 'ethereum-address';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import IconButton from '../../components/IconButton';
+import { useAssetsContext } from '../../contexts/assets';
+import { useWeb3Context } from '../../contexts/web3';
+import { useCurrencyQuery } from '../../hooks';
+import TokenList from '../../components/TokenList';
 
 type Props = {
   liquidityPoolModal: boolean;
@@ -282,6 +288,40 @@ const LiquidityPoolCard = styled('div')<{ open: boolean }>`
   }
 `;
 export default function Liquidity({ liquidityPoolModal, setLiquidityPoolModal }: Props) {
+  const { inputCurrency1, inputCurrency2, outputCurrency, chainId: queryChainId } = useCurrencyQuery();
+  const { assets } = useAssetsContext();
+  const { localChainId, chainId, switchChain, isActive } = useWeb3Context();
+
+  const [firstSelectedAddress, setFirstSelectedAddress] = useState('');
+  const [secondSelectedAddress, setSecondSelectedAddress] = useState('');
+  const [thirdSelectedAddress, setThirdSelectedAddress] = useState('');
+
+  const [showList1, setShowList1] = useState<boolean>(false);
+  const [showList2, setShowList2] = useState<boolean>(false);
+  const [showList3, setShowList3] = useState<boolean>(false);
+
+  const setSelectedCurrencies = useCallback(() => {
+    if (isActive && !!queryChainId) switchChain(queryChainId as string);
+
+    if (inputCurrency1) setFirstSelectedAddress(inputCurrency1 as string);
+
+    if (inputCurrency2) setSecondSelectedAddress(inputCurrency2 as string);
+
+    if (outputCurrency) setThirdSelectedAddress(outputCurrency as string);
+  }, []);
+
+  useEffect(() => {
+    setSelectedCurrencies();
+  }, [inputCurrency1, inputCurrency2, outputCurrency, queryChainId]);
+
+  useEffect(() => {
+    if (assets && Object.keys(assets).length > 1 && (queryChainId || chainId || localChainId)) {
+      setFirstSelectedAddress(Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[0]);
+      setSecondSelectedAddress(Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[1]);
+      setThirdSelectedAddress(Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[2]);
+    }
+  }, [assets, queryChainId, chainId, localChainId]);
+
   return (
     <>
       <LiquidityPoolCard
@@ -345,11 +385,50 @@ export default function Liquidity({ liquidityPoolModal, setLiquidityPoolModal }:
           <div className="text_select_token">Select Token</div>
 
           <div className="select_token">
+            {showList1 && (
+              <TokenList
+                selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+                onClose={() => setShowList1(false)}
+                onItemClick={val => {
+                  setFirstSelectedAddress(val);
+                  setShowList1(false);
+                }}
+              />
+            )}
             <div className="coin_container">
-              <div className="left">
-                <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
-                <div>BTC</div>
-                <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+              <div className="left" onClick={() => setShowList1(true)}>
+                <img
+                  src={
+                    !!assets && Object.keys(assets).length > 0
+                      ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
+                          ethereumAddress.isAddress(firstSelectedAddress)
+                            ? firstSelectedAddress
+                            : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[0]
+                        ]?.image
+                      : ''
+                  }
+                  alt="coin_image"
+                  style={{ cursor: 'pointer' }}
+                  width={28}
+                  height={28}
+                />
+                <div>
+                  {!!assets && Object.keys(assets).length > 0
+                    ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
+                        ethereumAddress.isAddress(firstSelectedAddress)
+                          ? firstSelectedAddress
+                          : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[0]
+                      ]?.symbol
+                    : 'TOKEN_SYMBOL'}
+                </div>
+                <IconButton
+                  width="12px"
+                  height="12px"
+                  iconType="solid"
+                  fontSize="12px"
+                  name="chevron-down"
+                  color="#4500a0"
+                />
               </div>
 
               <div className="right">
@@ -372,11 +451,50 @@ export default function Liquidity({ liquidityPoolModal, setLiquidityPoolModal }:
           <div className="text_select_token">Select Token</div>
 
           <div className="select_token">
+            {showList2 && (
+              <TokenList
+                selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+                onClose={() => setShowList2(false)}
+                onItemClick={val => {
+                  setSecondSelectedAddress(val);
+                  setShowList2(false);
+                }}
+              />
+            )}
             <div className="coin_container">
-              <div className="left">
-                <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
-                <div>BTC</div>
-                <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+              <div className="left" onClick={() => setShowList2(true)}>
+                <img
+                  src={
+                    !!assets && Object.keys(assets).length > 0
+                      ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
+                          ethereumAddress.isAddress(secondSelectedAddress)
+                            ? secondSelectedAddress
+                            : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[1]
+                        ]?.image
+                      : ''
+                  }
+                  style={{ cursor: 'pointer' }}
+                  alt="eth"
+                  width={28}
+                  height={28}
+                />
+                <div>
+                  {!!assets && Object.keys(assets).length > 0
+                    ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
+                        ethereumAddress.isAddress(secondSelectedAddress)
+                          ? secondSelectedAddress
+                          : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[1]
+                      ]?.symbol
+                    : 'TOKEN_SYMBOL'}
+                </div>
+                <IconButton
+                  width="12px"
+                  height="12px"
+                  iconType="solid"
+                  fontSize="12px"
+                  name="chevron-down"
+                  color="#4500a0"
+                />
               </div>
 
               <div className="right">
@@ -399,11 +517,50 @@ export default function Liquidity({ liquidityPoolModal, setLiquidityPoolModal }:
           <div className="text_select_token">Select Token</div>
 
           <div className="select_token">
+            {showList3 && (
+              <TokenList
+                selectedAddresses={[firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]}
+                onClose={() => setShowList3(false)}
+                onItemClick={val => {
+                  setThirdSelectedAddress(val);
+                  setShowList3(false);
+                }}
+              />
+            )}
             <div className="coin_container">
-              <div className="left">
-                <img src="../btc.svg" alt="btc" style={{ cursor: 'pointer' }} width={28} height={28} />
-                <div>BTC</div>
-                <Icon iconType="solid" name="chevron-down" width="12px" height="6px" fontSize="12px" />
+              <div className="left" onClick={() => setShowList3(true)}>
+                <img
+                  src={
+                    !!assets && Object.keys(assets).length > 0
+                      ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
+                          ethereumAddress.isAddress(thirdSelectedAddress)
+                            ? thirdSelectedAddress
+                            : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[2]
+                        ]?.image
+                      : ''
+                  }
+                  style={{ cursor: 'pointer' }}
+                  alt="btc"
+                  width={28}
+                  height={28}
+                />
+                <div>
+                  {!!assets && Object.keys(assets).length > 0
+                    ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
+                        ethereumAddress.isAddress(thirdSelectedAddress)
+                          ? thirdSelectedAddress
+                          : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[2]
+                      ]?.symbol
+                    : 'TOKEN_SYMBOL'}
+                </div>
+                <IconButton
+                  width="12px"
+                  height="12px"
+                  iconType="solid"
+                  fontSize="12px"
+                  name="chevron-down"
+                  color="#4500a0"
+                />
               </div>
 
               <div className="right">

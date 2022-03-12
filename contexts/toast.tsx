@@ -7,6 +7,7 @@ type ToastContextType = {
   showSuccessToast: (content: JSX.Element, timeout: number) => void;
   showErrorToast: (content: JSX.Element, timeout: number) => void;
   showWarningToast: (content: JSX.Element, timeout: number) => void;
+  close?: () => void;
 };
 
 const ToastContext = createContext<ToastContextType>({} as ToastContextType);
@@ -49,9 +50,14 @@ export const ToastProvider = ({ children }: any) => {
     }, timeout * 1000);
   }, []);
 
+  const close = useCallback(() => {
+    setVisible(false);
+    setContent(undefined);
+  }, []);
+
   return (
     <ToastContext.Provider
-      value={{ content, toastType, isVisible, showSuccessToast, showErrorToast, showWarningToast }}
+      value={{ content, toastType, isVisible, showSuccessToast, showErrorToast, showWarningToast, close }}
     >
       {children}
     </ToastContext.Provider>

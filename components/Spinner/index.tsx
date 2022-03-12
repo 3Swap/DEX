@@ -15,7 +15,7 @@ const Spin = styled('div')`
   margin-top: 1em;
   margin-bottom: 1em;
   .loader {
-    border: 1px solid #f5f5f5;
+    border: 3px solid #dcdcdc;
     border-top: 3px solid #4500a0;
     border-radius: 50%;
     width: 40px;

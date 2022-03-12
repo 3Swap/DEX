@@ -11,25 +11,28 @@ import { AssetsProvider } from '../contexts/assets';
 import type { AppProps } from 'next/app';
 import { Web3GlobalProvider } from '../contexts/web3';
 import { ToastProvider } from '../contexts/toast';
+import { SwapProvider } from '../contexts/swap';
 
 const getLibrary = (provider: any) => {
   return new Web3(provider);
 };
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3GlobalProvider>
-          <AssetsProvider>
+        <AssetsProvider>
+          <Web3GlobalProvider>
             <ToastProvider>
-              <Component {...pageProps} />
+              <SwapProvider>
+                <Component {...pageProps} />
+              </SwapProvider>
             </ToastProvider>
-          </AssetsProvider>
-        </Web3GlobalProvider>
+          </Web3GlobalProvider>
+        </AssetsProvider>
       </Web3ReactProvider>
     </Provider>
   );
 }
 
-export default MyApp;
+export default App;

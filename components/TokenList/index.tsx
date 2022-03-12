@@ -4,6 +4,13 @@ import _ from 'lodash';
 import { useAssetsContext } from '../../contexts/assets';
 import Icon from '../Icon';
 import { useWeb3Context } from '../../contexts/web3';
+import { useState } from 'react';
+import Button from '../Button';
+import { useDispatch } from 'react-redux';
+import Spinner from '../Spinner';
+import { importToken as importAsset } from '../../redux/assetsSlice';
+import { useToastContext } from '../../contexts/toast';
+import { Fetcher } from '3swap-sdk';
 
 type Props = {
   onItemClick: (value: string) => void;
@@ -91,6 +98,12 @@ const Tokenlist = styled.div`
   justify-content: space-between;
   flex-direction: column;
   box-sizing: border-box;
+  .import-token-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+  }
 `;
 
 const TokenlistItem = styled.button`
@@ -169,6 +182,61 @@ const TokenlistItem = styled.button`
 const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
   const { assets } = useAssetsContext();
   const { chainId, localChainId } = useWeb3Context();
+  const [searchItem, setSearchItem] = useState<string>('');
+  const [isImporting, setIsImporting] = useState(false);
+  const { showErrorToast, showSuccessToast } = useToastContext();
+  const dispatch = useDispatch();
+
+  const importToken = () => {
+    setIsImporting(true);
+
+    try {
+      Fetcher.fetchTokenData(localChainId as number, searchItem)
+        .then(token => {
+          setIsImporting(false);
+          dispatch(
+            importAsset({
+              name: token.name(),
+              symbol: token.symbol(),
+              decimals: token.decimals(),
+              image: '/placeholder.svg',
+              chainId: `0x${(localChainId as number).toString(16)}`,
+              contractAddress: searchItem
+            })
+          );
+          showSuccessToast(
+            <>
+              <span>Successfully imported token!</span>
+            </>,
+            5
+          );
+        })
+        .catch(error => {
+          setIsImporting(false);
+          showErrorToast(
+            <>
+              <span>
+                {error.message}
+                {''}!
+              </span>
+            </>,
+            5
+          );
+        });
+    } catch (error: any) {
+      setIsImporting(false);
+      showErrorToast(
+        <>
+          <span>
+            {error.message}
+            {''}!
+          </span>
+        </>,
+        5
+      );
+    }
+  };
+
   return (
     <>
       <TokenListContainer>
@@ -179,7 +247,12 @@ const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
               <Icon iconType="solid" name="times-circle" width="20px" height="20px" fontSize="20px" onClick={onClose} />
             </div>
             <div className="tokenSearch">
-              <input type="text" placeholder="Search for token" />
+              <input
+                type="text"
+                onChange={ev => setSearchItem(ev.target.value)}
+                value={searchItem}
+                placeholder="Search for token"
+              />
               <Icon iconType="solid" name="search" width="20px" height="20px" fontSize="16px" />
             </div>
           </TokenHeader>
@@ -187,22 +260,55 @@ const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
             <Tokenlist>
               {!!assets &&
                 Object.keys(assets).length > 0 &&
-                _.map(Object.keys(assets[`0x${(chainId || localChainId)?.toString(16)}`]), key => (
-                  <TokenlistItem key={key} disabled={selectedAddresses.includes(key)} onClick={() => onItemClick(key)}>
-                    <div className="img">
-                      <img
-                        src={`${assets[`0x${(chainId || localChainId)?.toString(16)}`][key].image}`}
-                        alt={assets[`0x${(chainId || localChainId)?.toString(16)}`][key].name}
-                        width="25px"
-                        height="25px"
+                searchItem.trim().length > 0 &&
+                Object.keys(assets[`0x${(chainId || localChainId)?.toString(16)}`]).filter(val =>
+                  val.toLowerCase().includes(searchItem.toLowerCase())
+                ).length === 0 && (
+                  <div className="import-token-container">
+                    <div style={{ flexBasis: '30%', flexGrow: 1, margin: 4 }}>
+                      <span style={{ fontSize: 20, fontWeight: 'bold' }}>Asset not found</span>
+                    </div>
+                    <div style={{ flexBasis: '60%', flexGrow: 1, margin: 4 }}>
+                      <Button
+                        border="2px solid #4500a0"
+                        title="Import Asset"
+                        height="40px"
+                        color="#4500a0"
+                        fontSize="16px"
+                        click={importToken}
                       />
                     </div>
-                    <div className="tokenName">
-                      <span>{assets[`0x${(chainId || localChainId)?.toString(16)}`][key].symbol}</span>
-                      <span>{assets[`0x${(chainId || localChainId)?.toString(16)}`][key].name}</span>
-                    </div>
-                  </TokenlistItem>
-                ))}
+                    <div style={{ flexBasis: '10%', flexGrow: 1, margin: 4 }}>{isImporting && <Spinner />}</div>
+                  </div>
+                )}
+              {!!assets &&
+                Object.keys(assets).length > 0 &&
+                _.map(
+                  Object.keys(assets[`0x${(chainId || localChainId)?.toString(16)}`]).filter(val => {
+                    if (searchItem.trim().length > 0) return val.toLowerCase().includes(searchItem.toLowerCase());
+                    else return val;
+                  }),
+                  key => (
+                    <TokenlistItem
+                      key={key}
+                      disabled={selectedAddresses.includes(key)}
+                      onClick={() => onItemClick(key)}
+                    >
+                      <div className="img">
+                        <img
+                          src={`${assets[`0x${(chainId || localChainId)?.toString(16)}`][key].image}`}
+                          alt={assets[`0x${(chainId || localChainId)?.toString(16)}`][key].name}
+                          width="25px"
+                          height="25px"
+                        />
+                      </div>
+                      <div className="tokenName">
+                        <span>{assets[`0x${(chainId || localChainId)?.toString(16)}`][key].symbol}</span>
+                        <span>{assets[`0x${(chainId || localChainId)?.toString(16)}`][key].name}</span>
+                      </div>
+                    </TokenlistItem>
+                  )
+                )}
             </Tokenlist>
           </TokenListWrapper>
         </TokenWrapper>

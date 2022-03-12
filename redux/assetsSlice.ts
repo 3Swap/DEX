@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 type ChainInfo = {
@@ -25,6 +25,13 @@ type Assets = {
   [chainId: string]: {
     [contractAddress: string]: AssetInfo;
   };
+};
+
+type Reducers = {
+  importToken: (
+    state: AllAsset,
+    action: PayloadAction<AssetInfo & { chainId: string; contractAddress: string }>
+  ) => void;
 };
 
 export type AllAsset = {
@@ -62,13 +69,29 @@ const fetchChains = createAsyncThunk<Chains, undefined>(
     })
 );
 
-const assetsSlice = createSlice<AllAsset, {}>({
+const assetsSlice = createSlice<AllAsset, Reducers>({
   name: 'assets',
   initialState: {
     assets: {},
     chains: {}
   },
-  reducers: {},
+  reducers: {
+    importToken: (state, action) => {
+      state.assets = {
+        ...state.assets,
+        [action.payload.chainId]: {
+          ...state.assets[action.payload.chainId],
+          [action.payload.contractAddress]: {
+            ...state.assets[action.payload.chainId][action.payload.contractAddress],
+            name: action.payload.name,
+            decimals: action.payload.decimals,
+            symbol: action.payload.symbol,
+            image: action.payload.image
+          }
+        }
+      };
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchAssets.fulfilled, (state, action) => {
@@ -81,4 +104,5 @@ const assetsSlice = createSlice<AllAsset, {}>({
 });
 
 export { fetchAssets, fetchChains };
+export const { importToken } = assetsSlice.actions;
 export const reducer = assetsSlice.reducer;
