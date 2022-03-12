@@ -3,6 +3,7 @@ import type Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
 import React, { useState, useCallback, useEffect, createContext, useContext } from 'react';
 import { injected } from '../connectors';
+import { useAssetsContext } from './assets';
 
 type Web3GlobalContextType = {
   account?: string | null;
@@ -21,6 +22,7 @@ export const Web3GlobalProvider = ({ children }: any) => {
   const [isActive, setIsActive] = useState(false);
   const { activate, account, deactivate, chainId, library } = useWeb3React<Web3>();
   const [localChainId, setLocalChainId] = useState(0x61);
+  const { chains } = useAssetsContext();
 
   useEffect(() => {
     injected.isAuthorized().then(authorized => {
@@ -58,8 +60,26 @@ export const Web3GlobalProvider = ({ children }: any) => {
         .catch((error: any) => {
           // This code means the chain hasn't been added yet
           if (error.code === 4902) {
-            // Fetch chain info from server
-            ethereum.request({ method: 'wallet_addEthereumChain', params: [] }).then(console.log);
+            const chain = chains[chainId];
+            // Add the chain if that's the case.
+            ethereum
+              .request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                  {
+                    chainId,
+                    chainName: chain.name,
+                    nativeCurrency: {
+                      name: chain.name,
+                      symbol: chain.symbol,
+                      decimals: chain.decimals
+                    },
+                    rpcUrls: [chain.rpcUrl],
+                    blockExplorerUrls: [chain.explorer]
+                  }
+                ]
+              })
+              .then(console.log);
           }
         });
     }

@@ -16,20 +16,20 @@ const getLibrary = (provider: any) => {
   return new Web3(provider);
 };
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3GlobalProvider>
-          <AssetsProvider>
+        <AssetsProvider>
+          <Web3GlobalProvider>
             <ToastProvider>
               <Component {...pageProps} />
             </ToastProvider>
-          </AssetsProvider>
-        </Web3GlobalProvider>
+          </Web3GlobalProvider>
+        </AssetsProvider>
       </Web3ReactProvider>
     </Provider>
   );
 }
 
-export default MyApp;
+export default App;
