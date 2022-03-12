@@ -191,25 +191,38 @@ const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
     setIsImporting(true);
 
     try {
-      Fetcher.fetchTokenData(localChainId as number, searchItem).then(token => {
-        setIsImporting(false);
-        dispatch(
-          importAsset({
-            name: token.name(),
-            symbol: token.symbol(),
-            decimals: token.decimals(),
-            image: '/placeholder.svg',
-            chainId: `0x${(localChainId as number).toString(16)}`,
-            contractAddress: searchItem
-          })
-        );
-        showSuccessToast(
-          <>
-            <span>Successfully imported token!</span>
-          </>,
-          5
-        );
-      });
+      Fetcher.fetchTokenData(localChainId as number, searchItem)
+        .then(token => {
+          setIsImporting(false);
+          dispatch(
+            importAsset({
+              name: token.name(),
+              symbol: token.symbol(),
+              decimals: token.decimals(),
+              image: '/placeholder.svg',
+              chainId: `0x${(localChainId as number).toString(16)}`,
+              contractAddress: searchItem
+            })
+          );
+          showSuccessToast(
+            <>
+              <span>Successfully imported token!</span>
+            </>,
+            5
+          );
+        })
+        .catch(error => {
+          setIsImporting(false);
+          showErrorToast(
+            <>
+              <span>
+                {error.message}
+                {''}!
+              </span>
+            </>,
+            5
+          );
+        });
     } catch (error: any) {
       setIsImporting(false);
       showErrorToast(

@@ -150,7 +150,7 @@ export default function Index() {
         <MainPage>
           {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
           {isVisible && (
-            <Toast direction="bottomRight" status={toastType}>
+            <Toast direction="topRight" status={toastType}>
               {content}
             </Toast>
           )}

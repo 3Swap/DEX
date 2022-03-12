@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components';
+import { useToastContext } from '../../contexts/toast';
 import Icon from '../Icon';
 
 interface IToast {
   direction?: string;
   status?: 'success' | 'danger' | 'warning';
   children?: any;
-  onClose?: () => void;
 }
 
 const ToastNotification = styled.div<IToast>`
@@ -79,11 +79,16 @@ const ToastContainer = styled.div<IToast>`
     }
     .close {
       position: absolute;
-      right: 20px;
-      top: 8px;
+      right: 4px;
+      top: 4px;
       cursor: pointer;
       color: rgba(0, 0, 0, 0.7);
       transition: all 0.3s ease-in;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #dcdcdc;
+      text-align: center;
 
       &:hover {
         color: rgba(9, 0, 0, 1);
@@ -93,6 +98,7 @@ const ToastContainer = styled.div<IToast>`
 `;
 
 const Toast = ({ direction, status, children }: IToast) => {
+  const { close } = useToastContext();
   return (
     <>
       {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
@@ -106,8 +112,8 @@ const Toast = ({ direction, status, children }: IToast) => {
           </div>
           <div className="body">
             <div className="message">{children}</div>
-            <div className="close">
-              <Icon iconType="solid" name="times" width="20px" height="20px" fontSize="20px" />
+            <div className="close" onClick={close}>
+              <Icon iconType="solid" name="times" width="13px" height="13px" fontSize="13px" />
             </div>
           </div>
         </ToastContainer>
