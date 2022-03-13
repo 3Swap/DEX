@@ -1,12 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useContext, useCallback, useState } from 'react';
 import type { Contract } from 'web3-eth-contract';
-import { numberToHex, Token, Triad, WETH } from '3swap-sdk';
+import { numberToHex, Router, Token, TokenAmount, Trade, TradeType, Triad, WETH } from '3swap-sdk';
 import { chainIdToRouterMap } from '../global/maps';
 import { useToastContext } from './toast';
 import { useWeb3Context } from './web3';
 import { _raiseByDecimals, _toWei } from '../utils';
 import Button from '../components/Button';
+import JSBI from 'jsbi';
+import { useAssetsContext } from './assets';
 
 type ApprovalType = {
   [chainId: number]: {
@@ -24,9 +26,20 @@ type SwapContextType = {
     token3: Token,
     amount1: number,
     amount2: number,
-    amount3: number
+    amount3: number,
+    deadlineInMins: number
   ) => void;
-  initiateSwap?: (contract: Contract) => void;
+  initiateSwap: (
+    contract: Contract,
+    token1: Token,
+    token2: Token,
+    token3: Token,
+    amount1: number,
+    amount2: number,
+    amount3: number,
+    deadlineInMins: number,
+    slippage: number
+  ) => void;
 };
 
 const SwapContext = createContext<SwapContextType>({} as SwapContextType);
@@ -35,6 +48,7 @@ export const SwapProvider = ({ children }: any) => {
   const [approval, setApproval] = useState<ApprovalType>({});
   const { showSuccessToast, showErrorToast } = useToastContext();
   const { isActive, chainId, account } = useWeb3Context();
+  const { chains } = useAssetsContext();
 
   const initiateContractApproval = useCallback((contract: Contract, amount: number, address: string) => {
     try {
@@ -101,7 +115,8 @@ export const SwapProvider = ({ children }: any) => {
       token3: Token,
       amount1: number,
       amount2: number,
-      amount3: number
+      amount3: number,
+      deadlineInMins: number
     ) => {
       try {
         if (isActive) {
@@ -171,7 +186,8 @@ export const SwapProvider = ({ children }: any) => {
                   amountB: numberToHex(_raiseByDecimals(amount2, token2.decimals())),
                   amountC: numberToHex(_raiseByDecimals(amount3, token3.decimals()))
                 },
-                account
+                account,
+                Math.floor(Date.now() / 1000) + deadlineInMins * 60
               )
               .send({
                 from: account
@@ -208,13 +224,131 @@ export const SwapProvider = ({ children }: any) => {
               });
           }
         }
-      } catch (error) {}
+      } catch (error: any) {
+        showErrorToast(
+          <>
+            <span>
+              {error.message}
+              {''}!
+            </span>
+          </>,
+          4
+        );
+      }
+    },
+    []
+  );
+
+  const initiateSwap = useCallback(
+    (
+      contract: Contract,
+      token1: Token,
+      token2: Token,
+      token3: Token,
+      amount1: number,
+      amount2: number,
+      amount3: number,
+      deadlineInMins: number,
+      slippage: number
+    ) => {
+      try {
+        const tokenAmount1: TokenAmount = new TokenAmount(JSBI.BigInt(amount1 * 10 ** token1.decimals()), token1);
+        const tokenAmount2: TokenAmount = new TokenAmount(JSBI.BigInt(amount2 * 10 ** token2.decimals()), token2);
+        const tokenAmount3: TokenAmount = new TokenAmount(JSBI.BigInt(amount3 * 10 ** token3.decimals()), token3);
+        const trade: Trade = new Trade(tokenAmount1, tokenAmount2, tokenAmount3, TradeType.EXACT_INPUT);
+        const swapParams = Router.swapCallParameters(trade, chainId as number, {
+          recipient: account as string,
+          deadline: deadlineInMins * 60,
+          slippage
+        });
+
+        if (swapParams.args.length === 5) {
+          contract.methods[swapParams.methodName](
+            swapParams.args[0],
+            swapParams.args[1],
+            swapParams.args[2],
+            swapParams.args[3],
+            swapParams.args[4]
+          )
+            .send({
+              from: account,
+              value: swapParams.value
+            })
+            .then((tx: any) => {
+              showSuccessToast(
+                <>
+                  <span>Swap successful{''}!</span>
+                  <a href={`${chains[`0x${(chainId as number).toString(16)}`].explorer}/tx/${tx.transactionHash}`}>
+                    View on explorer
+                  </a>
+                </>,
+                6
+              );
+            })
+            .catch((error: any) => {
+              showErrorToast(
+                <>
+                  <span>
+                    {error.message}
+                    {''}!
+                  </span>
+                </>,
+                4
+              );
+            });
+        } else {
+          contract.methods[swapParams.methodName](
+            swapParams.args[0],
+            swapParams.args[1],
+            swapParams.args[2],
+            swapParams.args[3],
+            swapParams.args[4],
+            swapParams.args[5]
+          )
+            .send({
+              from: account,
+              value: swapParams.value
+            })
+            .then((tx: any) => {
+              showSuccessToast(
+                <>
+                  <span>Swap successful{''}!</span>
+                  <a href={`${chains[`0x${(chainId as number).toString(16)}`].explorer}/tx/${tx.transactionHash}`}>
+                    View on explorer
+                  </a>
+                </>,
+                6
+              );
+            })
+            .catch((error: any) => {
+              showErrorToast(
+                <>
+                  <span>
+                    {error.message}
+                    {''}!
+                  </span>
+                </>,
+                4
+              );
+            });
+        }
+      } catch (error: any) {
+        showErrorToast(
+          <>
+            <span>
+              {error.message}
+              {''}!
+            </span>
+          </>,
+          4
+        );
+      }
     },
     []
   );
 
   return (
-    <SwapContext.Provider value={{ initiateAddLiquidity, initiateContractApproval, approval }}>
+    <SwapContext.Provider value={{ initiateAddLiquidity, initiateContractApproval, initiateSwap, approval }}>
       {children}
     </SwapContext.Provider>
   );
