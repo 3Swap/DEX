@@ -113,7 +113,7 @@ export default function Index() {
   const { isVisible, content, toastType } = useToastContext();
 
   const [transactionModal, setTransactionModal] = useState(false);
-  const [liquidityPoolModal, setLiquidityPoolModal] = useState(false);
+  const [showliquidityPoolModal, setShowLiquidityPoolModal] = useState(false);
 
   const handleBackgroundClick = () => {
     if (transactionModal) {
@@ -150,7 +150,7 @@ export default function Index() {
         <MainPage>
           {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
           {isVisible && (
-            <Toast direction="topRight" status={toastType}>
+            <Toast direction="bottomRight" status={toastType}>
               {content}
             </Toast>
           )}
@@ -192,7 +192,7 @@ export default function Index() {
             </div>
           ) : slug === 'liquidity' ? (
             <div>
-              <Liquidity liquidityPoolModal={liquidityPoolModal} setLiquidityPoolModal={setLiquidityPoolModal} />
+              <Liquidity showModal={showliquidityPoolModal} setShowModal={setShowLiquidityPoolModal} />
             </div>
           ) : (
             <div>

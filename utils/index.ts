@@ -34,3 +34,7 @@ export const _toWei = (amt: number | bigint) => {
 export const _raiseByDecimals = (amt: number | bigint, decimals: number) => {
   return Number(amt) * 10 ** decimals;
 };
+
+export const _toGwei = (amt: number) => {
+  return amt * 10 ** 9;
+};

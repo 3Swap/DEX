@@ -534,6 +534,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
 
   const [slippage, setSlippage] = useState(0.1);
   const [gas, setGas] = useState(5);
+  const [deadline, setDeadline] = useState(20);
 
   const setSelectedCurrencies = useCallback(() => {
     if (isActive && !!queryChainId) switchChain(queryChainId as string);
@@ -671,7 +672,8 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             <input
               type="number"
               style={{ border: 'none', width: 'inherit', textAlign: 'center', outline: 'none' }}
-              value="20"
+              value={deadline}
+              onChange={ev => setDeadline(ev.target.valueAsNumber)}
             />
           </div>
           <div>minutes</div>
@@ -700,7 +702,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           <div className={gas === 5 ? 'round selected' : 'round'} onClick={() => setGas(5)}>
             Standard (5)
           </div>
-          <div className={gas === 4 ? 'round selected' : 'round'} onClick={() => setGas(4)}>
+          <div className={gas === 7 ? 'round selected' : 'round'} onClick={() => setGas(7)}>
             Safe (4)
           </div>
           <div className={gas === 10 ? 'round selected' : 'round'} onClick={() => setGas(10)}>
