@@ -10,15 +10,8 @@ import Button from '../components/Button';
 import JSBI from 'jsbi';
 import { useAssetsContext } from './assets';
 
-type ApprovalType = {
-  [chainId: number]: {
-    [contract: string]: number;
-  };
-};
-
 type SwapContextType = {
-  approval: ApprovalType;
-  initiateContractApproval: (contract: Contract, amount: number, address: string) => void;
+  initiateContractApproval: (contract: Contract, amount: number, address: string) => Promise<void>;
   initiateAddLiquidity: (
     contract: Contract,
     token1: Token,
@@ -30,7 +23,7 @@ type SwapContextType = {
     deadlineInMins: number,
     gasPrice: number,
     gasLimit?: number
-  ) => void;
+  ) => Promise<void>;
   initiateSwap: (
     contract: Contract,
     token1: Token,
@@ -43,19 +36,18 @@ type SwapContextType = {
     slippage: number,
     gasPrice: number,
     gasLimit?: number
-  ) => void;
+  ) => Promise<void>;
 };
 
 const SwapContext = createContext<SwapContextType>({} as SwapContextType);
 
 export const SwapProvider = ({ children }: any) => {
-  const [approval, setApproval] = useState<ApprovalType>({});
   const { showSuccessToast, showErrorToast } = useToastContext();
   const { isActive, chainId, account } = useWeb3Context();
   const { chains } = useAssetsContext();
 
-  const initiateContractApproval = (contract: Contract, amount: number, address: string) => {
-    try {
+  const initiateContractApproval = (contract: Contract, amount: number, address: string): Promise<void> =>
+    new Promise((resolve, reject) => {
       if (isActive) {
         contract.methods
           .decimals()
@@ -69,47 +61,24 @@ export const SwapProvider = ({ children }: any) => {
                   .symbol()
                   .call()
                   .then((n: string) => {
-                    setApproval(app => ({
-                      ...app,
-                      [chainId as number]: { ...app[chainId as number], [address]: amount }
-                    }));
-                    showSuccessToast(
-                      <>
-                        <span>
-                          Router approved to spend {amount} {n} on behalf of {account}{' '}
-                        </span>
-                      </>,
-                      4
+                    resolve(
+                      showSuccessToast(
+                        <>
+                          <span>
+                            Router approved to spend {amount} {n} on behalf of {account}{' '}
+                          </span>
+                        </>,
+                        4
+                      )
                     );
                   });
               })
-              .catch((error: any) =>
-                showErrorToast(
-                  <>
-                    <span>
-                      {error.message}
-                      {''}!
-                    </span>
-                  </>,
-                  4
-                )
-              );
+              .catch(reject);
           });
       } else {
-        throw new Error('Please connect wallet first');
+        reject(new Error('Please connect wallet first'));
       }
-    } catch (error: any) {
-      showErrorToast(
-        <>
-          <span>
-            {error.message}
-            {''}!
-          </span>
-        </>,
-        4
-      );
-    }
-  };
+    });
 
   const initiateAddLiquidity = (
     contract: Contract,
@@ -122,8 +91,8 @@ export const SwapProvider = ({ children }: any) => {
     deadlineInMins: number,
     gasPrice: number,
     gasLimit = 8000000
-  ) => {
-    try {
+  ): Promise<void> =>
+    new Promise((resolve, reject) => {
       if (isActive && !!account) {
         const liquidityTokenAddress = Triad.getAddress(token1, token2, token3, chainId as number);
         if (token3.address().toLowerCase() === WETH[chainId as number].address().toLowerCase()) {
@@ -152,45 +121,37 @@ export const SwapProvider = ({ children }: any) => {
             })
             .then(() => {
               const { ethereum } = window as unknown as Window & { ethereum: any };
-              showSuccessToast(
-                <>
-                  <span>Successfully created liquidity!</span>
-                  <Button
-                    color="#4500a0"
-                    fontSize="14px"
-                    title="Add liquidity token"
-                    click={() => {
-                      ethereum
-                        .request({
-                          method: 'wallet_watchAsset',
-                          params: {
-                            type: 'ERC20',
-                            options: {
-                              address: liquidityTokenAddress,
-                              symbol: '3Swap V1',
-                              decimals: 18,
-                              image: '/3SwapLogo.png'
+              resolve(
+                showSuccessToast(
+                  <>
+                    <span>Successfully created liquidity!</span>
+                    <Button
+                      color="#4500a0"
+                      fontSize="14px"
+                      title="Add liquidity token"
+                      click={() => {
+                        ethereum
+                          .request({
+                            method: 'wallet_watchAsset',
+                            params: {
+                              type: 'ERC20',
+                              options: {
+                                address: liquidityTokenAddress,
+                                symbol: '3Swap V1',
+                                decimals: 18,
+                                image: '/3SwapLogo.png'
+                              }
                             }
-                          }
-                        })
-                        .then(console.log);
-                    }}
-                  />
-                </>,
-                10
+                          })
+                          .then(console.log);
+                      }}
+                    />
+                  </>,
+                  10
+                )
               );
             })
-            .catch((error: any) => {
-              showErrorToast(
-                <>
-                  <span>
-                    {error.message}
-                    {''}!
-                  </span>
-                </>,
-                4
-              );
-            });
+            .catch(reject);
         } else {
           contract.methods
             .addLiquidity(
@@ -215,59 +176,40 @@ export const SwapProvider = ({ children }: any) => {
             })
             .then(() => {
               const { ethereum } = window as unknown as Window & { ethereum: any };
-              showSuccessToast(
-                <>
-                  <span>Successfully created liquidity!</span>
-                  <Button
-                    color="#4500a0"
-                    fontSize="14px"
-                    title="Add liquidity token"
-                    click={() => {
-                      ethereum
-                        .request({
-                          method: 'wallet_watchAsset',
-                          params: {
-                            type: 'ERC20',
-                            options: {
-                              address: liquidityTokenAddress,
-                              symbol: '3Swap V1',
-                              decimals: 18,
-                              image: '/3SwapLogo.png'
+              resolve(
+                showSuccessToast(
+                  <>
+                    <span>Successfully created liquidity!</span>
+                    <Button
+                      color="#4500a0"
+                      fontSize="14px"
+                      title="Add liquidity token"
+                      click={() => {
+                        ethereum
+                          .request({
+                            method: 'wallet_watchAsset',
+                            params: {
+                              type: 'ERC20',
+                              options: {
+                                address: liquidityTokenAddress,
+                                symbol: '3Swap V1',
+                                decimals: 18,
+                                image: '/3SwapLogo.png'
+                              }
                             }
-                          }
-                        })
-                        .then(console.log);
-                    }}
-                  />
-                </>,
-                10
+                          })
+                          .then(console.log);
+                      }}
+                    />
+                  </>,
+                  10
+                )
               );
             })
-            .catch((error: any) => {
-              showErrorToast(
-                <>
-                  <span>
-                    {error.message}
-                    {''}!
-                  </span>
-                </>,
-                4
-              );
-            });
+            .catch(reject);
         }
       }
-    } catch (error: any) {
-      showErrorToast(
-        <>
-          <span>
-            {error.message}
-            {''}!
-          </span>
-        </>,
-        4
-      );
-    }
-  };
+    });
 
   const initiateSwap = (
     contract: Contract,
@@ -280,9 +222,9 @@ export const SwapProvider = ({ children }: any) => {
     deadlineInMins: number,
     slippage: number,
     gasPrice: number,
-    gasLimit = 21000
-  ) => {
-    try {
+    gasLimit = 24000
+  ): Promise<void> =>
+    new Promise((resolve, reject) => {
       const tokenAmount1: TokenAmount = new TokenAmount(JSBI.BigInt(amount1 * 10 ** token1.decimals()), token1);
       const tokenAmount2: TokenAmount = new TokenAmount(JSBI.BigInt(amount2 * 10 ** token2.decimals()), token2);
       const tokenAmount3: TokenAmount = new TokenAmount(JSBI.BigInt(amount3 * 10 ** token3.decimals()), token3);
@@ -308,27 +250,19 @@ export const SwapProvider = ({ children }: any) => {
             gasLimit: numberToHex(gasLimit)
           })
           .then((tx: any) => {
-            showSuccessToast(
-              <>
-                <span>Swap successful{''}!</span>
-                <a href={`${chains[`0x${(chainId as number).toString(16)}`].explorer}/tx/${tx.transactionHash}`}>
-                  View on explorer
-                </a>
-              </>,
-              6
+            resolve(
+              showSuccessToast(
+                <>
+                  <span>Swap successful{''}!</span>
+                  <a href={`${chains[`0x${(chainId as number).toString(16)}`].explorer}/tx/${tx.transactionHash}`}>
+                    View on explorer
+                  </a>
+                </>,
+                6
+              )
             );
           })
-          .catch((error: any) => {
-            showErrorToast(
-              <>
-                <span>
-                  {error.message}
-                  {''}!
-                </span>
-              </>,
-              4
-            );
-          });
+          .catch(reject);
       } else {
         contract.methods[swapParams.methodName](
           swapParams.args[0],
@@ -345,43 +279,24 @@ export const SwapProvider = ({ children }: any) => {
             gasLimit: numberToHex(gasLimit)
           })
           .then((tx: any) => {
-            showSuccessToast(
-              <>
-                <span>Swap successful{''}!</span>
-                <a href={`${chains[`0x${(chainId as number).toString(16)}`].explorer}/tx/${tx.transactionHash}`}>
-                  View on explorer
-                </a>
-              </>,
-              6
+            resolve(
+              showSuccessToast(
+                <>
+                  <span>Swap successful{''}!</span>
+                  <a href={`${chains[`0x${(chainId as number).toString(16)}`].explorer}/tx/${tx.transactionHash}`}>
+                    View on explorer
+                  </a>
+                </>,
+                6
+              )
             );
           })
-          .catch((error: any) => {
-            showErrorToast(
-              <>
-                <span>
-                  {error.message}
-                  {''}!
-                </span>
-              </>,
-              4
-            );
-          });
+          .catch(reject);
       }
-    } catch (error: any) {
-      showErrorToast(
-        <>
-          <span>
-            {error.message}
-            {''}!
-          </span>
-        </>,
-        4
-      );
-    }
-  };
+    });
 
   return (
-    <SwapContext.Provider value={{ initiateAddLiquidity, initiateContractApproval, initiateSwap, approval }}>
+    <SwapContext.Provider value={{ initiateAddLiquidity, initiateContractApproval, initiateSwap }}>
       {children}
     </SwapContext.Provider>
   );

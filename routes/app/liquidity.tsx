@@ -463,7 +463,7 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { contract: swapRouterContract, createSwapRouterContract } = useSwapRouterContract();
-  const { initiateContractApproval, initiateAddLiquidity, approval } = useSwapContext();
+  const { initiateContractApproval, initiateAddLiquidity } = useSwapContext();
   const { contract: token1Contract, createTokenContract: createToken1Contract } = useTokenContract();
   const { contract: token2Contract, createTokenContract: createToken2Contract } = useTokenContract();
   const { contract: token3Contract, createTokenContract: createToken3Contract } = useTokenContract();
@@ -520,52 +520,41 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
     }
   }, [thirdSelectedAddress]);
 
-  const initAddLiquidity = () => {
+  const initAddLiquidity = async () => {
     setIsLoading(true);
     try {
       if (
         amount1 &&
-        (Object.keys(approval).length === 0 ||
-          (Object.keys(approval).length > 0 &&
-            (!approval[chainId as number] || approval[chainId as number][firstSelectedAddress] < amount1))) &&
         !!token1Contract &&
         firstSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
       ) {
-        initiateContractApproval(token1Contract, amount1, firstSelectedAddress);
+        await initiateContractApproval(token1Contract, amount1, firstSelectedAddress);
       }
 
       if (
         amount2 &&
-        (Object.keys(approval).length === 0 ||
-          (Object.keys(approval).length > 0 &&
-            (!approval[chainId as number] || approval[chainId as number][secondSelectedAddress] < amount2))) &&
         !!token2Contract &&
         secondSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
       ) {
-        initiateContractApproval(token2Contract, amount2, secondSelectedAddress);
+        await initiateContractApproval(token2Contract, amount2, secondSelectedAddress);
       }
 
       if (
         amount3 &&
-        (Object.keys(approval).length === 0 ||
-          (Object.keys(approval).length > 0 &&
-            (!approval[chainId as number] || approval[chainId as number][thirdSelectedAddress] < amount3))) &&
         !!token3Contract &&
         thirdSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
       ) {
-        initiateContractApproval(token3Contract, amount3, thirdSelectedAddress);
+        await initiateContractApproval(token3Contract, amount3, thirdSelectedAddress);
       }
 
       if (!!swapRouterContract && chainId) {
-        Fetcher.fetchTokenData(chainId, firstSelectedAddress).then(t1 => {
-          Fetcher.fetchTokenData(chainId, secondSelectedAddress).then(t2 => {
-            Fetcher.fetchTokenData(chainId, thirdSelectedAddress).then(t3 => {
-              initiateAddLiquidity(swapRouterContract, t1, t2, t3, amount1, amount2, amount3, deadline, gas);
-              setIsLoading(false);
-            });
-          });
-        });
+        const t1 = await Fetcher.fetchTokenData(chainId, firstSelectedAddress);
+        const t2 = await Fetcher.fetchTokenData(chainId, secondSelectedAddress);
+        const t3 = await Fetcher.fetchTokenData(chainId, thirdSelectedAddress);
+
+        await initiateAddLiquidity(swapRouterContract, t1, t2, t3, amount1, amount2, amount3, deadline, gas);
       }
+      setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
       showErrorToast(
