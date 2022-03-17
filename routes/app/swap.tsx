@@ -12,9 +12,11 @@ import { useWeb3Context } from '../../contexts/web3';
 import { useAssetsContext } from '../../contexts/assets';
 import { useBalance, useCurrencyQuery, useSwapRouterContract, useTokenContract } from '../../hooks';
 import { useSwapContext } from '../../contexts/swap';
-import { Fetcher, Token } from '3swap-sdk';
-import { _calculateMinimumReceived, _getAmountOutFromReserves } from '../../utils';
+import { Fetcher, Token, WETH } from '3swap-sdk';
+import { _calculateMinimumReceived, _calculatePriceImpact, _getAmountOutFromReserves } from '../../utils';
 import { useReserves, useTriad } from '../../hooks/triad';
+import Spinner from '../../components/Spinner';
+import { useToastContext } from '../../contexts/toast';
 
 type Props = {
   transactionModal: boolean;
@@ -378,7 +380,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
 
   border-radius: 20px;
   width: 360px;
-  height: 298px;
+  height: 350px;
   position: absolute;
   right: 10%;
   top: 15%;
@@ -538,13 +540,13 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
 
   const [slippage, setSlippage] = useState(0.1);
   const [gas, setGas] = useState(5);
+  const [gasLimit, setGasLimit] = useState(24000);
   const [deadline, setDeadline] = useState(20);
 
-  const { initiateSwap } = useSwapContext();
+  const { initiateSwap, initiateContractApproval } = useSwapContext();
   const { contract: swapRouterContract, createSwapRouterContract } = useSwapRouterContract();
   const { contract: token1Contract, createTokenContract: createToken1Contract } = useTokenContract();
   const { contract: token2Contract, createTokenContract: createToken2Contract } = useTokenContract();
-  const { contract: token3Contract, createTokenContract: createToken3Contract } = useTokenContract();
 
   const [token1, setToken1] = useState<Token>();
   const [token2, setToken2] = useState<Token>();
@@ -560,6 +562,10 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
   const { isExistentTriad, checkTriadExistence } = useTriad();
   const { reserves, loadReserves } = useReserves();
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { showErrorToast } = useToastContext();
+
   const setSelectedCurrencies = useCallback(() => {
     if (isActive && !!queryChainId) switchChain(queryChainId as string);
 
@@ -572,11 +578,11 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
 
   const setMaxToken1 = useCallback(() => {
     setAmount1(balance1);
-  }, []);
+  }, [balance1]);
 
   const setMaxToken2 = useCallback(() => {
     setAmount2(balance2);
-  }, []);
+  }, [balance2]);
 
   useEffect(() => {
     setSelectedCurrencies();
@@ -619,12 +625,6 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
       createToken2Contract(secondSelectedAddress);
     }
   }, [secondSelectedAddress]);
-
-  useEffect(() => {
-    if (!!thirdSelectedAddress && ethereumAddress.isAddress(thirdSelectedAddress)) {
-      createToken3Contract(thirdSelectedAddress);
-    }
-  }, [thirdSelectedAddress]);
 
   useEffect(() => {
     (async () => {
@@ -692,12 +692,69 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
   }, [isExistentTriad]);
 
   useEffect(() => {
-    (async () => {
-      if (reserves.length > 0 && isExistentTriad && !!token1 && !!token2 && !!token3) {
+    (() => {
+      if (reserves.length > 0 && isExistentTriad && !!token1 && !!token2 && !!token3 && amount1 > 0 && amount2 > 0) {
         setAmount3(_getAmountOutFromReserves(reserves, amount1, amount2, token1, token2, token3));
       }
     })();
   }, [reserves, token1, token2, token3, amount1, amount2]);
+
+  useEffect(() => {
+    (() => {
+      if (amount1 > 0 && amount2 > 0 && !!token1 && !!token2 && reserves.length > 0 && isExistentTriad) {
+        setPriceImpact(_calculatePriceImpact(reserves, token1, token2, amount1, amount2));
+      }
+    })();
+  }, [amount1, amount2, token1, token2, reserves, isExistentTriad]);
+
+  const initSwap = async () => {
+    setIsLoading(true);
+    try {
+      if (
+        amount1 &&
+        !!token1Contract &&
+        firstSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
+      ) {
+        await initiateContractApproval(token1Contract, amount1, firstSelectedAddress);
+      }
+
+      if (
+        amount2 &&
+        !!token2Contract &&
+        secondSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
+      ) {
+        await initiateContractApproval(token2Contract, amount2, secondSelectedAddress);
+      }
+
+      if (!!swapRouterContract && chainId && !!token1 && !!token2 && !!token3) {
+        await initiateSwap(
+          swapRouterContract,
+          token1,
+          token2,
+          token3,
+          amount1,
+          amount2,
+          minimumReceived,
+          deadline,
+          slippage,
+          gas,
+          gasLimit
+        );
+      }
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
+      showErrorToast(
+        <>
+          <span>
+            {'An error occured'}
+            {''}!
+          </span>
+        </>,
+        4
+      );
+    }
+  };
 
   return (
     <SwapCard>
@@ -801,7 +858,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             <input
               type="number"
               style={{ border: 'none', width: 'inherit', textAlign: 'center', outline: 'none' }}
-              value={deadline}
+              value={deadline || 20}
               onChange={ev => setDeadline(ev.target.valueAsNumber)}
             />
           </div>
@@ -836,6 +893,36 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           </div>
           <div className={gas === 10 ? 'round selected' : 'round'} onClick={() => setGas(10)}>
             Instant (10)
+          </div>
+        </div>
+
+        <div className="slippage">
+          <div>Gas Limit</div>
+          <div className="info">
+            <IconButton
+              iconType="solid"
+              name="question"
+              width="16px"
+              height="16px"
+              color="#4500a0"
+              fontSize="9px"
+              border="1px solid #4500a0"
+              borderRadius="50%"
+            />
+            <img src="./triangle.svg" alt="image" className="triangle"></img>
+            <div className="hover" style={{ width: '200px', height: 'auto' }}>
+              Highest amount of gas to pay for this transaction.
+            </div>
+          </div>
+        </div>
+        <div className="box">
+          <div className="round">
+            <input
+              type="number"
+              style={{ border: 'none', width: 'inherit', padding: 3, outline: 'none' }}
+              value={gasLimit || 240000}
+              onChange={ev => setGasLimit(ev.target.valueAsNumber)}
+            />
           </div>
         </div>
       </TransactionSettings>
@@ -1140,13 +1227,31 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         </div>
         <div className="num-green">{priceImpact}%</div>
       </div>
+      {isLoading && <Spinner width="30px" height="30px" />}
       <Button
         background="#4500a0"
         marginTop="20px"
         marginBottom="20px"
         width="460px"
-        disabled={!isExistentTriad}
-        title={!isExistentTriad ? 'Invalid Triad' : 'Swap'}
+        click={initSwap}
+        disabled={
+          !isExistentTriad ||
+          priceImpact > 1 ||
+          amount1 === 0 ||
+          amount2 === 0 ||
+          amount3 === 0 ||
+          isLoading ||
+          !isActive
+        }
+        title={
+          !isExistentTriad
+            ? 'Invalid Triad'
+            : priceImpact > 1
+            ? 'Price Impact Too High'
+            : !isActive
+            ? 'Please Connect Wallet'
+            : 'Swap'
+        }
         fontSize="20px"
         style={{
           display: 'flex',

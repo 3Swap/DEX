@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useState, useCallback, useEffect, createContext, useContext } from 'react';
 import { injected } from '../connectors';
 import { useAssetsContext } from './assets';
+import { useRouter } from 'next/router';
 
 type Web3GlobalContextType = {
   account?: string | null;
@@ -24,6 +25,8 @@ export const Web3GlobalProvider = ({ children }: any) => {
   const [localChainId, setLocalChainId] = useState(0x61);
   const { chains } = useAssetsContext();
 
+  const { reload } = useRouter();
+
   useEffect(() => {
     injected.isAuthorized().then(authorized => {
       if (authorized) {
@@ -37,12 +40,14 @@ export const Web3GlobalProvider = ({ children }: any) => {
   const connectWallet = useCallback(() => {
     activate(injected, undefined, true).then(() => {
       setIsActive(true);
+      reload();
     });
   }, []);
 
   const disconnectWallet = useCallback(() => {
     deactivate();
     setIsActive(false);
+    reload();
   }, []);
 
   const switchChain = useCallback((chainId: string) => {
@@ -56,6 +61,7 @@ export const Web3GlobalProvider = ({ children }: any) => {
         })
         .then(() => {
           setLocalChainId(parseInt(chainId));
+          reload();
         })
         .catch((error: any) => {
           // This code means the chain hasn't been added yet

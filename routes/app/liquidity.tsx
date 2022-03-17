@@ -457,7 +457,6 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
   const [showList2, setShowList2] = useState<boolean>(false);
   const [showList3, setShowList3] = useState<boolean>(false);
 
-  const [slippage, setSlippage] = useState(0.1);
   const [gas, setGas] = useState(50);
   const [deadline, setDeadline] = useState(20);
   const [isLoading, setIsLoading] = useState(false);
@@ -703,37 +702,6 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
               borderRadius="50%"
               click={() => setShowModal(false)}
             />
-          </div>
-          <div className="slippage">
-            <div>Slippage Tolerance</div>
-            <div className="info">
-              <IconButton
-                iconType="solid"
-                name="question"
-                width="16px"
-                height="16px"
-                color="#4500a0"
-                fontSize="9px"
-                border="1px solid #4500a0"
-                borderRadius="50%"
-              />
-              <img src="./triangle.svg" alt="image" className="triangle"></img>
-              <div className="hover" style={{ width: '200px', height: 'auto' }}>
-                Percentage change you&apos;re willing to allow between transaction execution time and block inclusion
-                time.
-              </div>
-            </div>
-          </div>
-          <div className="box">
-            <div className={slippage === 0.1 ? 'round selected' : 'round'} onClick={() => setSlippage(0.1)}>
-              0.1%
-            </div>
-            <div className={slippage === 0.5 ? 'round selected' : 'round'} onClick={() => setSlippage(0.5)}>
-              0.5%
-            </div>
-            <div className={slippage === 1.0 ? 'round selected' : 'round'} onClick={() => setSlippage(1.0)}>
-              1.0%
-            </div>
           </div>
           <div className="slippage">
             <div>Transaction Deadline</div>
@@ -1037,10 +1005,19 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
           marginBottom="20px"
           width="460px"
           height="62px"
-          title="Add Liquidity"
+          title={!isActive ? 'Please Connect Wallet' : 'Add Liquidity'}
           fontSize="20px"
           click={initAddLiquidity}
-          disabled={!amount1 || !amount2 || !amount3 || amount1 === 0 || amount2 === 0 || amount3 === 0 || isLoading}
+          disabled={
+            !amount1 ||
+            !amount2 ||
+            !amount3 ||
+            amount1 === 0 ||
+            amount2 === 0 ||
+            amount3 === 0 ||
+            isLoading ||
+            !isActive
+          }
         />
       </LiquidityCard>
     </>

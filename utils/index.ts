@@ -6,7 +6,8 @@ import {
   Token,
   TokenAmount,
   Trade,
-  TradeType
+  TradeType,
+  _100
 } from '3swap-sdk';
 import { Interface } from '@ethersproject/abi';
 import { getCreate2Address } from '@ethersproject/address';
@@ -61,12 +62,20 @@ export const _calculateMinimumReceived = (
   amount3: number,
   slippage: number
 ) => {
-  console.log('Here');
-  const tokenAmount1 = new TokenAmount(new BigNumber(`0x${(amount1 * 10 ** token1.decimals()).toString(16)}`), token1);
-  const tokenAmount2 = new TokenAmount(new BigNumber(`0x${(amount2 * 10 ** token2.decimals()).toString(16)}`), token2);
-  const tokenAmount3 = new TokenAmount(new BigNumber(`0x${(amount3 * 10 ** token3.decimals()).toString(16)}`), token3);
+  const tokenAmount1 = new TokenAmount(
+    new BigNumber(amount1).multipliedBy(new BigNumber(10).pow(token1.decimals())),
+    token1
+  );
+  const tokenAmount2 = new TokenAmount(
+    new BigNumber(amount2).multipliedBy(new BigNumber(10).pow(token2.decimals())),
+    token2
+  );
+  const tokenAmount3 = new TokenAmount(
+    new BigNumber(amount3).multipliedBy(new BigNumber(10).pow(token3.decimals())),
+    token3
+  );
   const trade = new Trade(tokenAmount1, tokenAmount2, tokenAmount3, TradeType.EXACT_INPUT);
-  return trade.minAmountOut(slippage).divideByDecimal();
+  return parseFloat(trade.minAmountOut(slippage).divideByDecimal().toPrecision(7));
 };
 
 export const _computeCreate2Address = (chainId: number, address1: string, address2: string, address3: string) => {
@@ -94,13 +103,41 @@ export const _getAmountOutFromReserves = (
   const reserve1 = new BigNumber(reserves[0]);
   const reserve2 = new BigNumber(reserves[1]);
   const reserve3 = new BigNumber(reserves[2]);
-  const amountA = new BigNumber(`0x${(amount1 * 10 ** token1.decimals()).toString(16)}`);
-  const amountB = new BigNumber(`0x${(amount2 * 10 ** token2.decimals()).toString(16)}`);
+  const amountA = new BigNumber(amount1).multipliedBy(new BigNumber(10).pow(token1.decimals()));
+  const amountB = new BigNumber(amount2).multipliedBy(new BigNumber(10).pow(token2.decimals()));
   const amountWithFee = amountA.plus(amountB).multipliedBy(FEES_NUMERATOR);
   const numerator = amountWithFee.multipliedBy(reserve3);
   const denominator = reserve1.plus(reserve2).multipliedBy(FEES_DENOMINATOR).plus(amountWithFee);
-  return numerator
-    .dividedBy(denominator)
-    .dividedBy(10 ** token3.decimals())
-    .toNumber();
+  return parseFloat(
+    numerator
+      .dividedBy(denominator)
+      .dividedBy(10 ** token3.decimals())
+      .toNumber()
+      .toPrecision(4)
+  );
+};
+
+export const _calculatePriceImpact = (
+  reserves: Array<string>,
+  token1: Token,
+  token2: Token,
+  amount1: number,
+  amount2: number
+) => {
+  const reserve1 = new BigNumber(reserves[0]);
+  const reserve2 = new BigNumber(reserves[1]);
+  const reserve3 = new BigNumber(reserves[2]);
+
+  const _constantProduct = reserve1.plus(reserve2).multipliedBy(reserve3);
+  const _marketPrice = reserve1.plus(reserve2).dividedBy(reserve3);
+
+  const addition1 = new BigNumber(amount1).multipliedBy(new BigNumber(10).pow(token1.decimals()));
+  const addition2 = new BigNumber(amount2).multipliedBy(new BigNumber(10).pow(token2.decimals()));
+  const _newSummedReserveAmount = reserve1.plus(reserve2).plus(addition1.plus(addition2));
+  const _inReserve3 = _constantProduct.dividedBy(_newSummedReserveAmount);
+  const _received = reserve3.minus(_inReserve3);
+  const _pricePerToken3 = addition1.plus(addition2).dividedBy(_received);
+  return parseFloat(
+    _pricePerToken3.minus(_marketPrice).dividedBy(_pricePerToken3).multipliedBy(_100).toNumber().toPrecision(4)
+  );
 };

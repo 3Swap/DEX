@@ -226,15 +226,15 @@ export const SwapProvider = ({ children }: any) => {
   ): Promise<void> =>
     new Promise((resolve, reject) => {
       const tokenAmount1: TokenAmount = new TokenAmount(
-        new BigNumber(`0x${(amount1 * 10 ** token1.decimals()).toString(16)}`),
+        new BigNumber(amount1).multipliedBy(new BigNumber(10).pow(token1.decimals())),
         token1
       );
       const tokenAmount2: TokenAmount = new TokenAmount(
-        new BigNumber(`0x${(amount2 * 10 ** token2.decimals()).toString(16)}`),
+        new BigNumber(amount2).multipliedBy(new BigNumber(10).pow(token2.decimals())),
         token2
       );
       const tokenAmount3: TokenAmount = new TokenAmount(
-        new BigNumber(`0x${(amount3 * 10 ** token3.decimals()).toString(16)}`),
+        new BigNumber(amount3).multipliedBy(new BigNumber(10).pow(token3.decimals())),
         token3
       );
       const trade: Trade = new Trade(tokenAmount1, tokenAmount2, tokenAmount3, TradeType.EXACT_INPUT);
