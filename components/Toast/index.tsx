@@ -39,6 +39,7 @@ const ToastNotification = styled.div<IToast>`
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 0.8);
   border-right: 1px solid rgba(255, 255, 255, 0.5);
+  z-index: -9999%;
 `;
 const ToastContainer = styled.div<IToast>`
   display: flex;

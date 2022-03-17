@@ -6,18 +6,25 @@ import JSBI from 'jsbi';
 import type { Contract } from 'web3-eth-contract';
 import { useWeb3Context } from '../contexts/web3';
 import { _decodeFuncResult, _divideByDecimals, _encodeFuncData, _fromWei, _getSigHash } from '../utils';
-import abi from './assets/ERC20Abi.json';
+import ERC20Abi from './assets/ERC20Abi.json';
+import RouterAbi from './assets/RouterAbi.json';
 import { useAssetsContext } from '../contexts/assets';
 import { _request } from '../rpc';
 import { hexToNumber, WETH } from '3swap-sdk';
+import { chainIdToRouterMap } from '../global/maps';
 
-export const useContract = () => {
+const useContract = () => {
   const [contract, setContract] = useState<Contract>();
   const { library } = useWeb3Context();
 
-  const createContract = useCallback((address: string) => {
-    setContract(new (library as Web3).eth.Contract(<any>abi, address));
-  }, []);
+  const createContract = useCallback(
+    (abi: any, address: string) => {
+      if (!!library) {
+        setContract(new (library as Web3).eth.Contract(abi, address));
+      }
+    },
+    [library]
+  );
 
   return { contract, createContract };
 };
@@ -41,8 +48,8 @@ export const useBalance = () => {
             setBalance(parseFloat(_fromWei(hexToNumber(balanceResult)).toPrecision(4)));
           });
         } else {
-          const decimalsSighash = _getSigHash(abi, 'decimals');
-          const balanceOfSignature = _encodeFuncData(abi, 'balanceOf', [account]);
+          const decimalsSighash = _getSigHash(ERC20Abi, 'decimals');
+          const balanceOfSignature = _encodeFuncData(ERC20Abi, 'balanceOf', [account]);
           _request(rpcUrl, {
             jsonrpc: '2.0',
             id: 1,
@@ -57,7 +64,7 @@ export const useBalance = () => {
               method: 'eth_call',
               params: [{ to: contract, data: balanceOfSignature }, 'latest']
             }).then(balanceResult => {
-              const resultDecoded = _decodeFuncResult(abi, 'balanceOf', balanceResult);
+              const resultDecoded = _decodeFuncResult(ERC20Abi, 'balanceOf', balanceResult);
               const bal =
                 typeof resultDecoded[0] === 'string'
                   ? _divideByDecimals(parseInt(resultDecoded[0]), decimals).toPrecision(4)
@@ -73,4 +80,29 @@ export const useBalance = () => {
     [account, chainId, chains]
   );
   return { balance, fetchBalance };
+};
+
+export const useSwapRouterContract = () => {
+  const { contract, createContract } = useContract();
+  const { chainId } = useWeb3Context();
+
+  const createSwapRouterContract = useCallback(() => {
+    if (!!chainId) {
+      createContract(RouterAbi, chainIdToRouterMap[chainId]);
+    }
+  }, [chainId]);
+  return { contract, createSwapRouterContract };
+};
+
+export const useTokenContract = () => {
+  const { contract, createContract } = useContract();
+  const [deps] = useState(true);
+
+  const createTokenContract = useCallback(
+    (address: string) => {
+      createContract(ERC20Abi, address);
+    },
+    [deps]
+  );
+  return { contract, createTokenContract };
 };
