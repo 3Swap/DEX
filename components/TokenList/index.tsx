@@ -251,7 +251,7 @@ const TokenList = ({ selectedAddresses, onItemClick, onClose }: Props) => {
                 type="text"
                 onChange={ev => setSearchItem(ev.target.value)}
                 value={searchItem}
-                placeholder="Search for token"
+                placeholder="Paste token address"
               />
               <Icon iconType="solid" name="search" width="20px" height="20px" fontSize="16px" />
             </div>

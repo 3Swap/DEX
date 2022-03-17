@@ -10,7 +10,11 @@ import IconButton from '../../components/IconButton';
 import TokenList from '../../components/TokenList';
 import { useWeb3Context } from '../../contexts/web3';
 import { useAssetsContext } from '../../contexts/assets';
-import { useBalance, useCurrencyQuery } from '../../hooks';
+import { useBalance, useCurrencyQuery, useSwapRouterContract, useTokenContract } from '../../hooks';
+import { useSwapContext } from '../../contexts/swap';
+import { Fetcher, Token } from '3swap-sdk';
+import { _calculateMinimumReceived, _getAmountOutFromReserves } from '../../utils';
+import { useReserves, useTriad } from '../../hooks/triad';
 
 type Props = {
   transactionModal: boolean;
@@ -536,6 +540,26 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
   const [gas, setGas] = useState(5);
   const [deadline, setDeadline] = useState(20);
 
+  const { initiateSwap } = useSwapContext();
+  const { contract: swapRouterContract, createSwapRouterContract } = useSwapRouterContract();
+  const { contract: token1Contract, createTokenContract: createToken1Contract } = useTokenContract();
+  const { contract: token2Contract, createTokenContract: createToken2Contract } = useTokenContract();
+  const { contract: token3Contract, createTokenContract: createToken3Contract } = useTokenContract();
+
+  const [token1, setToken1] = useState<Token>();
+  const [token2, setToken2] = useState<Token>();
+  const [token3, setToken3] = useState<Token>();
+
+  const [amount1, setAmount1] = useState(0);
+  const [amount2, setAmount2] = useState(0);
+  const [amount3, setAmount3] = useState(0);
+
+  const [minimumReceived, setMinimumReceived] = useState(0);
+  const [priceImpact, setPriceImpact] = useState(0);
+
+  const { isExistentTriad, checkTriadExistence } = useTriad();
+  const { reserves, loadReserves } = useReserves();
+
   const setSelectedCurrencies = useCallback(() => {
     if (isActive && !!queryChainId) switchChain(queryChainId as string);
 
@@ -544,6 +568,14 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
     if (inputCurrency2) setSecondSelectedAddress(inputCurrency2 as string);
 
     if (outputCurrency) setThirdSelectedAddress(outputCurrency as string);
+  }, []);
+
+  const setMaxToken1 = useCallback(() => {
+    setAmount1(balance1);
+  }, []);
+
+  const setMaxToken2 = useCallback(() => {
+    setAmount2(balance2);
   }, []);
 
   useEffect(() => {
@@ -569,6 +601,103 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
       fetchBalance2(secondSelectedAddress);
     }
   }, [secondSelectedAddress]);
+
+  useEffect(() => {
+    if (!!chainId) {
+      createSwapRouterContract();
+    }
+  }, [chainId]);
+
+  useEffect(() => {
+    if (!!firstSelectedAddress && ethereumAddress.isAddress(firstSelectedAddress)) {
+      createToken1Contract(firstSelectedAddress);
+    }
+  }, [firstSelectedAddress]);
+
+  useEffect(() => {
+    if (!!secondSelectedAddress && ethereumAddress.isAddress(secondSelectedAddress)) {
+      createToken2Contract(secondSelectedAddress);
+    }
+  }, [secondSelectedAddress]);
+
+  useEffect(() => {
+    if (!!thirdSelectedAddress && ethereumAddress.isAddress(thirdSelectedAddress)) {
+      createToken3Contract(thirdSelectedAddress);
+    }
+  }, [thirdSelectedAddress]);
+
+  useEffect(() => {
+    (async () => {
+      if (!!firstSelectedAddress && ethereumAddress.isAddress(firstSelectedAddress) && (chainId || localChainId)) {
+        const token = await Fetcher.fetchTokenData(
+          (chainId as number) || (localChainId as number),
+          firstSelectedAddress
+        );
+        setToken1(token);
+      }
+    })();
+  }, [firstSelectedAddress, chainId, localChainId]);
+
+  useEffect(() => {
+    (async () => {
+      if (!!secondSelectedAddress && ethereumAddress.isAddress(secondSelectedAddress) && (chainId || localChainId)) {
+        const token = await Fetcher.fetchTokenData(
+          (chainId as number) || (localChainId as number),
+          secondSelectedAddress
+        );
+        setToken2(token);
+      }
+    })();
+  }, [secondSelectedAddress, chainId, localChainId]);
+
+  useEffect(() => {
+    (async () => {
+      if (!!thirdSelectedAddress && ethereumAddress.isAddress(thirdSelectedAddress) && (chainId || localChainId)) {
+        const token = await Fetcher.fetchTokenData(
+          (chainId as number) || (localChainId as number),
+          thirdSelectedAddress
+        );
+        setToken3(token);
+      }
+    })();
+  }, [thirdSelectedAddress, chainId, localChainId]);
+
+  useEffect(() => {
+    (async () => {
+      if ((!!chainId || !!localChainId) && !!token1 && !!token2 && !!token3) {
+        setMinimumReceived(_calculateMinimumReceived(token1, token2, token3, amount1, amount2, amount3, slippage));
+      }
+    })();
+  }, [token1, token2, token3, amount1, amount2, amount3, slippage, chainId, localChainId]);
+
+  useEffect(() => {
+    (async () => {
+      if (
+        !!firstSelectedAddress &&
+        ethereumAddress.isAddress(firstSelectedAddress) &&
+        !!secondSelectedAddress &&
+        ethereumAddress.isAddress(secondSelectedAddress) &&
+        !!thirdSelectedAddress &&
+        ethereumAddress.isAddress(thirdSelectedAddress)
+      ) {
+        await checkTriadExistence(firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress);
+      }
+    })();
+  }, [firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]);
+
+  useEffect(() => {
+    (async () => {
+      if (isExistentTriad) await loadReserves(firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress);
+    })();
+  }, [isExistentTriad]);
+
+  useEffect(() => {
+    (async () => {
+      if (reserves.length > 0 && isExistentTriad && !!token1 && !!token2 && !!token3) {
+        setAmount3(_getAmountOutFromReserves(reserves, amount1, amount2, token1, token2, token3));
+      }
+    })();
+  }, [reserves, token1, token2, token3, amount1, amount2]);
 
   return (
     <SwapCard>
@@ -773,10 +902,19 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
                   textAlign: 'right'
                 }}
                 placeholder="Enter Amount"
+                value={amount1 || 0}
+                onChange={ev => setAmount1(ev.target.valueAsNumber)}
               />
             </div>
             <div className="inner-right-button">
-              <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+              <Button
+                border="1px solid #4500a0"
+                title="MAX"
+                click={setMaxToken1}
+                height="14.74px"
+                width="28px"
+                color="#4500a0"
+              />
             </div>
           </div>
         </div>
@@ -851,10 +989,19 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
                   textAlign: 'right'
                 }}
                 placeholder="Enter Amount"
+                value={amount2 || 0}
+                onChange={ev => setAmount2(ev.target.valueAsNumber)}
               />
             </div>
             <div className="inner-right-button">
-              <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
+              <Button
+                border="1px solid #4500a0"
+                title="MAX"
+                click={setMaxToken2}
+                height="14.74px"
+                width="28px"
+                color="#4500a0"
+              />
             </div>
           </div>
         </div>
@@ -949,25 +1096,37 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
                   textAlign: 'right'
                 }}
                 placeholder="Enter Amount"
+                value={amount3 || 0}
+                onChange={ev => setAmount3(ev.target.valueAsNumber)}
+                disabled
               />
             </div>
-            <div className="inner-right-button">
+            {/* <div className="inner-right-button">
               <Button border="1px solid #4500a0" title="MAX" height="14.74px" width="28px" color="#4500a0" />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
 
       <div className="details">
         <div className="detailtext">
-          <div>Minimum recieved</div>
+          <div>Minimum received</div>
           <div className="info">
             <img src="./info-black.svg" alt="image" className="info-icon"></img>
             <img src="./triangle.svg" alt="image" className="triangle"></img>
-            <div className="hover">This will have info of question mark....</div>
+            <div className="hover">The lowest amount you&apos;ll get from this swap</div>
           </div>
         </div>
-        <div className="num">0.00</div>
+        <div className="num">
+          {minimumReceived}{' '}
+          {!!assets && Object.keys(assets).length > 0
+            ? assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`][
+                ethereumAddress.isAddress(thirdSelectedAddress)
+                  ? thirdSelectedAddress
+                  : Object.keys(assets[`0x${(queryChainId || chainId || localChainId)?.toString(16)}`])[2]
+              ]?.symbol
+            : 'TOKEN_SYMBOL'}
+        </div>
       </div>
 
       <div className="details">
@@ -976,29 +1135,18 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           <div className="info">
             <img src="./info-black.svg" alt="image" className="info-icon"></img>
             <img src="./triangle.svg" alt="image" className="triangle"></img>
-            <div className="hover">This will have info of question mark....</div>
+            <div className="hover">Percentage shift in pricing constant that would be incurred by the reserves</div>
           </div>
         </div>
-        <div className="num-green">0.05%</div>
-      </div>
-
-      <div className="details">
-        <div className="detailtext">
-          <div>Liquidity provider</div>
-          <div className="info">
-            <img src="./info-black.svg" alt="image" className="info-icon"></img>
-            <img src="./triangle.svg" alt="image" className="triangle"></img>
-            <div className="hover">This will have info of question mark....</div>
-          </div>
-        </div>
-        <div className="num">0.000000001 BTC</div>
+        <div className="num-green">{priceImpact}%</div>
       </div>
       <Button
         background="#4500a0"
         marginTop="20px"
         marginBottom="20px"
         width="460px"
-        title="Swap"
+        disabled={!isExistentTriad}
+        title={!isExistentTriad ? 'Invalid Triad' : 'Swap'}
         fontSize="20px"
         style={{
           display: 'flex',

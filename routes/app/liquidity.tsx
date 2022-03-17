@@ -13,7 +13,7 @@ import { useCurrencyQuery, useSwapRouterContract, useTokenContract } from '../..
 import TokenList from '../../components/TokenList';
 import Spinner from '../../components/Spinner';
 import { useSwapContext } from '../../contexts/swap';
-import { Fetcher, WETH } from '3swap-sdk';
+import { Fetcher, Token, WETH } from '3swap-sdk';
 import { useToastContext } from '../../contexts/toast';
 
 type Props = {
@@ -472,6 +472,10 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
   const [amount2, setAmount2] = useState(0);
   const [amount3, setAmount3] = useState(0);
 
+  const [token1, setToken1] = useState<Token>();
+  const [token2, setToken2] = useState<Token>();
+  const [token3, setToken3] = useState<Token>();
+
   const { showErrorToast } = useToastContext();
 
   const setSelectedCurrencies = useCallback(() => {
@@ -520,6 +524,42 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
     }
   }, [thirdSelectedAddress]);
 
+  useEffect(() => {
+    (async () => {
+      if (!!firstSelectedAddress && ethereumAddress.isAddress(firstSelectedAddress) && (chainId || localChainId)) {
+        const token = await Fetcher.fetchTokenData(
+          (chainId as number) || (localChainId as number),
+          firstSelectedAddress
+        );
+        setToken1(token);
+      }
+    })();
+  }, [firstSelectedAddress, chainId, localChainId]);
+
+  useEffect(() => {
+    (async () => {
+      if (!!secondSelectedAddress && ethereumAddress.isAddress(secondSelectedAddress) && (chainId || localChainId)) {
+        const token = await Fetcher.fetchTokenData(
+          (chainId as number) || (localChainId as number),
+          secondSelectedAddress
+        );
+        setToken2(token);
+      }
+    })();
+  }, [secondSelectedAddress, chainId, localChainId]);
+
+  useEffect(() => {
+    (async () => {
+      if (!!thirdSelectedAddress && ethereumAddress.isAddress(thirdSelectedAddress) && (chainId || localChainId)) {
+        const token = await Fetcher.fetchTokenData(
+          (chainId as number) || (localChainId as number),
+          thirdSelectedAddress
+        );
+        setToken3(token);
+      }
+    })();
+  }, [thirdSelectedAddress, chainId, localChainId]);
+
   const initAddLiquidity = async () => {
     setIsLoading(true);
     try {
@@ -547,12 +587,18 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
         await initiateContractApproval(token3Contract, amount3, thirdSelectedAddress);
       }
 
-      if (!!swapRouterContract && chainId) {
-        const t1 = await Fetcher.fetchTokenData(chainId, firstSelectedAddress);
-        const t2 = await Fetcher.fetchTokenData(chainId, secondSelectedAddress);
-        const t3 = await Fetcher.fetchTokenData(chainId, thirdSelectedAddress);
-
-        await initiateAddLiquidity(swapRouterContract, t1, t2, t3, amount1, amount2, amount3, deadline, gas);
+      if (!!swapRouterContract && chainId && !!token1 && !!token2 && !!token3) {
+        await initiateAddLiquidity(
+          swapRouterContract,
+          token1,
+          token2,
+          token3,
+          amount1,
+          amount2,
+          amount3,
+          deadline,
+          gas
+        );
       }
       setIsLoading(false);
     } catch (error: any) {
@@ -994,7 +1040,7 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
           title="Add Liquidity"
           fontSize="20px"
           click={initAddLiquidity}
-          disabled={!amount1 || !amount2 || !amount3 || amount1 === 0 || amount2 === 0 || amount3 === 0}
+          disabled={!amount1 || !amount2 || !amount3 || amount1 === 0 || amount2 === 0 || amount3 === 0 || isLoading}
         />
       </LiquidityCard>
     </>

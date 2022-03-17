@@ -7,7 +7,7 @@ import { useToastContext } from './toast';
 import { useWeb3Context } from './web3';
 import { _raiseByDecimals, _toGwei, _toWei } from '../utils';
 import Button from '../components/Button';
-import JSBI from 'jsbi';
+import BigNumber from 'bignumber.js';
 import { useAssetsContext } from './assets';
 
 type SwapContextType = {
@@ -225,9 +225,18 @@ export const SwapProvider = ({ children }: any) => {
     gasLimit = 24000
   ): Promise<void> =>
     new Promise((resolve, reject) => {
-      const tokenAmount1: TokenAmount = new TokenAmount(JSBI.BigInt(amount1 * 10 ** token1.decimals()), token1);
-      const tokenAmount2: TokenAmount = new TokenAmount(JSBI.BigInt(amount2 * 10 ** token2.decimals()), token2);
-      const tokenAmount3: TokenAmount = new TokenAmount(JSBI.BigInt(amount3 * 10 ** token3.decimals()), token3);
+      const tokenAmount1: TokenAmount = new TokenAmount(
+        new BigNumber(`0x${(amount1 * 10 ** token1.decimals()).toString(16)}`),
+        token1
+      );
+      const tokenAmount2: TokenAmount = new TokenAmount(
+        new BigNumber(`0x${(amount2 * 10 ** token2.decimals()).toString(16)}`),
+        token2
+      );
+      const tokenAmount3: TokenAmount = new TokenAmount(
+        new BigNumber(`0x${(amount3 * 10 ** token3.decimals()).toString(16)}`),
+        token3
+      );
       const trade: Trade = new Trade(tokenAmount1, tokenAmount2, tokenAmount3, TradeType.EXACT_INPUT);
       const swapParams = Router.swapCallParameters(trade, chainId as number, {
         recipient: account as string,

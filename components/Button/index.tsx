@@ -23,7 +23,12 @@ const CustomButton = styled('button')<CustomComponentProps>`
 `;
 
 const Button = (props: Props & CustomComponentProps) => (
-  <CustomButton {...(props as CustomComponentProps)} onClick={(props as Props).click} disabled={props.disabled}>
+  <CustomButton
+    {...(props as CustomComponentProps)}
+    onClick={(props as Props).click}
+    background={props.disabled ? '#808080' : props.background}
+    disabled={props.disabled}
+  >
     {(props as Props).title}
   </CustomButton>
 );
