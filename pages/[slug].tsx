@@ -130,7 +130,7 @@ export default function Index() {
         <div className="bg"></div>
 
         <Header>
-          <SwapLogo src="3swap.svg" />
+          <SwapLogo src="3swap.svg" className="logo"/>
           <div className="nav_right">
             <Dropdown />
             <Button
