@@ -49,6 +49,7 @@ const SwapCard = styled('div')`
   // 393x786 411x731 414x736
   @media screen and (min-width: 376px) and (max-width: 480px) {
     width: 100%;
+    margin-left: 5px;
 
     .swapButton {
       width: 80%;

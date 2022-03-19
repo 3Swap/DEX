@@ -37,6 +37,22 @@ const LiquidityCard = styled('div')`
   justify-content: flex-start;
   position: relative;
 
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    width: 90%;
+    margin-left: 10px;
+    .liquidtyBtn {
+      width: 90%;
+    }
+  }
+  // 393x786 411x731 414x736
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    width: 90%;
+    margin-left: 15px;
+    .liquidtyBtn {
+      width: 90%;
+    }
+  }
+
   input {
     background: transparent !important;
   }
@@ -55,6 +71,17 @@ const LiquidityCard = styled('div')`
     font-weight: bold;
     font-size: 36px;
     line-height: 24px;
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 90%;
+      height: auto;
+      font-size: 28px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 90%;
+      height: auto;
+      font-size: 28px;
+    }
   }
   .desc {
     font-family: Poppins;
@@ -65,6 +92,14 @@ const LiquidityCard = styled('div')`
     height: 27px;
     width: 80%;
     margin-top: 10px;
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 90%;
+      height: auto;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 90%;
+      height: auto;
+    }
   }
   .text {
     width: 80%;
@@ -106,6 +141,16 @@ const LiquidityCard = styled('div')`
     /* or 133% */
     /* Color primary */
     color: #4500a0;
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      img {
+        padding-left: 10px;
+      }
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      img {
+        padding-left: 10px;
+      }
+    }
   }
 
   .right {
@@ -144,6 +189,20 @@ const LiquidityCard = styled('div')`
     margin-top: 25px;
     display: flex;
     flex-direction: row;
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 100%;
+      padding: 0px;
+      .left {
+        width: 30%;
+        img {
+          padding-left: 5px;
+        }
+      }
+      .right {
+        width: 60%;
+      }
+    }
   }
   .addition {
     margin-top: 35px;
@@ -172,6 +231,15 @@ const LiquidityCard = styled('div')`
     align-items: flex-end;
     padding-right: 30px;
     justify-content: flex-start;
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 90%;
+      padding: 0 10px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 90%;
+      padding: 0 10px;
+    }
   }
   .left {
     width: 40%;
@@ -188,6 +256,11 @@ const LiquidityCard = styled('div')`
     /* or 133% */
     /* Color primary */
     color: #4500a0;
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      img {
+        padding-left: 10px;
+      }
+    }
   }
 
   .right {
@@ -218,6 +291,13 @@ const LiquidityCard = styled('div')`
     margin: 15px 0;
     display: flex;
     flex-direction: row;
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 97%;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 97%;
+    }
   }
   .btn_primary {
     cursor: pointer;
@@ -236,6 +316,14 @@ const LiquidityCard = styled('div')`
     font-size: 24px;
     border: none;
     margin-bottom: 50px;
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 97%;
+    }
+    // 393x786 411x731 414x736
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 97%;
+    }
   }
   .amt {
     color: #322e37;
@@ -271,6 +359,15 @@ const LiquidityPoolCard = styled('div')<{ open: boolean }>`
         color: #fff;
       }
     }
+  }
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    width: 90%;
+    margin-left: 10px;
+  }
+  // 393x786 411x731 414x736
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    width: 90%;
+    margin-left: 10px;
   }
   .container {
     background: rgba(255, 255, 255, 0.8);
@@ -314,6 +411,16 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    width: 90%;
+    margin-left: 9px;
+  }
+  // 393x786 411x731 414x736
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    width: 90%;
+    margin-left: 9px;
+  }
 
   .top {
     display: flex;
@@ -1005,6 +1112,7 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
           marginBottom="20px"
           width="460px"
           height="62px"
+          className="liquidtyBtn"
           title={!isActive ? 'Please Connect Wallet' : 'Add Liquidity'}
           fontSize="20px"
           click={initAddLiquidity}
