@@ -18,6 +18,7 @@ const HeaderContainer = styled('div')`
     justify-content: baseline;
     column-gap: 10px;
   }
+  display: none;
 `;
 
 type Props = { children: any };

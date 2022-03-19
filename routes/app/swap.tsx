@@ -39,6 +39,22 @@ const SwapCard = styled('div')`
   justify-content: flex-start;
   position: relative;
 
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    width: 90%;
+    margin-left: 9px;
+    .swapButton {
+      width: 80%;
+    }
+  }
+  // 393x786 411x731 414x736
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    width: 100%;
+
+    .swapButton {
+      width: 80%;
+    }
+  }
+
   input {
     background: transparent !important;
   }
@@ -58,6 +74,12 @@ const SwapCard = styled('div')`
     font-weight: bold;
     font-size: 36px;
     line-height: 24px;
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      margin-bottom: 10px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      margin-bottom: 10px;
+    }
   }
 
   .details {
@@ -73,7 +95,14 @@ const SwapCard = styled('div')`
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
-
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 100%;
+      padding: 0 10px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 100%;
+      padding: 0 10px;
+    }
     .detailtext {
       display: flex;
       flex-direction: row;
@@ -169,6 +198,15 @@ const SwapCard = styled('div')`
     align-items: center;
     display: flex;
     flex-direction: row;
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      padding-top: 10px;
+      height: auto;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      padding-top: 10px;
+      height: auto;
+    }
   }
 
   .text {
@@ -197,10 +235,18 @@ const SwapCard = styled('div')`
     padding-right: 30px;
     justify-content: flex-start;
 
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 95%;
+      padding: 0px 5px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 95%;
+      padding: 0px 5px;
+    }
     .coin-container {
       width: 402px;
       height: 55px;
-      background: #fcfcfc;
+      background: #fff;
       border: 1px solid #d8d8d8;
       box-sizing: border-box;
       border-radius: 20px;
@@ -208,6 +254,32 @@ const SwapCard = styled('div')`
       display: flex;
       flex-direction: row;
 
+      @media screen and (min-width: 320px) and (max-width: 375px) {
+        width: 100%;
+        padding: 0px;
+        .left {
+          width: 30%;
+          img {
+            padding-left: 5px;
+          }
+        }
+        .right {
+          width: 60%;
+        }
+      }
+      @media screen and (min-width: 376px) and (max-width: 480px) {
+        width: 100%;
+        padding: 0px;
+        .left {
+          width: 30%;
+          img {
+            padding-left: 5px;
+          }
+        }
+        .right {
+          width: 60%;
+        }
+      }
       .left {
         width: 40%;
         display: flex;
@@ -268,6 +340,13 @@ const SwapCard = styled('div')`
       margin-top: 5px;
 
       color: #9a999c;
+
+      @media screen and (min-width: 320px) and (max-width: 375px) {
+        padding-right: 5px;
+      }
+      @media screen and (min-width: 376px) and (max-width: 480px) {
+        padding-right: 5px;
+      }
     }
   }
 
@@ -302,6 +381,14 @@ const SwapCard = styled('div')`
     padding-right: 30px;
     justify-content: flex-start;
 
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 95%;
+      padding: 0px 5px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 95%;
+      padding: 0px 5px;
+    }
     .coin-container {
       width: 402px;
       height: 55px;
@@ -314,6 +401,32 @@ const SwapCard = styled('div')`
       display: flex;
       flex-direction: row;
 
+      @media screen and (min-width: 320px) and (max-width: 375px) {
+        width: 100%;
+        padding: 0px;
+        .left {
+          width: 30%;
+          img {
+            padding-left: 5px;
+          }
+        }
+        .right {
+          width: 60%;
+        }
+      }
+      @media screen and (min-width: 376px) and (max-width: 480px) {
+        width: 100%;
+        padding: 0px;
+        .left {
+          width: 30%;
+          img {
+            padding-left: 5px;
+          }
+        }
+        .right {
+          width: 60%;
+        }
+      }
       .left {
         width: 40%;
         display: flex;
@@ -380,7 +493,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
 
   border-radius: 20px;
   width: 360px;
-  height: 350px;
+  min-height: 400px;
   position: absolute;
   right: 10%;
   top: 15%;
@@ -392,6 +505,14 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    width: 95%;
+    right: 2%;
+  }
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    width: 95%;
+    right: 2%;
+  }
 
   .top {
     display: flex;
@@ -417,7 +538,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
   }
 
   .slippage {
-    width: 65%;
+    width: 100%;
     color: #4500a0;
     margin-top: 20px;
     display: flex;
@@ -474,7 +595,7 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
   }
 
   .box {
-    width: 95%;
+    width: 100%;
     margin-top: 10px;
     display: flex;
     flex-direction: row;
@@ -486,6 +607,15 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
     font-weight: 500;
     font-size: 12px;
     line-height: 24px;
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 95%;
+      padding: 0px 5px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 95%;
+      padding: 0px 5px;
+    }
 
     .round {
       &.small {
@@ -865,7 +995,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           <div>minutes</div>
         </div>
 
-        <div className="slippage">
+        <div className="slippage ">
           <div>Transaction Speed (Gwei) </div>
           <div className="info">
             <IconButton
@@ -884,7 +1014,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             </div>
           </div>
         </div>
-        <div className="box">
+        <div className="box speed">
           <div className={gas === 5 ? 'round selected' : 'round'} onClick={() => setGas(5)}>
             Standard (5)
           </div>
@@ -1233,6 +1363,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         marginTop="20px"
         marginBottom="20px"
         width="460px"
+        className="swapButton"
         click={initSwap}
         disabled={
           !isExistentTriad ||
