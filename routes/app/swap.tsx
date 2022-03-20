@@ -49,7 +49,7 @@ const SwapCard = styled('div')`
   // 393x786 411x731 414x736
   @media screen and (min-width: 376px) and (max-width: 480px) {
     width: 100%;
-    margin-left: 5px;
+    margin-left: -5px;
 
     .swapButton {
       width: 80%;
@@ -97,11 +97,11 @@ const SwapCard = styled('div')`
     font-weight: 500;
     font-size: 12px;
     @media screen and (min-width: 320px) and (max-width: 375px) {
-      width: 100%;
+      width: 96%;
       padding: 0 10px;
     }
     @media screen and (min-width: 376px) and (max-width: 480px) {
-      width: 100%;
+      width: 96%;
       padding: 0 10px;
     }
     .detailtext {

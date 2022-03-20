@@ -38,11 +38,14 @@ const HeaderContainer = styled('div')`
       margin-bottom: 20px;
     }
   }
+  @media screen and (min-width: 361px) and (max-width: 375px) {
+    width: 94%;
+  }
   @media screen and (min-width: 376px) and (max-width: 480px) {
     flex-direction: column;
     padding-top: 20px;
     height: auto;
-    width: 95%;
+    width: 90%;
 
     padding-left: 0;
     padding-right: 0;
@@ -53,7 +56,7 @@ const HeaderContainer = styled('div')`
     .logo {
       object-fit: contain;
       /* margin-left: 200px !important; */
-      width: 100%;
+      width: 96%;
       margin-bottom: 20px;
     }
   }
