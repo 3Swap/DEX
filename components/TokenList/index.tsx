@@ -30,6 +30,13 @@ const TokenListContainer = styled.div`
   border-radius: 10px;
   z-index: 10;
   overflow: hidden;
+
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    width: 95%;
+  }
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    width: 95%;
+  }
 `;
 
 const TokenWrapper = styled.div`

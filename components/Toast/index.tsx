@@ -39,7 +39,16 @@ const ToastNotification = styled.div<IToast>`
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 0.8);
   border-right: 1px solid rgba(255, 255, 255, 0.5);
-  z-index: -9999%;
+  z-index: 999;
+
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    min-width: 83%;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    min-width: 80%;
+    margin: 0 auto;
+  }
 `;
 const ToastContainer = styled.div<IToast>`
   display: flex;
@@ -73,7 +82,7 @@ const ToastContainer = styled.div<IToast>`
     justify-content: space-between;
     position: relative;
     .message {
-      padding-left: 10px;
+      padding: 5px;
       font-size: 14px;
       font-weight: 500;
       text-transform: normal;
@@ -90,6 +99,9 @@ const ToastContainer = styled.div<IToast>`
       border-radius: 50%;
       background: #dcdcdc;
       text-align: center;
+      display: flex;
+      justify-content: center;
+      padding-top: 2px;
 
       &:hover {
         color: rgba(9, 0, 0, 1);

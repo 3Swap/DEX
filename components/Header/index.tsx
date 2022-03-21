@@ -18,6 +18,48 @@ const HeaderContainer = styled('div')`
     justify-content: baseline;
     column-gap: 10px;
   }
+  /* display: none; */
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    flex-direction: column;
+    padding-top: 20px;
+    height: auto;
+    width: 95%;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    .nav_right {
+      padding-right: 10px;
+    }
+    .logo {
+      object-fit: contain;
+      /* margin-left: 200px !important; */
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+  @media screen and (min-width: 361px) and (max-width: 375px) {
+    width: 94%;
+  }
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    flex-direction: column;
+    padding-top: 20px;
+    height: auto;
+    width: 90%;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    .nav_right {
+      padding-right: 10px;
+    }
+    .logo {
+      object-fit: contain;
+      /* margin-left: 200px !important; */
+      width: 96%;
+      margin-bottom: 20px;
+    }
+  }
 `;
 
 type Props = { children: any };
