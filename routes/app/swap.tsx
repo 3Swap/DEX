@@ -10,7 +10,7 @@ import IconButton from '../../components/IconButton';
 import TokenList from '../../components/TokenList';
 import { useWeb3Context } from '../../contexts/web3';
 import { useAssetsContext } from '../../contexts/assets';
-import { useBalance, useCurrencyQuery, useSwapRouterContract, useTokenContract } from '../../hooks';
+import { useAllowance, useBalance, useCurrencyQuery, useSwapRouterContract, useTokenContract } from '../../hooks';
 import { useSwapContext } from '../../contexts/swap';
 import { Fetcher, Token, WETH } from '3swap-sdk';
 import { _calculateMinimumReceived, _calculatePriceImpact, _getAmountOutFromReserves } from '../../utils';
@@ -678,6 +678,8 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
   const { contract: swapRouterContract, createSwapRouterContract } = useSwapRouterContract();
   const { contract: token1Contract, createTokenContract: createToken1Contract } = useTokenContract();
   const { contract: token2Contract, createTokenContract: createToken2Contract } = useTokenContract();
+  const { allowance: token1Allowance, loadAllowance: loadToken1Allowance } = useAllowance();
+  const { allowance: token2Allowance, loadAllowance: loadToken2Allowance } = useAllowance();
 
   const [token1, setToken1] = useState<Token>();
   const [token2, setToken2] = useState<Token>();
@@ -811,10 +813,15 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         !!thirdSelectedAddress &&
         ethereumAddress.isAddress(thirdSelectedAddress)
       ) {
-        await checkTriadExistence(firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress);
+        await checkTriadExistence(
+          (chainId as number) || (localChainId as number),
+          firstSelectedAddress,
+          secondSelectedAddress,
+          thirdSelectedAddress
+        );
       }
     })();
-  }, [firstSelectedAddress, secondSelectedAddress, thirdSelectedAddress]);
+  }, [token1, token2, token3, chainId]);
 
   useEffect(() => {
     (async () => {
@@ -838,13 +845,22 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
     })();
   }, [amount1, amount2, token1, token2, reserves, isExistentTriad]);
 
+  useEffect(() => {
+    if (!!token1Contract && !!chainId) loadToken1Allowance(token1Contract, chainId);
+  }, [token1Contract, chainId]);
+
+  useEffect(() => {
+    if (!!token2Contract && !!chainId) loadToken2Allowance(token2Contract, chainId);
+  }, [token2Contract, chainId]);
+
   const initSwap = async () => {
     setIsLoading(true);
     try {
       if (
         amount1 &&
         !!token1Contract &&
-        firstSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
+        firstSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase() &&
+        token1Allowance < amount1
       ) {
         await initiateContractApproval(token1Contract, amount1, firstSelectedAddress);
       }
@@ -852,7 +868,8 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
       if (
         amount2 &&
         !!token2Contract &&
-        secondSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
+        secondSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase() &&
+        token2Allowance < amount2
       ) {
         await initiateContractApproval(token2Contract, amount2, secondSelectedAddress);
       }
@@ -1051,7 +1068,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
             <input
               type="number"
               style={{ border: 'none', width: 'inherit', padding: 3, outline: 'none' }}
-              value={gasLimit || 240000}
+              value={gasLimit || 24000}
               onChange={ev => setGasLimit(ev.target.valueAsNumber)}
             />
           </div>

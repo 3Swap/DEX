@@ -292,7 +292,13 @@ export const SwapProvider = ({ children }: any) => {
               showSuccessToast(
                 <>
                   <span>Swap successful{''}!</span>
-                  <a href={`${chains[`0x${(chainId as number).toString(16)}`].explorer}/tx/${tx.transactionHash}`}>
+                  <a
+                    href={`${chains[`0x${(chainId as number).toString(16)}`].explorer}/tx/${tx.transactionHash}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: '#4500a0' }}
+                  >
+                    {' '}
                     View on explorer
                   </a>
                 </>,
