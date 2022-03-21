@@ -106,3 +106,29 @@ export const useTokenContract = () => {
   );
   return { contract, createTokenContract };
 };
+
+export const useAllowance = () => {
+  const [allowance, setAllowance] = useState(0);
+  const { account } = useWeb3Context();
+
+  const loadAllowance = useCallback(
+    (contract: Contract, chainId: number) => {
+      if (!!account) {
+        contract.methods
+          .decimals()
+          .call()
+          .then((dec: number) => {
+            contract.methods
+              .allowance(account, chainIdToRouterMap[chainId])
+              .call()
+              .then((al: number) => {
+                setAllowance(_divideByDecimals(al, dec));
+              });
+          });
+      }
+    },
+    [account]
+  );
+
+  return { allowance, loadAllowance };
+};

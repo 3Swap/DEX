@@ -9,7 +9,7 @@ import Icon from '../../components/Icon';
 import IconButton from '../../components/IconButton';
 import { useAssetsContext } from '../../contexts/assets';
 import { useWeb3Context } from '../../contexts/web3';
-import { useCurrencyQuery, useSwapRouterContract, useTokenContract } from '../../hooks';
+import { useAllowance, useCurrencyQuery, useSwapRouterContract, useTokenContract } from '../../hooks';
 import TokenList from '../../components/TokenList';
 import Spinner from '../../components/Spinner';
 import { useSwapContext } from '../../contexts/swap';
@@ -573,6 +573,9 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
   const { contract: token1Contract, createTokenContract: createToken1Contract } = useTokenContract();
   const { contract: token2Contract, createTokenContract: createToken2Contract } = useTokenContract();
   const { contract: token3Contract, createTokenContract: createToken3Contract } = useTokenContract();
+  const { allowance: token1Allowance, loadAllowance: loadToken1Allowance } = useAllowance();
+  const { allowance: token2Allowance, loadAllowance: loadToken2Allowance } = useAllowance();
+  const { allowance: token3Allowance, loadAllowance: loadToken3Allowance } = useAllowance();
 
   const [amount1, setAmount1] = useState(0);
   const [amount2, setAmount2] = useState(0);
@@ -666,13 +669,26 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
     })();
   }, [thirdSelectedAddress, chainId, localChainId]);
 
+  useEffect(() => {
+    if (!!token1Contract && !!chainId) loadToken1Allowance(token1Contract, chainId);
+  }, [token1Contract, chainId]);
+
+  useEffect(() => {
+    if (!!token2Contract && !!chainId) loadToken2Allowance(token2Contract, chainId);
+  }, [token2Contract, chainId]);
+
+  useEffect(() => {
+    if (!!token3Contract && !!chainId) loadToken3Allowance(token3Contract, chainId);
+  }, [token3Contract, chainId]);
+
   const initAddLiquidity = async () => {
     setIsLoading(true);
     try {
       if (
         amount1 &&
         !!token1Contract &&
-        firstSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
+        firstSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase() &&
+        token1Allowance < amount1
       ) {
         await initiateContractApproval(token1Contract, amount1, firstSelectedAddress);
       }
@@ -680,7 +696,8 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
       if (
         amount2 &&
         !!token2Contract &&
-        secondSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
+        secondSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase() &&
+        token2Allowance < amount2
       ) {
         await initiateContractApproval(token2Contract, amount2, secondSelectedAddress);
       }
@@ -688,7 +705,8 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
       if (
         amount3 &&
         !!token3Contract &&
-        thirdSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase()
+        thirdSelectedAddress.toLowerCase() !== WETH[chainId as number].address().toLowerCase() &&
+        token3Allowance < amount3
       ) {
         await initiateContractApproval(token3Contract, amount3, thirdSelectedAddress);
       }
@@ -723,7 +741,7 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
 
   return (
     <>
-      <LiquidityPoolCard
+      {/* <LiquidityPoolCard
         open={true}
         onClick={(e: any) => {
           e.stopPropagation();
@@ -736,7 +754,6 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
               <p>Remove liquidity to receive tokens back.</p>
             </div>
             <div className="icon">
-              {/* <Icon iconType="solid" name="gear" width="20px" height="20px" fontSize="20px" /> */}
               <Icon
                 iconType="solid"
                 name="gear"
@@ -769,7 +786,7 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
             </div>
           </div>
         </div>
-      </LiquidityPoolCard>
+      </LiquidityPoolCard> */}
       <LiquidityCard>
         <Head>
           <title>3Swap | Add Liquidity</title>
