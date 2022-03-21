@@ -14,7 +14,7 @@ import { hexToNumber, WETH } from '3swap-sdk';
 import { chainIdToRouterMap } from '../global/maps';
 
 const useContract = () => {
-  const [contract, setContract] = useState<Contract>();
+  const [contract, setContract] = useState<any>();
   const { library } = useWeb3Context();
 
   const createContract = useCallback(
