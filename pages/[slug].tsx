@@ -64,6 +64,12 @@ const MainPage = styled('div')`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  @media screen and (min-width: 320px) and (max-width: 375px) {
+    width: 100%;
+  }
+  @media screen and (min-width: 376px) and (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 const Flex = styled('div')`
