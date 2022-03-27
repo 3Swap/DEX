@@ -2,68 +2,66 @@ import React from 'react';
 import styled from 'styled-components';
 
 const HeaderContainer = styled('div')`
-  width: 100vw;
-  padding-right: 40px;
-  padding-left: 40px;
+  width:100%;
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: space-between;
   height: 100px;
   backdrop-filter: blur(1px);
   padding-bottom: 20px;
-  .nav_right {
+
+  @media screen and (max-width:760px){
+    height:auto;
+  }
+  .container{
     display: flex;
-    flex-direction: row;
-    justify-content: baseline;
-    column-gap: 10px;
-  }
-  /* display: none; */
-  @media screen and (min-width: 320px) and (max-width: 375px) {
-    flex-direction: column;
-    padding-top: 20px;
-    height: auto;
-    width: 95%;
-
-    padding-left: 0;
-    padding-right: 0;
+    align-items: center;
+    width: 100%;
+    justify-content:space-between ;
+    margin-left:30px ;
+    margin-right:30px ;
 
     .nav_right {
-      padding-right: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: baseline;
+      column-gap: 10px;
     }
-    .logo {
-      object-fit: contain;
-      /* margin-left: 200px !important; */
+    @media screen and (max-width: 320px){
+      width:100%;
+      .nav_right{
+        width:95%;
+      }
+    }
+    @media screen and (min-width: 320px) and (max-width: 375px) {
       width: 100%;
-      margin-bottom: 20px;
-    }
-  }
-  @media screen and (min-width: 361px) and (max-width: 375px) {
-    width: 94%;
-  }
-  @media screen and (min-width: 376px) and (max-width: 480px) {
-    flex-direction: column;
-    padding-top: 20px;
-    height: auto;
-    width: 90%;
+      flex-direction:column ;
+      margin:15px 0 0 0;
 
-    padding-left: 0;
-    padding-right: 0;
-
-    .nav_right {
-      padding-right: 10px;
+      .nav_left{
+        margin-bottom:10px ;
+      }
+      .nav_right{
+        padding-bottom:10px;
+      }
     }
-    .logo {
-      object-fit: contain;
-      /* margin-left: 200px !important; */
-      width: 96%;
-      margin-bottom: 20px;
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      width: 100%;
+      flex-direction:column ;
+      margin:15px 0 0 0;
+
+      .nav_left{
+        margin-bottom:10px ;
+      }
     }
   }
+  
 `;
 
 type Props = { children: any };
 
 export default function Header({ children }: Props) {
-  return <HeaderContainer>{children}</HeaderContainer>;
+  return (
+    <HeaderContainer>
+      <div className="container">{children}</div>
+    </HeaderContainer>
+  );
 }

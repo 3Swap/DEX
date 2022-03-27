@@ -261,7 +261,7 @@ const SwapCard = styled('div')`
         .left {
           width: 30%;
           img {
-            padding-left: 5px;
+            padding-right: 5px;
           }
         }
         .right {
@@ -274,7 +274,7 @@ const SwapCard = styled('div')`
         .left {
           width: 30%;
           img {
-            padding-left: 5px;
+            padding-right: 5px;
           }
         }
         .right {
@@ -299,16 +299,21 @@ const SwapCard = styled('div')`
         /* Color primary */
 
         color: #4500a0;
+        @media screen and (max-width: 320px){
+          width: 47%;
+          
+        }
+        @media screen and (min-width: 321px) and (max-width: 375px) {
+          width: 40%;
+          
+        }
       }
 
       .right {
-        width: 60%;
+        width: 70%;
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        padding-right: 18px;
+        align-items:center ;
+     
         font-family: Poppins;
         font-style: normal;
         font-weight: normal;
@@ -317,12 +322,17 @@ const SwapCard = styled('div')`
         /* or 171% */
 
         /* Inactive text color */
-
+        @media screen and (max-width: 320px){
+          width: 55%;
+        }
+        @media screen and (min-width: 320px) and (max-width: 375px) {
+          width: 55%;
+          
+        }
         color: #9a999c;
-
         .inner-right-input {
-          flex-basis: 90%;
-          flex-grow: 1;
+          margin-top:3px ;
+          margin-right:5px ;
         }
 
         .inner-right-button {
@@ -408,7 +418,7 @@ const SwapCard = styled('div')`
         .left {
           width: 30%;
           img {
-            padding-left: 5px;
+            padding-right: 5px;
           }
         }
         .right {
@@ -421,7 +431,7 @@ const SwapCard = styled('div')`
         .left {
           width: 30%;
           img {
-            padding-left: 5px;
+            padding-right: 5px;
           }
         }
         .right {
@@ -429,7 +439,7 @@ const SwapCard = styled('div')`
         }
       }
       .left {
-        width: 40%;
+        width: 30%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -442,14 +452,16 @@ const SwapCard = styled('div')`
         font-size: 18px;
         line-height: 24px;
         /* or 133% */
-
+        @media screen and (max-width: 760px) {
+         width:30%;
+        }
         /* Color primary */
 
         color: #4500a0;
       }
 
       .right {
-        width: 60%;
+        width: 70%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -466,6 +478,9 @@ const SwapCard = styled('div')`
         /* Inactive text color */
 
         color: #9a999c;
+        @media screen and (max-width: 760px) {
+         width:70%;
+        }
       }
     }
   }

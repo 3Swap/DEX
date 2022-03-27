@@ -14,7 +14,7 @@ import Toast from '../components/Toast';
 import { useToastContext } from '../contexts/toast';
 
 const MainContainer = styled('div')`
-  min-width: 100vw;
+  min-width: 100%;
   min-height: 100vh;
   background-color: #0e0020;
 
@@ -54,30 +54,42 @@ const MainContainer = styled('div')`
 
 const Navbar = styled('div')`
   height: 90px;
-  width: 100vw;
+  width: 100%;
 `;
 
 const MainPage = styled('div')`
-  min-height: 85vh;
-  min-width: 100vw;
   display: flex;
-  flex-direction: column;
+  flex-direction:column ;
   align-items: center;
   justify-content: center;
   @media screen and (min-width: 320px) and (max-width: 375px) {
-    width: 100%;
+    width: 95%;
+    margin:0 auto;
   }
   @media screen and (min-width: 376px) and (max-width: 480px) {
-    width: 100%;
+    width: 95%;
+    margin:0 auto;
+  }
+
+  .slug__container{
+    width:100%;
+    min-height: 400px;
+    background:red;
+   
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      width: 95%;
+      margin-left:auto;
+      margin-right: auto;
+    }
   }
 `;
 
 const Flex = styled('div')`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  text-align: center;
   backdrop-filter: blur(0px);
   z-index: 10;
   .linkNav {
@@ -134,9 +146,10 @@ export default function Index() {
         <div className="bg"></div>
         <div className="bg"></div>
         <div className="bg"></div>
-
         <Header>
-          <SwapLogo src="3swap.svg" className="logo" />
+          <div className="nav_left">
+            <SwapLogo src="3swap.svg" className="logo" />
+          </div>
           <div className="nav_right">
             <Dropdown />
             <Button
@@ -154,14 +167,12 @@ export default function Index() {
           </div>
         </Header>
         <MainPage>
-          {/* possible values direction="topRight | topLeft | bottomRight | bottomLeft" : status="success | danger | warning | info" */}
           {isVisible && (
             <Toast direction="bottomRight" status={toastType}>
               {content}
             </Toast>
           )}
           <Flex style={{ margin: '1em auto' }}>
-            <div></div>
             <div className="linkNav">
               <ActiveLink href="/swap" activeClassName="activeLink">
                 <button
@@ -190,20 +201,19 @@ export default function Index() {
                 </button>
               </ActiveLink>
             </div>
-            <div></div>
           </Flex>
           {slug === 'swap' || slug === 'index' ? (
-            <div>
+            <>
               <Swap transactionModal={transactionModal} setTransactionModal={setTransactionModal} />
-            </div>
+            </>
           ) : slug === 'liquidity' ? (
-            <div>
+            <>
               <Liquidity showModal={showliquidityPoolModal} setShowModal={setShowLiquidityPoolModal} />
-            </div>
+            </>
           ) : (
-            <div>
+            <>
               <PageNotFound />
-            </div>
+            </>
           )}
         </MainPage>
       </MainContainer>
