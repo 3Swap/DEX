@@ -24,7 +24,7 @@ type Props = {
 const LiquidityCard = styled('div')`
   margin: 2em auto;
   width: 540px;
-  height: 846px;
+  height: auto;
   background: rgba(255, 255, 255, 0.3);
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -38,16 +38,14 @@ const LiquidityCard = styled('div')`
   position: relative;
 
   @media screen and (min-width: 320px) and (max-width: 375px) {
-    width: 90%;
-    margin-left: 10px;
+    width: 100%;
     .liquidtyBtn {
       width: 90%;
     }
   }
   // 393x786 411x731 414x736
   @media screen and (min-width: 376px) and (max-width: 480px) {
-    width: 90%;
-    margin-left: 15px;
+    width: 100%;
     .liquidtyBtn {
       width: 90%;
     }
