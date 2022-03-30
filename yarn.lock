@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"3swap-sdk@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/3swap-sdk/-/3swap-sdk-1.0.9.tgz#ec9ab5825795e98b17220759469771a7424482f3"
-  integrity sha512-Gf3vE5XkGJVcq5QjlgYELvvDAi14ZrQ+YRYm5APRNrc9DzO/NBzeyH9dIYBZSkaS0kBcloko5oGCz/whMev1pA==
+"3swap-sdk@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/3swap-sdk/-/3swap-sdk-1.0.10.tgz#546a34270adab34253bd3296e5d7fcd04338889d"
+  integrity sha512-z3zMlqBHfmtg//vAMHV/ekTNsjOn94+xUHhMXZs1UrAyTINDQhYyUuRQIP0b0KR0rv/h6lNko/sX2o+7rYp0nA==
   dependencies:
-    "3swap-v1-core" "^1.0.13"
+    "3swap-v1-core" "^1.0.14"
     "@ethersproject/abi" "^5.5.0"
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/solidity" "^5.5.0"
@@ -17,10 +17,10 @@
     tiny-invariant "^1.2.0"
     tiny-warning "^1.0.3"
 
-"3swap-v1-core@^1.0.13":
-  version "1.0.13"
-  resolved "https://registry.npmjs.org/3swap-v1-core/-/3swap-v1-core-1.0.13.tgz"
-  integrity sha512-Id5p9tHTuG4p/8CwCU/0S6XIEwlOuulfIHNtOjypTZQt3UvR5aPtghHCq2S3ah5CNldEuXY49p6Ry+gYOhKP0g==
+"3swap-v1-core@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/3swap-v1-core/-/3swap-v1-core-1.0.14.tgz#0c5e130d90777963fc77c0f78c25ace883bb9ff1"
+  integrity sha512-WPi6ERqV0XpDI1nqsBRt61BRGCafrX32DGKqqOf0jrnVAYjRFrdNULe2sTEo+tp/2KvbV9BumxCWG4ymF0UBlA==
 
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"

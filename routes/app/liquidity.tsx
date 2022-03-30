@@ -563,6 +563,7 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
   const [showList3, setShowList3] = useState<boolean>(false);
 
   const [gas, setGas] = useState(50);
+  const [gasLimit, setGasLimit] = useState(24000);
   const [deadline, setDeadline] = useState(20);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -885,6 +886,36 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
             </div>
             <div className={gas === 100 ? 'round selected' : 'round'} onClick={() => setGas(100)}>
               Instant (100)
+            </div>
+          </div>
+
+          <div className="slippage">
+            <div>Gas Limit</div>
+            <div className="info">
+              <IconButton
+                iconType="solid"
+                name="question"
+                width="16px"
+                height="16px"
+                color="#4500a0"
+                fontSize="9px"
+                border="1px solid #4500a0"
+                borderRadius="50%"
+              />
+              <img src="./triangle.svg" alt="image" className="triangle"></img>
+              <div className="hover" style={{ width: '200px', height: 'auto' }}>
+                Highest amount of gas to pay for this transaction.
+              </div>
+            </div>
+          </div>
+          <div className="box">
+            <div className="round">
+              <input
+                type="number"
+                style={{ border: 'none', width: 'inherit', padding: 3, outline: 'none' }}
+                value={gasLimit || 24000}
+                onChange={ev => setGasLimit(ev.target.valueAsNumber)}
+              />
             </div>
           </div>
         </TransactionSettings>

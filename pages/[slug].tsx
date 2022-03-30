@@ -59,27 +59,26 @@ const Navbar = styled('div')`
 
 const MainPage = styled('div')`
   display: flex;
-  flex-direction:column ;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   @media screen and (min-width: 320px) and (max-width: 375px) {
     width: 95%;
-    margin:0 auto;
+    margin: 0 auto;
   }
   @media screen and (min-width: 376px) and (max-width: 480px) {
     width: 95%;
-    margin:0 auto;
+    margin: 0 auto;
   }
 
-  .slug__container{
-    width:100%;
+  .slug__container {
+    width: 100%;
     min-height: 400px;
-    background:red;
-   
+    background: red;
 
     @media screen and (min-width: 320px) and (max-width: 375px) {
       width: 95%;
-      margin-left:auto;
+      margin-left: auto;
       margin-right: auto;
     }
   }
