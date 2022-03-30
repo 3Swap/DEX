@@ -50,7 +50,6 @@ const SwapCard = styled('div')`
   @media screen and (min-width: 376px) and (max-width: 480px) {
     width: 100%;
 
-
     .swapButton {
       width: 80%;
     }
@@ -299,21 +298,19 @@ const SwapCard = styled('div')`
         /* Color primary */
 
         color: #4500a0;
-        @media screen and (max-width: 320px){
+        @media screen and (max-width: 320px) {
           width: 47%;
-          
         }
         @media screen and (min-width: 321px) and (max-width: 375px) {
           width: 40%;
-          
         }
       }
 
       .right {
         width: 70%;
         display: flex;
-        align-items:center ;
-     
+        align-items: center;
+
         font-family: Poppins;
         font-style: normal;
         font-weight: normal;
@@ -322,17 +319,16 @@ const SwapCard = styled('div')`
         /* or 171% */
 
         /* Inactive text color */
-        @media screen and (max-width: 320px){
+        @media screen and (max-width: 320px) {
           width: 55%;
         }
         @media screen and (min-width: 320px) and (max-width: 375px) {
           width: 55%;
-          
         }
         color: #9a999c;
         .inner-right-input {
-          margin-top:3px ;
-          margin-right:5px ;
+          margin-top: 3px;
+          margin-right: 5px;
         }
 
         .inner-right-button {
@@ -453,7 +449,7 @@ const SwapCard = styled('div')`
         line-height: 24px;
         /* or 133% */
         @media screen and (max-width: 760px) {
-         width:30%;
+          width: 30%;
         }
         /* Color primary */
 
@@ -479,7 +475,7 @@ const SwapCard = styled('div')`
 
         color: #9a999c;
         @media screen and (max-width: 760px) {
-         width:70%;
+          width: 70%;
         }
       }
     }
