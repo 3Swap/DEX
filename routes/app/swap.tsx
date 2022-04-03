@@ -220,8 +220,21 @@ const SwapCard = styled('div')`
     height: 19px;
 
     color: #f2f2f2;
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      margin-top: 20px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      margin-top: 20px;
+    }
   }
-
+  .rotateBtn {
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      margin-top: 1em;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      margin-top: 1em;
+    }
+  }
   .from {
     width: 460px;
     height: 238px;
@@ -372,6 +385,13 @@ const SwapCard = styled('div')`
     height: 19px;
 
     color: #f2f2f2;
+
+    @media screen and (min-width: 320px) and (max-width: 375px) {
+      margin-top: 0;
+    }
+    @media screen and (min-width: 376px) and (max-width: 480px) {
+      margin-top: 0;
+    }
   }
 
   .to {
@@ -623,10 +643,17 @@ const TransactionSettings = styled('div')<{ open: boolean }>`
     @media screen and (min-width: 320px) and (max-width: 375px) {
       width: 95%;
       padding: 0px 5px;
+
+      &.speed {
+        gap: 0;
+      }
     }
     @media screen and (min-width: 376px) and (max-width: 480px) {
       width: 95%;
       padding: 0px 5px;
+      &.speed {
+        gap: 0;
+      }
     }
 
     .round {
@@ -1044,13 +1071,13 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
           </div>
         </div>
         <div className="box speed">
-          <div className={gas === 5 ? 'round selected' : 'round'} onClick={() => setGas(5)}>
+          <div className={gas === 5 ? 'round  selected' : 'round box_speed'} onClick={() => setGas(5)}>
             Standard (5)
           </div>
-          <div className={gas === 7 ? 'round selected' : 'round'} onClick={() => setGas(7)}>
+          <div className={gas === 7 ? 'round  selected' : 'round box_speed'} onClick={() => setGas(7)}>
             Safe (4)
           </div>
-          <div className={gas === 10 ? 'round selected' : 'round'} onClick={() => setGas(10)}>
+          <div className={gas === 10 ? 'round  selected' : 'round box_speed'} onClick={() => setGas(10)}>
             Instant (10)
           </div>
         </div>
@@ -1273,6 +1300,7 @@ export default function Swap({ transactionModal, setTransactionModal }: Props) {
         fontSize="20px"
         borderRadius="50%"
         marginTop="2em"
+        className="rotateBtn"
         click={() => {
           setFirstSelectedAddress(thirdSelectedAddress);
           setSecondSelectedAddress(firstSelectedAddress);
