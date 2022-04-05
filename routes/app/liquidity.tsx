@@ -720,7 +720,8 @@ export default function Liquidity({ showModal, setShowModal }: Props) {
           amount2,
           amount3,
           deadline,
-          gas
+          gas,
+          gasLimit
         );
       }
       setIsLoading(false);
